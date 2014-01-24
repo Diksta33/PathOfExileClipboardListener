@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EEE35629-7A83-4B25-AFD8-3E5AD7E14B59}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExileClipboardListener</RootNamespace>
+    <AssemblyName>ExileClipboardListenerExpress</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\NewProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinForms\AboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\AboutBox.designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\ContextMenu.cs" />
+    <Compile Include="Classes\GlobalMethods.cs" />
+    <Compile Include="Classes\Listener.cs" />
+    <Compile Include="Classes\ProcessIcon.cs" />
+    <Compile Include="Classes\Program.cs" />
+    <Compile Include="WinForms\Character.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\Character.Designer.cs">
+      <DependentUpon>Character.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\ItemValue.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\ItemValue.designer.cs">
+      <DependentUpon>ItemValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\League.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\League.Designer.cs">
+      <DependentUpon>League.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\PopUpError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\PopUpError.Designer.cs">
+      <DependentUpon>PopUpError.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\PopUpStashed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\PopUpStashed.designer.cs">
+      <DependentUpon>PopUpStashed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WinForms\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\Settings.designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\Stash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\Stash.designer.cs">
+      <DependentUpon>Stash.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\Test.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\Test.Designer.cs">
+      <DependentUpon>Test.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="WinForms\AboutBox.resx">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\Character.resx">
+      <DependentUpon>Character.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\ItemValue.resx">
+      <DependentUpon>ItemValue.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\League.resx">
+      <DependentUpon>League.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\PopUpError.resx">
+      <DependentUpon>PopUpError.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\PopUpStashed.resx">
+      <DependentUpon>PopUpStashed.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="WinForms\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\Stash.resx">
+      <DependentUpon>Stash.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\Test.resx">
+      <DependentUpon>Test.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PoEGraphic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PathOfExile.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chest.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Average.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Good.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Poor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GoodSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AverageSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PoorSmall.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

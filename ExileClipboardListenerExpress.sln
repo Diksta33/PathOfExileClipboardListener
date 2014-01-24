@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExileClipboardListenerExpress", "ExileClipboardListenerExpress\ExileClipboardListenerExpress.csproj", "{EEE35629-7A83-4B25-AFD8-3E5AD7E14B59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEE35629-7A83-4B25-AFD8-3E5AD7E14B59}.Debug|x86.ActiveCfg = Debug|x86
+		{EEE35629-7A83-4B25-AFD8-3E5AD7E14B59}.Debug|x86.Build.0 = Debug|x86
+		{EEE35629-7A83-4B25-AFD8-3E5AD7E14B59}.Release|x86.ActiveCfg = Release|x86
+		{EEE35629-7A83-4B25-AFD8-3E5AD7E14B59}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
