@@ -41,7 +41,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.LeagueDefault = new System.Windows.Forms.Button();
             this.LeagueGrid = new System.Windows.Forms.DataGridView();
-            this.Parent = new System.Windows.Forms.ComboBox();
+            this.League = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.LeagueGrid)).BeginInit();
             this.SuspendLayout();
@@ -166,14 +166,14 @@
             this.LeagueGrid.Size = new System.Drawing.Size(625, 186);
             this.LeagueGrid.TabIndex = 19;
             // 
-            // Parent
+            // League
             // 
-            this.Parent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Parent.FormattingEnabled = true;
-            this.Parent.Location = new System.Drawing.Point(331, 255);
-            this.Parent.Name = "Parent";
-            this.Parent.Size = new System.Drawing.Size(175, 21);
-            this.Parent.TabIndex = 32;
+            this.League.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.League.FormattingEnabled = true;
+            this.League.Location = new System.Drawing.Point(331, 255);
+            this.League.Name = "League";
+            this.League.Size = new System.Drawing.Size(175, 21);
+            this.League.TabIndex = 32;
             // 
             // textBox1
             // 
@@ -188,7 +188,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(648, 297);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.Parent);
+            this.Controls.Add(this.League);
             this.Controls.Add(this.CharacterClass);
             this.Controls.Add(this.NewLeague);
             this.Controls.Add(this.SaveLeague);
@@ -230,7 +230,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button LeagueDefault;
         private System.Windows.Forms.DataGridView LeagueGrid;
-        private System.Windows.Forms.ComboBox Parent;
+        private System.Windows.Forms.ComboBox League;
         private System.Windows.Forms.TextBox textBox1;
     }
 }

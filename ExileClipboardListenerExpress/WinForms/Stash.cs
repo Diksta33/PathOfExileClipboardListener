@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ExileClipboardListener.Classes;
+using System.Data.SQLite;
+using System.Data.SqlClient;
 
 namespace ExileClipboardListener.WinForms
 {
@@ -22,6 +24,44 @@ namespace ExileClipboardListener.WinForms
 
         private void Stash_Load(object sender, EventArgs e)
         {
+            ////Perform a SQL Query into SQLite
+            //using (var conSS = new SqlConnection("Server=localhost\\EXILE;Database=PathOfExile;Trusted_Connection=yes;"))
+            //{
+            //    conSS.Open();
+            //    using (var conSL = new SQLiteConnection(GlobalMethods.Connection))
+            //    {
+            //        conSL.Open();
+            //        using (var comSS = conSS.CreateCommand())
+            //        {
+            //            using (var comSL = conSL.CreateCommand())
+            //            {
+            //                comSS.CommandText = "SELECT * FROM [BaseItem];";
+            //                using (var drSS = comSS.ExecuteReader())
+            //                {
+            //                    while (drSS.Read())
+            //                    {
+            //                        string sql = "INSERT INTO [BaseItem] VALUES(";
+            //                        for (int i = 0; i < drSS.FieldCount; i++)
+            //                        {
+            //                            if (drSS[i] == DBNull.Value)
+            //                                sql += "NULL";
+            //                            else if (drSS[i].GetType() == typeof(System.String))
+            //                                sql += "'" + drSS[i].ToString().Replace("'", "''") + "'";
+            //                            else
+            //                                sql += drSS[i].ToString();
+            //                            if (i < drSS.FieldCount - 1)
+            //                                sql += ",";
+            //                        }
+            //                        sql += ")";
+            //                        comSL.CommandText = sql;
+            //                        comSL.ExecuteNonQuery();
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
             _refresh = false;
             GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT LeagueName FROM League ORDER BY 1;", League);
             League.SelectedIndex = 0;

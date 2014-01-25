@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Windows.Forms;
-
+using System.Data.SQLite;
 
 namespace ExileClipboardListener.Classes
 {
@@ -13,16 +12,35 @@ namespace ExileClipboardListener.Classes
         public const int COLLECTION_MODE = 1;
         //ReSharper restore InconsistentNaming
         public static int Mode = STASH_MODE;
-        public static string Connection = "Server=localhost\\EXILE;Database=PathOfExile;Trusted_Connection=yes;";
+        public static string Connection = "Data Source=ExileStash.s3db;Version=3;";
         public static int CommandTimeout = 600;
 
         //Current League and Character
         public static Guid CurrentLeagueId = Properties.Settings.Default.DefaultLeagueId;
         public static Guid CurrentCharacterId = Properties.Settings.Default.DefaultCharacterId;
 
+        //Modification
+        public struct Mod
+        {
+            public int Id;
+            public int Value;
+            public int ValueMin;
+            public int ValueMax;
+        }
+
+        //Affix
+        public struct Affix
+        {
+            public int AffixId;
+            public int Level;
+            public Mod Mod1;
+            public Mod Mod2;
+        }
+
         //Stash class
         public static class StashItem
         {
+            public static string OriginalText;
             public static string ItemName;
             public static int BaseItemId;
             public static string ItemTypeName;
@@ -39,41 +57,11 @@ namespace ExileClipboardListener.Classes
             public static int ElementalDamageMin;
             public static int ElementalDamageMax;
             public static decimal AttacksPerSecond;
+            public static decimal DamagePerSecond;
             public static decimal CriticalStrikeChance;
-            public static int ImplicitMod1Id;
-            public static int ImplicitMod1Value;
-            public static int ImplicitMod2Id;
-            public static int ImplicitMod2Value;
-            public static int Prefix1Id;
-            public static int Prefix1Mod1Id;
-            public static int Prefix1Mod1Value;
-            public static int Prefix1Mod2Id;
-            public static int Prefix1Mod2Value;
-            public static int Prefix2Id;
-            public static int Prefix2Mod1Id;
-            public static int Prefix2Mod1Value;
-            public static int Prefix2Mod2Id;
-            public static int Prefix2Mod2Value;
-            public static int Prefix3Id;
-            public static int Prefix3Mod1Id;
-            public static int Prefix3Mod1Value;
-            public static int Prefix3Mod2Id;
-            public static int Prefix3Mod2Value;
-            public static int Suffix1Id;
-            public static int Suffix1Mod1Id;
-            public static int Suffix1Mod1Value;
-            public static int Suffix1Mod2Id;
-            public static int Suffix1Mod2Value;
-            public static int Suffix2Id;
-            public static int Suffix2Mod1Id;
-            public static int Suffix2Mod1Value;
-            public static int Suffix2Mod2Id;
-            public static int Suffix2Mod2Value;
-            public static int Suffix3Id;
-            public static int Suffix3Mod1Id;
-            public static int Suffix3Mod1Value;
-            public static int Suffix3Mod2Id;
-            public static int Suffix3Mod2Value;
+            public static string Sockets;
+            public static Mod[] Mod = new Mod[10];
+            public static Affix[] Affix = new Affix[7]; //0 = Implicit, 1-3 - Prefix, 4-6 = Suffix
         }
 
         public static void ClearStash()
@@ -92,41 +80,17 @@ namespace ExileClipboardListener.Classes
             StashItem.ElementalDamageMin = 0;
             StashItem.ElementalDamageMax = 0;
             StashItem.AttacksPerSecond = 0;
+            StashItem.DamagePerSecond = 0;
             StashItem.CriticalStrikeChance = 0;
-            StashItem.ImplicitMod1Id = 0;
-            StashItem.ImplicitMod1Value = 0;
-            StashItem.ImplicitMod2Id = 0;
-            StashItem.ImplicitMod2Value = 0;
-            StashItem.Prefix1Id = 0;
-            StashItem.Prefix1Mod1Id = 0;
-            StashItem.Prefix1Mod1Value = 0;
-            StashItem.Prefix1Mod2Id = 0;
-            StashItem.Prefix1Mod2Value = 0;
-            StashItem.Prefix2Id = 0;
-            StashItem.Prefix2Mod1Id = 0;
-            StashItem.Prefix2Mod1Value = 0;
-            StashItem.Prefix2Mod2Id = 0;
-            StashItem.Prefix2Mod2Value = 0;
-            StashItem.Prefix3Id = 0;
-            StashItem.Prefix3Mod1Id = 0;
-            StashItem.Prefix3Mod1Value = 0;
-            StashItem.Prefix3Mod2Id = 0;
-            StashItem.Prefix3Mod2Value = 0;
-            StashItem.Suffix1Id = 0;
-            StashItem.Suffix1Mod1Id = 0;
-            StashItem.Suffix1Mod1Value = 0;
-            StashItem.Suffix1Mod2Id = 0;
-            StashItem.Suffix1Mod2Value = 0;
-            StashItem.Suffix2Id = 0;
-            StashItem.Suffix2Mod1Id = 0;
-            StashItem.Suffix2Mod1Value = 0;
-            StashItem.Suffix2Mod2Id = 0;
-            StashItem.Suffix2Mod2Value = 0;
-            StashItem.Suffix3Id = 0;
-            StashItem.Suffix3Mod1Id = 0;
-            StashItem.Suffix3Mod1Value = 0;
-            StashItem.Suffix3Mod2Id = 0;
-            StashItem.Suffix3Mod2Value = 0;
+            StashItem.Sockets = "";
+            for (int affix = 0; affix < 7; affix++)
+            {
+                StashItem.Affix[affix].Mod1.Id = 0;
+                StashItem.Affix[affix].Mod1.Value = 0;
+                StashItem.Affix[affix].Mod2.Id = 0;
+                StashItem.Affix[affix].Mod2.Value = 0;
+            }
+            StashItem.OriginalText = "";
         }
 
         public static int RunQuery(string sql)
@@ -134,7 +98,7 @@ namespace ExileClipboardListener.Classes
             //This method just runs a SQL query that has no results against the standard connection
             try
             {
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
@@ -159,14 +123,19 @@ namespace ExileClipboardListener.Classes
             int value;
             try
             {
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
                     {
                         com.CommandTimeout = CommandTimeout;
                         com.CommandText = sql;
-                        value = (com.ExecuteScalar() as int?) ?? 0;
+                        object result = com.ExecuteScalar();
+                        if (result == DBNull.Value)
+                            value = 0;
+                        else
+                            value = Convert.ToInt32(result);
+                        //value = (com.ExecuteScalar() as int?) ?? 0;
                     }
                 }
             }
@@ -184,7 +153,7 @@ namespace ExileClipboardListener.Classes
             Guid value;
             try
             {
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
@@ -203,13 +172,38 @@ namespace ExileClipboardListener.Classes
             return value;
         }
 
+        public static Decimal GetScalarDecimal(string sql)
+        {
+            //This method just runs a SQL query that returns a single integer
+            Decimal value;
+            try
+            {
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+                        com.CommandText = sql;
+                        value = (com.ExecuteScalar() as Decimal?) ?? 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return 0;
+            }
+            return value;
+        }
+
         public static string GetScalarString(string sql)
         {
             //This method just runs a SQL query that returns a single string
             string value;
             try
             {
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
@@ -247,7 +241,7 @@ namespace ExileClipboardListener.Classes
             {
                 gridTarget.Rows.Clear();
                 gridTarget.Columns.Clear();
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection (Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
@@ -333,7 +327,7 @@ namespace ExileClipboardListener.Classes
             try
             {
                 target.Items.Clear();
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
@@ -358,12 +352,12 @@ namespace ExileClipboardListener.Classes
             return;
         }
 
-        public static List<ClipboardNotification.Fix> StuffList(string sql)
+        public static List<GlobalMethods.Affix> StuffList(string sql)
         {
-            var results = new List<ClipboardNotification.Fix>();
+            var results = new List<GlobalMethods.Affix>();
             try
             {
-                using (var con = new SqlConnection(Connection))
+                using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
                     using (var com = con.CreateCommand())
@@ -375,15 +369,16 @@ namespace ExileClipboardListener.Classes
                             //Now process the results set
                             while (dr.Read())
                             {
-                                var row = new ClipboardNotification.Fix();
-                                row.FixId = Convert.ToInt32(dr["FixId"]);
-                                row.Mod1Id = Convert.ToInt32(dr["Mod1Id"]);
-                                row.Mod1ValueMin = Convert.ToInt32(dr["Mod1ValueMin"]);
-                                row.Mod1ValueMax = Convert.ToInt32(dr["Mod1ValueMax"]);
-                                row.Mod2Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
-                                row.Mod2ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
-                                row.Mod2ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
-                                results.Add(row);
+                                var affix = new GlobalMethods.Affix();
+                                affix.AffixId = Convert.ToInt32(dr["AffixId"]);
+                                affix.Level = Convert.ToInt32(dr["Level"]);
+                                affix.Mod1.Id = Convert.ToInt32(dr["Mod1Id"]);
+                                affix.Mod1.ValueMin = Convert.ToInt32(dr["Mod1ValueMin"]);
+                                affix.Mod1.ValueMax = Convert.ToInt32(dr["Mod1ValueMax"]);
+                                affix.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
+                                affix.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
+                                affix.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                results.Add(affix);
                             }
                         }
                     }
@@ -394,6 +389,34 @@ namespace ExileClipboardListener.Classes
                 MessageBox.Show("Unhandled exception: " + ex.Message);
             }
             return results;
+        }
+
+        public static void StuffIntList(string sql, List<int> target)
+        {
+            try
+            {
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+                        com.CommandText = sql;
+                        using (var dr = com.ExecuteReader())
+                        {
+                            //Now process the results set
+                            while (dr.Read())
+                            {
+                                target.Add(Convert.ToInt32(dr[0]));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+            }
         }
     }
 }

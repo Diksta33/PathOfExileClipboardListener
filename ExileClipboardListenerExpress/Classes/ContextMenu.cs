@@ -10,6 +10,7 @@ namespace ExileClipboardListener.Classes
         private bool _characterLoaded;
         private bool _leagueLoaded;
         private bool _stashLoaded;
+        private bool _filtersLoaded;
         private bool _settingsLoaded;
         public ContextMenuStrip Menu = new ContextMenuStrip();
 
@@ -57,8 +58,13 @@ namespace ExileClipboardListener.Classes
             sep = new ToolStripSeparator();
             Menu.Items.Add(sep);
 
+            //Filters
+            item = new ToolStripMenuItem {Text = "Filters"};
+            item.Click += FiltersClick;
+            Menu.Items.Add(item);
+
             //Settings
-            item = new ToolStripMenuItem {Text = "Settings"};
+            item = new ToolStripMenuItem { Text = "Settings" };
             item.Click += SettingsClick;
             Menu.Items.Add(item);
 
@@ -127,6 +133,16 @@ namespace ExileClipboardListener.Classes
             GlobalMethods.Mode = GlobalMethods.COLLECTION_MODE;
             ((ToolStripMenuItem)Menu.Items[0]).Checked = false;
             ((ToolStripMenuItem)Menu.Items[1]).Checked = true;
+        }
+
+        private void FiltersClick(object sender, EventArgs e)
+        {
+            if (!_filtersLoaded)
+            {
+                _filtersLoaded = true;
+                new Filters().ShowDialog();
+                _filtersLoaded = false;
+            }
         }
 
         private void SettingsClick(object sender, EventArgs e)

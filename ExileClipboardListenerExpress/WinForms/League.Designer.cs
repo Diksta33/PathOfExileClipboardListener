@@ -40,7 +40,7 @@
             this.DeleteLeague = new System.Windows.Forms.Button();
             this.SaveLeague = new System.Windows.Forms.Button();
             this.NewLeague = new System.Windows.Forms.Button();
-            this.Parent = new System.Windows.Forms.ComboBox();
+            this.ParentLeague = new System.Windows.Forms.ComboBox();
             this.LeagueStart = new System.Windows.Forms.DateTimePicker();
             this.LeagueEnd = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.LeagueGrid)).BeginInit();
@@ -157,14 +157,14 @@
             this.NewLeague.Text = "New";
             this.NewLeague.UseVisualStyleBackColor = true;
             // 
-            // Parent
+            // ParentLeague
             // 
-            this.Parent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Parent.FormattingEnabled = true;
-            this.Parent.Location = new System.Drawing.Point(196, 255);
-            this.Parent.Name = "Parent";
-            this.Parent.Size = new System.Drawing.Size(175, 21);
-            this.Parent.TabIndex = 16;
+            this.ParentLeague.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ParentLeague.FormattingEnabled = true;
+            this.ParentLeague.Location = new System.Drawing.Point(196, 255);
+            this.ParentLeague.Name = "ParentLeague";
+            this.ParentLeague.Size = new System.Drawing.Size(175, 21);
+            this.ParentLeague.TabIndex = 16;
             // 
             // LeagueStart
             // 
@@ -187,7 +187,7 @@
             this.ClientSize = new System.Drawing.Size(649, 286);
             this.Controls.Add(this.LeagueEnd);
             this.Controls.Add(this.LeagueStart);
-            this.Controls.Add(this.Parent);
+            this.Controls.Add(this.ParentLeague);
             this.Controls.Add(this.NewLeague);
             this.Controls.Add(this.SaveLeague);
             this.Controls.Add(this.DeleteLeague);
@@ -226,7 +226,7 @@
         private System.Windows.Forms.Button DeleteLeague;
         private System.Windows.Forms.Button SaveLeague;
         private System.Windows.Forms.Button NewLeague;
-        private System.Windows.Forms.ComboBox Parent;
+        private System.Windows.Forms.ComboBox ParentLeague;
         private System.Windows.Forms.DateTimePicker LeagueStart;
         private System.Windows.Forms.DateTimePicker LeagueEnd;
     }

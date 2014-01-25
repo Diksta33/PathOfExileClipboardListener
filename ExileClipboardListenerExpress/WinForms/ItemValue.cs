@@ -41,76 +41,28 @@ namespace ExileClipboardListener.WinForms
             {
                 //We are adding rows to a grid for each key
                 //Determine the mods and value
-                int mod1Id = 0;
-                int mod2Id = 0;
-                int itemMod1Value = 0;
-                int itemMod2Value = 0;
+                int mod1Id = GlobalMethods.StashItem.Affix[key].Mod1.Id;
+                int mod2Id = GlobalMethods.StashItem.Affix[key].Mod2.Id;
+                int itemMod1Value = GlobalMethods.StashItem.Affix[key].Mod1.Value;
+                int itemMod2Value = GlobalMethods.StashItem.Affix[key].Mod2.Value;
                 string modType = "";
                 if (key == 0)
                 {
                     index = 1;
                     modType = "Implicit";
-                    mod1Id = GlobalMethods.StashItem.ImplicitMod1Id;
-                    mod2Id = GlobalMethods.StashItem.ImplicitMod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.ImplicitMod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.ImplicitMod2Value;
                 }
-                if (key == 1)
+                if (key == 1 || key == 2 || key == 3)
                 {
-                    index = 1;
+                    index = key;
                     modType = "Prefix";
-                    mod1Id = GlobalMethods.StashItem.Prefix1Mod1Id;
-                    mod2Id = GlobalMethods.StashItem.Prefix1Mod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.Prefix1Mod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.Prefix1Mod2Value;
                 }
-                if (key == 2)
+                if (key == 4 || key == 5 || key == 6)
                 {
-                    index = 2;
-                    modType = "Prefix";
-                    mod1Id = GlobalMethods.StashItem.Prefix2Mod1Id;
-                    mod2Id = GlobalMethods.StashItem.Prefix2Mod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.Prefix2Mod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.Prefix2Mod2Value;
-                }
-                if (key == 3)
-                {
-                    index = 3;
-                    modType = "Prefix";
-                    mod1Id = GlobalMethods.StashItem.Prefix3Mod1Id;
-                    mod2Id = GlobalMethods.StashItem.Prefix3Mod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.Prefix3Mod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.Prefix3Mod2Value;
-                }
-                if (key == 4)
-                {
-                    index = 1;
+                    index = key - 3;
                     modType = "Suffix";
-                    mod1Id = GlobalMethods.StashItem.Suffix1Mod1Id;
-                    mod2Id = GlobalMethods.StashItem.Suffix1Mod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.Suffix1Mod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.Suffix1Mod2Value;
-                }
-                if (key == 5)
-                {
-                    index = 2;
-                    modType = "Suffix";
-                    mod1Id = GlobalMethods.StashItem.Suffix2Mod1Id;
-                    mod2Id = GlobalMethods.StashItem.Suffix2Mod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.Suffix2Mod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.Suffix2Mod2Value;
-                }
-                if (key == 6)
-                {
-                    index = 3;
-                    modType = "Suffix";
-                    mod1Id = GlobalMethods.StashItem.Suffix3Mod1Id;
-                    mod2Id = GlobalMethods.StashItem.Suffix3Mod2Id;
-                    itemMod1Value = GlobalMethods.StashItem.Suffix3Mod1Value;
-                    itemMod2Value = GlobalMethods.StashItem.Suffix3Mod2Value;
                 }
 
-                //If there isn't one then skip this
+                //If there isn't an affix then skip this
                 if (mod1Id == 0 && mod2Id == 0)
                     continue;
 
@@ -127,56 +79,33 @@ namespace ExileClipboardListener.WinForms
 
                 //First check the item
                 //Implicit Mods have a set range that doesn't alter by level
-                if (key == 0)
-                {
-                    mod1ValueMin = GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                    mod1ValueMax = GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                    mod2ValueMin = GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                    mod2ValueMax = GlobalMethods.GetScalarInt("SELECT Mod2ValueMax FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                }
+                mod1ValueMin = GlobalMethods.StashItem.Affix[key].Mod1.ValueMin;
+                mod1ValueMax = GlobalMethods.StashItem.Affix[key].Mod1.ValueMax;
+                mod2ValueMin = GlobalMethods.StashItem.Affix[key].Mod2.ValueMin;
+                mod2ValueMax = GlobalMethods.StashItem.Affix[key].Mod2.ValueMax;
 
                 //If we have a prefix or a suffix we will get a Mod Category
                 int modCategoryId = 0;
 
-                //Prefix Mods are trickier as we have to guess the level of the mod first
-                //This should really be moved to the Listener class as a lot of this is duplicate work
-                //We should really be stashing the actual prefixes/ suffixes but instead we stash the first from a group that matches
-                //So if we had 3 prefixes called "Added Widget" with ids of #1 = 10-20, #2 = 21-30, #3 = 31-40 and out value was 22 we would stash #1
+                //Prefixes
                 int prefixId = 0;
                 if (key == 1 || key == 2 || key == 3)
                 {
-                    //This needs more work, it will spot false-positives where a prefix with two mods happens to collide with the item
-                    if (key == 1)
-                        prefixId = mod2Id == 0 ? GlobalMethods.GetScalarInt("SELECT PrefixId FROM Prefix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Prefix1Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Prefix1Mod1Value + ";") : GlobalMethods.GetScalarInt("SELECT PrefixId FROM Prefix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Prefix1Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Prefix1Mod1Value + "AND Mod2Id = " + mod2Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Prefix1Mod2Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Prefix1Mod2Value + ";");
-                    if (key == 2)
-                        prefixId = mod2Id == 0 ? GlobalMethods.GetScalarInt("SELECT PrefixId FROM Prefix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Prefix2Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Prefix2Mod1Value + ";") : GlobalMethods.GetScalarInt("SELECT PrefixId FROM Prefix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Prefix2Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Prefix2Mod1Value + "AND Mod2Id = " + mod2Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Prefix2Mod2Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Prefix2Mod2Value + ";");
-                    if (key == 3)
-                        prefixId = mod2Id == 0 ? GlobalMethods.GetScalarInt("SELECT PrefixId FROM Prefix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Prefix3Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Prefix3Mod1Value + ";") : GlobalMethods.GetScalarInt("SELECT PrefixId FROM Prefix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Prefix3Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Prefix3Mod1Value + "AND Mod2Id = " + mod2Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Prefix3Mod2Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Prefix3Mod2Value + ";");
+                    prefixId = GlobalMethods.StashItem.Affix[key].AffixId;
                     modCategoryId = GlobalMethods.GetScalarInt("SELECT ModCategoryId FROM Prefix WHERE PrefixId = " + prefixId + ";");
-                    Controls.Find(modType + index + "Category", true)[0].Text = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory WHERE ModCategoryId = " + modCategoryId + ";");
-                    mod1ValueMin = GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM Prefix WHERE PrefixId = " + prefixId + ";");
-                    mod1ValueMax = GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM Prefix WHERE PrefixId = " + prefixId + ";");
-                    mod2ValueMin = GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM Prefix WHERE PrefixId = " + prefixId + ";");
-                    mod2ValueMax = GlobalMethods.GetScalarInt("SELECT Mod2ValueMax FROM Prefix WHERE PrefixId = " + prefixId + ";");
                 }
 
-                //Suffix Mods are trickier as we have to guess the level of the mod first
+                //Suffixes
                 int suffixId = 0;
                 if (key == 4 || key == 5 || key == 6)
                 {
-                    if (key == 4)
-                        suffixId = mod2Id == 0 ? GlobalMethods.GetScalarInt("SELECT SuffixId FROM Suffix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Suffix1Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Suffix1Mod1Value + ";") : GlobalMethods.GetScalarInt("SELECT SuffixId FROM Suffix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Suffix1Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Suffix1Mod1Value + "AND Mod2Id = " + mod2Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Suffix1Mod2Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Suffix1Mod2Value + ";");
-                    if (key == 5)
-                        suffixId = mod2Id == 0 ? GlobalMethods.GetScalarInt("SELECT SuffixId FROM Suffix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Suffix2Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Suffix2Mod1Value + ";") : GlobalMethods.GetScalarInt("SELECT SuffixId FROM Suffix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Suffix2Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Suffix2Mod1Value + "AND Mod2Id = " + mod2Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Suffix2Mod2Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Suffix2Mod2Value + ";");
-                    if (key == 6)
-                        suffixId = mod2Id == 0 ? GlobalMethods.GetScalarInt("SELECT SuffixId FROM Suffix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Suffix3Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Suffix3Mod1Value + ";") : GlobalMethods.GetScalarInt("SELECT SuffixId FROM Suffix WHERE Mod1Id = " + mod1Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Suffix3Mod1Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Suffix3Mod1Value + "AND Mod2Id = " + mod2Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Suffix3Mod2Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Suffix3Mod2Value + ";");
+                    suffixId = GlobalMethods.StashItem.Affix[key].AffixId;
                     modCategoryId = GlobalMethods.GetScalarInt("SELECT ModCategoryId FROM Suffix WHERE SuffixId = " + suffixId + ";");
-                    Controls.Find(modType + index + "Category", true)[0].Text = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory WHERE ModCategoryId = " + modCategoryId + ";");
-                    mod1ValueMin = GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM Suffix WHERE SuffixId = " + suffixId + ";");
-                    mod1ValueMax = GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM Suffix WHERE SuffixId = " + suffixId + ";");
-                    mod2ValueMin = GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM Suffix WHERE SuffixId = " + suffixId + ";");
-                    mod2ValueMax = GlobalMethods.GetScalarInt("SELECT Mod2ValueMax FROM Suffix WHERE SuffixId = " + suffixId + ";");
                 }
+
+                //Set the mod category
+                if (modCategoryId != 0)
+                    Controls.Find(modType + index + "Category", true)[0].Text = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory WHERE ModCategoryId = " + modCategoryId + ";");
 
                 //Load the values onto the form
                 Controls.Find(modType + index + "Mod1Min", true)[0].Text = mod1ValueMin.ToString();

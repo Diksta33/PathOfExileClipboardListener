@@ -36,6 +36,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.90.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,11 +63,29 @@
     <Compile Include="Classes\Listener.cs" />
     <Compile Include="Classes\ProcessIcon.cs" />
     <Compile Include="Classes\Program.cs" />
+    <Compile Include="WinForms\AffixDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\AffixDetails.Designer.cs">
+      <DependentUpon>AffixDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms\Character.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="WinForms\Character.Designer.cs">
       <DependentUpon>Character.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\FilterResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\FilterResults.Designer.cs">
+      <DependentUpon>FilterResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\Filters.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\Filters.Designer.cs">
+      <DependentUpon>Filters.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\ItemValue.cs">
       <SubType>Form</SubType>
@@ -103,18 +124,21 @@
     <Compile Include="WinForms\Stash.designer.cs">
       <DependentUpon>Stash.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\Test.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WinForms\Test.Designer.cs">
-      <DependentUpon>Test.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="WinForms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\AffixDetails.resx">
+      <DependentUpon>AffixDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms\Character.resx">
       <DependentUpon>Character.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\FilterResults.resx">
+      <DependentUpon>FilterResults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\Filters.resx">
+      <DependentUpon>Filters.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\ItemValue.resx">
       <DependentUpon>ItemValue.cs</DependentUpon>
@@ -146,9 +170,6 @@
     <EmbeddedResource Include="WinForms\Stash.resx">
       <DependentUpon>Stash.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\Test.resx">
-      <DependentUpon>Test.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -161,6 +182,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ExileStash.s3db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\PoEGraphic.png" />
   </ItemGroup>
   <ItemGroup>
