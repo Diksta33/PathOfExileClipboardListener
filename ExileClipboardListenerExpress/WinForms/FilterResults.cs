@@ -137,10 +137,10 @@ namespace ExileClipboardListener.WinForms
                     {
                         row[AffixLevelColumn.Index] = GlobalMethods.StashItem.Affix[i].Level;
                         row[AffixCategoryColumn.Index] = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory mc INNER JOIN " + AffixName + " a ON a.ModCategoryId = mc.ModCategoryId WHERE a." + AffixName + "Id = " + affixId + ";");
-                        row[AffixPrimaryModValueColumn.Index] = GlobalMethods.GetScalarString("SELECT Name FROM " + AffixName + " WHERE " + AffixName + "Id = " + affixId + ";");
+                        row[AffixNameColumn.Index] = GlobalMethods.GetScalarString("SELECT Name FROM " + AffixName + " WHERE " + AffixName + "Id = " + affixId + ";");
                     }
-                    row[AffixPrimaryModValueColumn.Index] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + GlobalMethods.StashItem.Affix[i].Mod1.Id + ";");
-                    row[AffixPrimaryModValueColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod1.ValueMin + "-" + GlobalMethods.StashItem.Affix[i].Mod1.ValueMax;
+                    row[AffixPrimaryModNameColumn.Index] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + GlobalMethods.StashItem.Affix[i].Mod1.Id + ";");
+                    row[AffixPrimaryModRangeColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod1.ValueMin + "-" + GlobalMethods.StashItem.Affix[i].Mod1.ValueMax;
                     row[AffixPrimaryModValueColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod1.Value;
                     if (GlobalMethods.StashItem.Affix[i].Mod2.Value == 0)
                     {
@@ -196,9 +196,9 @@ namespace ExileClipboardListener.WinForms
         private int ScoreFilter(int FilterId, bool showDetail = false)
         {
             //This is where the fun begins, we pull out the various mods we were looking for and mark the item against them
+            int runningTotalActual = 0;
             int filterCount = 0;
-            int filtersHit = 0;
-            int runningTotal = 0;
+            //int filtersHit = 0;
             for (int affixSlot = 1; affixSlot < 7; affixSlot++)
             {
                 string affixType = affixSlot < 4 ? "Prefix" : "Suffix";
@@ -231,89 +231,97 @@ namespace ExileClipboardListener.WinForms
                 else
                 {
                     List<int> match = new List<int>();
-                    string sql = "SELECT ModId FROM Mod WHERE ModClass = '" + modClass + "'";
+                    string sql = "SELECT m.ModId FROM Mod m WHERE m.ModClass = '" + modClass + "'";
 
                     //We filter by the current item type
                     if (GlobalMethods.StashItem.ItemTypeName == "Weapons")
-                        sql += " AND IFNULL(Weapons, 1) = 1";
+                        sql += " AND IFNULL(m.Weapons, 1) = 1";
                     else if (GlobalMethods.StashItem.ItemTypeName == "Armour")
-                        sql += " AND IFNULL(Armour, 1) = 1";
+                        sql += " AND IFNULL(m.Armour, 1) = 1";
                     else if (GlobalMethods.StashItem.ItemTypeName == "Jewellery")
-                        sql += " AND IFNULL(Jewellery, 1) = 1";
+                        sql += " AND IFNULL(m.Jewellery, 1) = 1";
 
                     //For Defense we also need to make the base type of the body armour matches the mod, e.g. we wouldn't get evasion on an AR armour
                     if (modClass == "Defense")
                     {
                         if (GlobalMethods.StashItem.Armour == 0)
-                            sql += " AND ModName NOT LIKE '%Armour%'";
+                            sql += " AND m.ModName NOT LIKE '%Armour%'";
                         if (GlobalMethods.StashItem.Evasion == 0)
-                            sql += " AND ModName NOT LIKE '%Evasion%'";
+                            sql += " AND m.ModName NOT LIKE '%Evasion%'";
                         if (GlobalMethods.StashItem.EnergyShield == 0)
-                            sql += " AND ModName NOT LIKE '%Energy Shield%'";
+                            sql += " AND m.ModName NOT LIKE '%Energy Shield%'";
                     }
-                    sql += ";";
+                    sql += " AND IFNULL(m.ModPair, 2) = 2";
+                    sql += " AND EXISTS (SELECT * FROM " + affixType + " a WHERE a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId);";
                     GlobalMethods.StuffIntList(sql, match);
                     foreach (int id in match)
                         mods.Add(new GlobalMethods.Mod { Id = id });
                 }
 
                 //Now we have a list it's simply a matter of tallying up the scores for each mod
-                int maxILevel = 0;
-                int maxCLevel = 0;
-                int maxSlot = 0;
+                int score = 0;
+                int modsHit = 0;
+                int runningTotalILevel = 0;
+                int runningTotalCLevel = 0;
+                int runningTotalSlot = 0;
                 foreach (GlobalMethods.Mod m in mods)
                 {
+                    modsHit++;
+
                     //We want three values for each mod:
                     //the maximum value it could roll for the item's level
                     //the maximum value it could roll for the character's level
                     //the maximum value it could roll for the slot
-                    maxILevel = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level < " + GlobalMethods.StashItem.ItemLevel + ";");
+                    int maxILevel = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level < " + GlobalMethods.StashItem.ItemLevel + ";");
                     maxILevel += GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Level < " + GlobalMethods.StashItem.ItemLevel + ";");
-                    maxCLevel = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level < " + CharacterLevel.Value + ";");
+                    int maxCLevel = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level < " + CharacterLevel.Value + ";");
                     maxCLevel += GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Level < " + CharacterLevel.Value + ";");
-                    maxSlot = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + ";");
+                    int maxSlot = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + ";");
                     maxSlot += GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + ";");
-                }
 
-                //Next we need the values from the item that match the same list of mods
-                int itemModScore = 0;
-                int score = 0;
-                foreach (GlobalMethods.Mod m in mods)
-                {
-                    for (int mod = 1; mod < 10; mod++)
+                    //Next we need the values from the item that match the same list of mods
+                    int itemModScore = 0;
+                    for (int mod = 0; mod < 10; mod++)
                     {
                         if (GlobalMethods.StashItem.Mod[mod].Id == m.Id)
                             itemModScore += GlobalMethods.StashItem.Mod[mod].Value;
                     }
-                }
 
-                //Now we can rate the filter
-                if (itemModScore != 0)
-                {
-                    filtersHit++;
-                    score = Properties.Settings.Default.RatingMode == 0 ? (maxSlot == 0 ? 0 : itemModScore * 100 / maxSlot) : (maxCLevel == 0 ? 0 : itemModScore * 100 / maxCLevel);
-
-                    //Dump the results out to the form if this option is on
-                    if (showDetail)
+                    //Now we can rate the mod
+                    int scoreILevel = maxILevel == 0 ? 0 : itemModScore * 100 / maxILevel;
+                    int scoreCLevel = maxCLevel == 0 ? 0 : itemModScore * 100 / maxCLevel;
+                    int scoreSlot = maxSlot == 0 ? 0 : itemModScore * 100 / maxSlot;
+                    if (itemModScore != 0)
                     {
-                        tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (maxILevel == 0 ? 0 : itemModScore * 100 / maxILevel) + "%";
-                        tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (maxCLevel == 0 ? 0 : itemModScore * 100 / maxCLevel) + "%";
-                        tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (maxSlot == 0 ? 0 : itemModScore * 100 / maxSlot) + "%";
-                        Image smiley;
-                        if (score <= Properties.Settings.Default.TolerancePoorTo)
-                            smiley = Resources.PoorSmall;
-                        else if (score <= Properties.Settings.Default.ToleranceAverageTo)
-                            smiley = Resources.AverageSmall;
-                        else
-                            smiley = Resources.GoodSmall;
-                        ((PictureBox)Controls.Find(affixName + "Smiley", true)[0]).Image = smiley;
+                        score = Properties.Settings.Default.RatingMode == 0 ? scoreSlot : scoreILevel;
                     }
+
+                    //Tally the scores
+                    runningTotalILevel += scoreILevel;
+                    runningTotalCLevel += scoreCLevel;
+                    runningTotalSlot += scoreSlot;
+                    runningTotalActual += score;
                 }
 
-                //Tally the scores
-                runningTotal += score;
+                //Dump the results out to the form if this option is on
+                if (showDetail)
+                {
+                    tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (runningTotalILevel == 0 ? 0 : runningTotalILevel / modsHit) + "%";
+                    tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel/ modsHit) + "%";
+                    tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / modsHit) + "%";
+                    Image smiley;
+                    if (score <= Properties.Settings.Default.TolerancePoorTo)
+                        smiley = Resources.PoorSmall;
+                    else if (score <= Properties.Settings.Default.ToleranceAverageTo)
+                        smiley = Resources.AverageSmall;
+                    else
+                        smiley = Resources.GoodSmall;
+                    ((PictureBox)Controls.Find(affixName + "Smiley", true)[0]).Image = smiley;
+                }
             }
-            return filterCount == 0 ? 0 : runningTotal / filterCount;
+
+            //Return a single score
+            return filterCount == 0 ? 0 : runningTotalActual / filterCount;
         }
 
         private void FilterResultsGrid_SelectionChanged(object sender, EventArgs e)
@@ -372,7 +380,48 @@ namespace ExileClipboardListener.WinForms
             if (AffixGrid.CurrentRow == null)
                 return;
             int affixId = Convert.ToInt32(AffixGrid.CurrentRow.Cells[AffixIdColumn.Index].Value);
-            new AffixDetails(){ AffixId = affixId }.ShowDialog();
+            string affixType = AffixGrid.CurrentRow.Cells[AffixTypeColumn.Index].Value.ToString();
+            int mod1Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value + "';");
+            int mod2Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value + "';");
+            new AffixDetails() { AffixId = affixId, AffixType = affixType, Mod1Id = mod1Id, Mod2Id = mod2Id }.ShowDialog();
+        }
+
+        private void ModDetails_Click(object sender, EventArgs e)
+        {
+            if (ModGrid.CurrentRow == null)
+                return;
+            int modId = Convert.ToInt32(ModGrid.CurrentRow.Cells[ModIdColumn.Index].Value);
+            new ModDetails() { ModId = modId }.ShowDialog();
+        }
+
+        private void Prefix1Details_Click(object sender, EventArgs e)
+        {
+            new RollDetails() { AffixTypeString = "Prefix", ModClassName = Prefix1ModClass.Text, ModNameString = Prefix1Mod.Text }.ShowDialog();
+        }
+
+        private void Prefix2Details_Click(object sender, EventArgs e)
+        {
+            new RollDetails() { AffixTypeString = "Prefix", ModClassName = Prefix2ModClass.Text, ModNameString = Prefix2Mod.Text }.ShowDialog();
+        }
+
+        private void Prefix3Details_Click(object sender, EventArgs e)
+        {
+            new RollDetails() { AffixTypeString = "Prefix", ModClassName = Prefix3ModClass.Text, ModNameString = Prefix3Mod.Text }.ShowDialog();
+        }
+
+        private void Suffix1Details_Click(object sender, EventArgs e)
+        {
+            new RollDetails() { AffixTypeString = "Suffix", ModClassName = Suffix1ModClass.Text, ModNameString = Suffix1Mod.Text }.ShowDialog();
+        }
+
+        private void Suffix2Details_Click(object sender, EventArgs e)
+        {
+            new RollDetails() { AffixTypeString = "Suffix", ModClassName = Suffix2ModClass.Text, ModNameString = Suffix2Mod.Text }.ShowDialog();
+        }
+
+        private void Suffix3Details_Click(object sender, EventArgs e)
+        {
+            new RollDetails() { AffixTypeString = "Suffix", ModClassName = Suffix3ModClass.Text, ModNameString = Suffix3Mod.Text }.ShowDialog();
         }
     }
 }

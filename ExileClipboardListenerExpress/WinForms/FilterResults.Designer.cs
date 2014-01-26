@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FilterResultsGrid = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -85,11 +85,27 @@
             this.ModDetails = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
             this.ModGrid = new System.Windows.Forms.DataGridView();
+            this.ModIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModValueMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModValueMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModItemValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabAffixes = new System.Windows.Forms.TabPage();
             this.AffixDetails = new System.Windows.Forms.Button();
             this.HideSecondary = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.AffixGrid = new System.Windows.Forms.DataGridView();
+            this.AffixIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixTypeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixLevelColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixCategoryColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixPrimaryModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixPrimaryModRangeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixPrimaryModValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixSecondaryModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixSecondaryModRangeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AffixSecondaryModValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabFilterResults = new System.Windows.Forms.TabPage();
             this.Suffix3Details = new System.Windows.Forms.Button();
             this.Suffix2Details = new System.Windows.Forms.Button();
@@ -162,22 +178,6 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.Sockets = new System.Windows.Forms.TextBox();
             this.label38 = new System.Windows.Forms.Label();
-            this.AffixIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixTypeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixLevelColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixCategoryColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixPrimaryModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixPrimaryModRangeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixPrimaryModValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixSecondaryModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixSecondaryModRangeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.AffixSecondaryModValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModValueMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModValueMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModItemValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -228,8 +228,8 @@
             // Column2
             // 
             this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.Column2.DefaultCellStyle = dataGridViewCellStyle46;
             this.Column2.HeaderText = "Average Score";
             this.Column2.Name = "Column2";
             this.Column2.ReadOnly = true;
@@ -532,9 +532,9 @@
             this.label36.AutoSize = true;
             this.label36.Location = new System.Drawing.Point(15, 100);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(29, 13);
+            this.label36.Size = new System.Drawing.Size(56, 13);
             this.label36.TabIndex = 28;
-            this.label36.Text = "DPS";
+            this.label36.Text = "Base DPS";
             // 
             // AttackSpeed
             // 
@@ -658,6 +658,7 @@
             this.ModDetails.TabIndex = 24;
             this.ModDetails.Text = "Show Details";
             this.ModDetails.UseVisualStyleBackColor = true;
+            this.ModDetails.Click += new System.EventHandler(this.ModDetails_Click);
             // 
             // label16
             // 
@@ -687,6 +688,54 @@
             this.ModGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ModGrid.Size = new System.Drawing.Size(952, 184);
             this.ModGrid.TabIndex = 22;
+            // 
+            // ModIdColumn
+            // 
+            this.ModIdColumn.HeaderText = "ModId";
+            this.ModIdColumn.Name = "ModIdColumn";
+            this.ModIdColumn.ReadOnly = true;
+            this.ModIdColumn.Visible = false;
+            // 
+            // ModNameColumn
+            // 
+            this.ModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ModNameColumn.HeaderText = "Mod Name";
+            this.ModNameColumn.Name = "ModNameColumn";
+            this.ModNameColumn.ReadOnly = true;
+            this.ModNameColumn.Width = 84;
+            // 
+            // ModValueMinColumn
+            // 
+            this.ModValueMinColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle47.Format = "N0";
+            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle47;
+            this.ModValueMinColumn.HeaderText = "Value Min";
+            this.ModValueMinColumn.Name = "ModValueMinColumn";
+            this.ModValueMinColumn.ReadOnly = true;
+            this.ModValueMinColumn.Visible = false;
+            // 
+            // ModValueMaxColumn
+            // 
+            this.ModValueMaxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle48.Format = "N0";
+            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle48;
+            this.ModValueMaxColumn.HeaderText = "Value Max";
+            this.ModValueMaxColumn.Name = "ModValueMaxColumn";
+            this.ModValueMaxColumn.ReadOnly = true;
+            this.ModValueMaxColumn.Visible = false;
+            // 
+            // ModItemValueColumn
+            // 
+            this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle49.Format = "N0";
+            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle49;
+            this.ModItemValueColumn.HeaderText = "Item Value";
+            this.ModItemValueColumn.Name = "ModItemValueColumn";
+            this.ModItemValueColumn.ReadOnly = true;
+            this.ModItemValueColumn.Width = 82;
             // 
             // tabAffixes
             // 
@@ -757,6 +806,106 @@
             this.AffixGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AffixGrid.Size = new System.Drawing.Size(952, 184);
             this.AffixGrid.TabIndex = 20;
+            // 
+            // AffixIdColumn
+            // 
+            this.AffixIdColumn.HeaderText = "AffixId";
+            this.AffixIdColumn.Name = "AffixIdColumn";
+            this.AffixIdColumn.ReadOnly = true;
+            this.AffixIdColumn.Visible = false;
+            // 
+            // AffixTypeColumn
+            // 
+            this.AffixTypeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.AffixTypeColumn.HeaderText = "Affix Type";
+            this.AffixTypeColumn.Name = "AffixTypeColumn";
+            this.AffixTypeColumn.ReadOnly = true;
+            this.AffixTypeColumn.Width = 79;
+            // 
+            // AffixLevelColumn
+            // 
+            this.AffixLevelColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle50.Format = "N0";
+            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle50;
+            this.AffixLevelColumn.HeaderText = "Level";
+            this.AffixLevelColumn.Name = "AffixLevelColumn";
+            this.AffixLevelColumn.ReadOnly = true;
+            this.AffixLevelColumn.Width = 58;
+            // 
+            // AffixCategoryColumn
+            // 
+            this.AffixCategoryColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.AffixCategoryColumn.HeaderText = "Category";
+            this.AffixCategoryColumn.Name = "AffixCategoryColumn";
+            this.AffixCategoryColumn.ReadOnly = true;
+            this.AffixCategoryColumn.Width = 74;
+            // 
+            // AffixNameColumn
+            // 
+            this.AffixNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.AffixNameColumn.HeaderText = "Name";
+            this.AffixNameColumn.Name = "AffixNameColumn";
+            this.AffixNameColumn.ReadOnly = true;
+            this.AffixNameColumn.Width = 60;
+            // 
+            // AffixPrimaryModNameColumn
+            // 
+            this.AffixPrimaryModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.AffixPrimaryModNameColumn.HeaderText = "Primary Mod Name";
+            this.AffixPrimaryModNameColumn.Name = "AffixPrimaryModNameColumn";
+            this.AffixPrimaryModNameColumn.ReadOnly = true;
+            this.AffixPrimaryModNameColumn.Width = 121;
+            // 
+            // AffixPrimaryModRangeColumn
+            // 
+            this.AffixPrimaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle51;
+            this.AffixPrimaryModRangeColumn.HeaderText = "Range";
+            this.AffixPrimaryModRangeColumn.Name = "AffixPrimaryModRangeColumn";
+            this.AffixPrimaryModRangeColumn.ReadOnly = true;
+            this.AffixPrimaryModRangeColumn.Width = 64;
+            // 
+            // AffixPrimaryModValueColumn
+            // 
+            this.AffixPrimaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle52.Format = "N0";
+            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle52;
+            this.AffixPrimaryModValueColumn.HeaderText = "Value";
+            this.AffixPrimaryModValueColumn.Name = "AffixPrimaryModValueColumn";
+            this.AffixPrimaryModValueColumn.ReadOnly = true;
+            this.AffixPrimaryModValueColumn.Width = 59;
+            // 
+            // AffixSecondaryModNameColumn
+            // 
+            this.AffixSecondaryModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.AffixSecondaryModNameColumn.HeaderText = "Secondary Mod Name";
+            this.AffixSecondaryModNameColumn.Name = "AffixSecondaryModNameColumn";
+            this.AffixSecondaryModNameColumn.ReadOnly = true;
+            this.AffixSecondaryModNameColumn.Width = 138;
+            // 
+            // AffixSecondaryModRangeColumn
+            // 
+            this.AffixSecondaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle53;
+            this.AffixSecondaryModRangeColumn.HeaderText = "Range";
+            this.AffixSecondaryModRangeColumn.Name = "AffixSecondaryModRangeColumn";
+            this.AffixSecondaryModRangeColumn.ReadOnly = true;
+            this.AffixSecondaryModRangeColumn.Width = 64;
+            // 
+            // AffixSecondaryModValueColumn
+            // 
+            this.AffixSecondaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle54.Format = "N0";
+            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle54;
+            this.AffixSecondaryModValueColumn.HeaderText = "Value";
+            this.AffixSecondaryModValueColumn.Name = "AffixSecondaryModValueColumn";
+            this.AffixSecondaryModValueColumn.ReadOnly = true;
+            this.AffixSecondaryModValueColumn.Width = 59;
             // 
             // tabFilterResults
             // 
@@ -835,6 +984,7 @@
             this.Suffix3Details.TabIndex = 81;
             this.Suffix3Details.Text = "...";
             this.Suffix3Details.UseVisualStyleBackColor = true;
+            this.Suffix3Details.Click += new System.EventHandler(this.Suffix3Details_Click);
             // 
             // Suffix2Details
             // 
@@ -844,6 +994,7 @@
             this.Suffix2Details.TabIndex = 80;
             this.Suffix2Details.Text = "...";
             this.Suffix2Details.UseVisualStyleBackColor = true;
+            this.Suffix2Details.Click += new System.EventHandler(this.Suffix2Details_Click);
             // 
             // Suffix1Details
             // 
@@ -853,6 +1004,7 @@
             this.Suffix1Details.TabIndex = 79;
             this.Suffix1Details.Text = "...";
             this.Suffix1Details.UseVisualStyleBackColor = true;
+            this.Suffix1Details.Click += new System.EventHandler(this.Suffix1Details_Click);
             // 
             // Prefix3Details
             // 
@@ -862,6 +1014,7 @@
             this.Prefix3Details.TabIndex = 78;
             this.Prefix3Details.Text = "...";
             this.Prefix3Details.UseVisualStyleBackColor = true;
+            this.Prefix3Details.Click += new System.EventHandler(this.Prefix3Details_Click);
             // 
             // Prefix2Details
             // 
@@ -871,6 +1024,7 @@
             this.Prefix2Details.TabIndex = 77;
             this.Prefix2Details.Text = "...";
             this.Prefix2Details.UseVisualStyleBackColor = true;
+            this.Prefix2Details.Click += new System.EventHandler(this.Prefix2Details_Click);
             // 
             // Prefix1Details
             // 
@@ -880,6 +1034,7 @@
             this.Prefix1Details.TabIndex = 76;
             this.Prefix1Details.Text = "...";
             this.Prefix1Details.UseVisualStyleBackColor = true;
+            this.Prefix1Details.Click += new System.EventHandler(this.Prefix1Details_Click);
             // 
             // label40
             // 
@@ -1493,152 +1648,6 @@
             this.label38.TabIndex = 14;
             this.label38.Text = "Sockets";
             // 
-            // AffixIdColumn
-            // 
-            this.AffixIdColumn.HeaderText = "AffixId";
-            this.AffixIdColumn.Name = "AffixIdColumn";
-            this.AffixIdColumn.ReadOnly = true;
-            this.AffixIdColumn.Visible = false;
-            // 
-            // AffixTypeColumn
-            // 
-            this.AffixTypeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.AffixTypeColumn.HeaderText = "Affix Type";
-            this.AffixTypeColumn.Name = "AffixTypeColumn";
-            this.AffixTypeColumn.ReadOnly = true;
-            this.AffixTypeColumn.Width = 79;
-            // 
-            // AffixLevelColumn
-            // 
-            this.AffixLevelColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N0";
-            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle5;
-            this.AffixLevelColumn.HeaderText = "Level";
-            this.AffixLevelColumn.Name = "AffixLevelColumn";
-            this.AffixLevelColumn.ReadOnly = true;
-            this.AffixLevelColumn.Width = 58;
-            // 
-            // AffixCategoryColumn
-            // 
-            this.AffixCategoryColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.AffixCategoryColumn.HeaderText = "Category";
-            this.AffixCategoryColumn.Name = "AffixCategoryColumn";
-            this.AffixCategoryColumn.ReadOnly = true;
-            this.AffixCategoryColumn.Width = 74;
-            // 
-            // AffixNameColumn
-            // 
-            this.AffixNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.AffixNameColumn.HeaderText = "Name";
-            this.AffixNameColumn.Name = "AffixNameColumn";
-            this.AffixNameColumn.ReadOnly = true;
-            this.AffixNameColumn.Width = 60;
-            // 
-            // AffixPrimaryModNameColumn
-            // 
-            this.AffixPrimaryModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.AffixPrimaryModNameColumn.HeaderText = "Primary Mod Name";
-            this.AffixPrimaryModNameColumn.Name = "AffixPrimaryModNameColumn";
-            this.AffixPrimaryModNameColumn.ReadOnly = true;
-            this.AffixPrimaryModNameColumn.Width = 121;
-            // 
-            // AffixPrimaryModRangeColumn
-            // 
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle6;
-            this.AffixPrimaryModRangeColumn.HeaderText = "Range";
-            this.AffixPrimaryModRangeColumn.Name = "AffixPrimaryModRangeColumn";
-            this.AffixPrimaryModRangeColumn.ReadOnly = true;
-            // 
-            // AffixPrimaryModValueColumn
-            // 
-            this.AffixPrimaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle7.Format = "N0";
-            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle7;
-            this.AffixPrimaryModValueColumn.HeaderText = "Value";
-            this.AffixPrimaryModValueColumn.Name = "AffixPrimaryModValueColumn";
-            this.AffixPrimaryModValueColumn.ReadOnly = true;
-            this.AffixPrimaryModValueColumn.Width = 59;
-            // 
-            // AffixSecondaryModNameColumn
-            // 
-            this.AffixSecondaryModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.AffixSecondaryModNameColumn.HeaderText = "Secondary Mod Name";
-            this.AffixSecondaryModNameColumn.Name = "AffixSecondaryModNameColumn";
-            this.AffixSecondaryModNameColumn.ReadOnly = true;
-            this.AffixSecondaryModNameColumn.Width = 138;
-            // 
-            // AffixSecondaryModRangeColumn
-            // 
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle8;
-            this.AffixSecondaryModRangeColumn.HeaderText = "Range";
-            this.AffixSecondaryModRangeColumn.Name = "AffixSecondaryModRangeColumn";
-            this.AffixSecondaryModRangeColumn.ReadOnly = true;
-            // 
-            // AffixSecondaryModValueColumn
-            // 
-            this.AffixSecondaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle9.Format = "N0";
-            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle9;
-            this.AffixSecondaryModValueColumn.HeaderText = "Value";
-            this.AffixSecondaryModValueColumn.Name = "AffixSecondaryModValueColumn";
-            this.AffixSecondaryModValueColumn.ReadOnly = true;
-            this.AffixSecondaryModValueColumn.Width = 59;
-            // 
-            // ModIdColumn
-            // 
-            this.ModIdColumn.HeaderText = "ModId";
-            this.ModIdColumn.Name = "ModIdColumn";
-            this.ModIdColumn.ReadOnly = true;
-            this.ModIdColumn.Visible = false;
-            // 
-            // ModNameColumn
-            // 
-            this.ModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ModNameColumn.HeaderText = "Mod Name";
-            this.ModNameColumn.Name = "ModNameColumn";
-            this.ModNameColumn.ReadOnly = true;
-            this.ModNameColumn.Width = 84;
-            // 
-            // ModValueMinColumn
-            // 
-            this.ModValueMinColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N0";
-            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle2;
-            this.ModValueMinColumn.HeaderText = "Value Min";
-            this.ModValueMinColumn.Name = "ModValueMinColumn";
-            this.ModValueMinColumn.ReadOnly = true;
-            this.ModValueMinColumn.Visible = false;
-            this.ModValueMinColumn.Width = 79;
-            // 
-            // ModValueMaxColumn
-            // 
-            this.ModValueMaxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N0";
-            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.ModValueMaxColumn.HeaderText = "Value Max";
-            this.ModValueMaxColumn.Name = "ModValueMaxColumn";
-            this.ModValueMaxColumn.ReadOnly = true;
-            this.ModValueMaxColumn.Visible = false;
-            this.ModValueMaxColumn.Width = 82;
-            // 
-            // ModItemValueColumn
-            // 
-            this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle4;
-            this.ModItemValueColumn.HeaderText = "Item Value";
-            this.ModItemValueColumn.Name = "ModItemValueColumn";
-            this.ModItemValueColumn.ReadOnly = true;
-            this.ModItemValueColumn.Width = 82;
-            // 
             // FilterResults
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1815,6 +1824,11 @@
         private System.Windows.Forms.Button Prefix2Details;
         private System.Windows.Forms.Button Prefix1Details;
         private System.Windows.Forms.Button ModDetails;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModIdColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModValueMinColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModValueMaxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixIdColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixTypeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixLevelColumn;
@@ -1826,10 +1840,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModNameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModRangeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModValueColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModIdColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModValueMinColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModValueMaxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
     }
 }

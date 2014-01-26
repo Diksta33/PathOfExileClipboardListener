@@ -231,7 +231,7 @@ namespace ExileClipboardListener.Classes
             return value ?? "";
         }
 
-        public static int StuffGrid(string sql, DataGridView gridTarget)
+        public static int StuffGrid(string sql, DataGridView gridTarget, bool ReloadColumns = true)
         {
             //This method will run a SQL query and load the results into the specified data grid
             //We try to be clever with dates, if we have a column with a date format then we will convert the SQL results to a date before loading them
@@ -240,7 +240,8 @@ namespace ExileClipboardListener.Classes
             try
             {
                 gridTarget.Rows.Clear();
-                gridTarget.Columns.Clear();
+                if (ReloadColumns)
+                    gridTarget.Columns.Clear();
                 using (var con = new SQLiteConnection (Connection))
                 {
                     con.Open();
@@ -250,14 +251,17 @@ namespace ExileClipboardListener.Classes
                         com.CommandText = sql;
                         using (var dr = com.ExecuteReader())
                         {
-                            //Add the columns dynamically
                             int columnCount = dr.FieldCount;
-                            for (int i = 0; i < columnCount; i++)
+                            if (ReloadColumns)
                             {
-                                var col = new DataGridViewTextBoxColumn {HeaderText = dr.GetName(i)};
-                                if (dr.GetName(i).Contains("Date"))
-                                    col.DefaultCellStyle.Format = "d";
-                                gridTarget.Columns.Add(col);
+                                //Add the columns dynamically
+                                for (int i = 0; i < columnCount; i++)
+                                {
+                                    var col = new DataGridViewTextBoxColumn { HeaderText = dr.GetName(i) };
+                                    if (dr.GetName(i).Contains("Date"))
+                                        col.DefaultCellStyle.Format = "d";
+                                    gridTarget.Columns.Add(col);
+                                }
                             }
 
                             //We change the valuetype for any date or numerical columns
