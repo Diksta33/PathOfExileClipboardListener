@@ -143,7 +143,7 @@ namespace ExileClipboardListener.Classes
             {
                 //Armour
                 GlobalMethods.StashItem.Armour = FindAnyValue<int>(entity, "Armour");
-                GlobalMethods.StashItem.Evasion = FindAnyValue<int>(entity, "Evasion");
+                GlobalMethods.StashItem.Evasion = FindAnyValue<int>(entity, "Evasion Rating");
                 GlobalMethods.StashItem.EnergyShield = FindAnyValue<int>(entity, "Energy Shield");
 
                 //Weapons
@@ -165,6 +165,7 @@ namespace ExileClipboardListener.Classes
             //var reqInt = Math.Max(FindAnyValue<int>(entity, "Int"), FindValue(entity, "Int (gem)"));
             //var reqDex = Math.Max(FindAnyValue<int>(entity, "Dex"), FindValue(entity, "Dex (gem)"));
             GlobalMethods.StashItem.ReqLevel = FindAnyValue<int>(entity, "Level");
+            GlobalMethods.StashItem.ReqLevelBase = GlobalMethods.GetScalarInt("SELECT ReqLevel FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
             RemoveSection(ref entity);
 
             //Sockets
@@ -404,7 +405,7 @@ namespace ExileClipboardListener.Classes
             }
 
             //Pop off the prefixes and suffixes into the StashItem class
-            for (int prefix = 0; prefix < prefixes.Count(); prefix++)
+            for (int prefix = 0; prefix < Math.Min(prefixes.Count(), 3); prefix++)
             {
                 GlobalMethods.StashItem.Affix[prefix + 1].AffixId = prefixes[prefix].AffixId;
                 GlobalMethods.StashItem.Affix[prefix + 1].Level = prefixes[prefix].Level;
@@ -417,7 +418,7 @@ namespace ExileClipboardListener.Classes
                 GlobalMethods.StashItem.Affix[prefix + 1].Mod2.ValueMin = prefixes[prefix].Mod2.ValueMin;
                 GlobalMethods.StashItem.Affix[prefix + 1].Mod2.ValueMax = prefixes[prefix].Mod2.ValueMax;
             }
-            for (int suffix = 0; suffix < suffixes.Count(); suffix++)
+            for (int suffix = 0; suffix < Math.Min(suffixes.Count(), 3); suffix++)
             {
                 GlobalMethods.StashItem.Affix[suffix + 4].AffixId = suffixes[suffix].AffixId;
                 GlobalMethods.StashItem.Affix[suffix + 4].Level = suffixes[suffix].Level;
@@ -470,7 +471,7 @@ namespace ExileClipboardListener.Classes
             sql += GlobalMethods.StashItem.RarityId + ",";
             sql += GlobalMethods.StashItem.Quality + ",";
             sql += GlobalMethods.StashItem.ItemLevel + ",";
-            sql += GlobalMethods.StashItem.ReqLevel + ",";
+            sql += GlobalMethods.StashItem.ReqLevelBase + ",";
 
             //Armour
             sql += GlobalMethods.StashItem.Armour + ",";
@@ -490,10 +491,7 @@ namespace ExileClipboardListener.Classes
                 sql += (GlobalMethods.StashItem.Affix[key].Mod1.Value == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod1.Value.ToString()) + ",";
                 sql += (GlobalMethods.StashItem.Affix[key].Mod2.Id == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod2.Id.ToString()) + ",";
                 sql += (GlobalMethods.StashItem.Affix[key].Mod2.Value == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod2.Value.ToString()) + ",";
-                //sql += (GlobalMethods.StashItem.Affix[1].AffixId == 0 || GlobalMethods.StashItem.Affix[1].Mod2.Id == 0 ? "NULL" : GlobalMethods.StashItem.Affix[2].Mod2.Id.ToString()) + ",";
-                //sql += (GlobalMethods.StashItem.Affix[1].AffixId == 0 || GlobalMethods.StashItem.Affix[1].Mod2.Id == 0 ? "NULL" : GlobalMethods.StashItem.Affix[2].Mod2.Value.ToString()) + ",";
             }
-            //sql = sql.Substring(0, sql.Length - 1) + ")";
             sql += "'" + GlobalMethods.StashItem.OriginalText.Replace("'", "''") + "')";
 
             //Stash this item
@@ -515,7 +513,7 @@ namespace ExileClipboardListener.Classes
         }
 
         //Generic method
-        private static T FindAnyValue<T>(IEnumerable<string> entity, string tag, int pair = 0)
+        private static T FindAnyValue<T>(IEnumerable<string> entity, string tag, int pair = -1)
         {
             //Look for a tag and if found return the value associated with it as an integer
             foreach (var item in entity)
@@ -535,10 +533,8 @@ namespace ExileClipboardListener.Classes
                         valueString = valueString.Replace("(gem)", "");
                         valueString = valueString.Replace("(unmet)", "");
                         valueString = valueString.Trim();
-                        if (valueString.Contains("-"))
+                        if (valueString.Contains("-") && pair != -1)
                             valueString = valueString.Split('-')[pair];
-                        //int value;
-                        //if (int.TryParse(valueString, out value))
                         return (T) Convert.ChangeType(valueString, typeof (T));
                     }
                 }

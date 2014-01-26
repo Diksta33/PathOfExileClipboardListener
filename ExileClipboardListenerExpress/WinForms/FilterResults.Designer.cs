@@ -28,18 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle49 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle50 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle51 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle52 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle53 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle54 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FilterResultsGrid = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AverageScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.Rarity = new System.Windows.Forms.TextBox();
             this.BaseItemName = new System.Windows.Forms.TextBox();
@@ -178,6 +179,10 @@
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.Sockets = new System.Windows.Forms.TextBox();
             this.label38 = new System.Windows.Forms.Label();
+            this.AddStash = new System.Windows.Forms.Button();
+            this.Exit = new System.Windows.Forms.Button();
+            this.ReqLevelBase = new System.Windows.Forms.TextBox();
+            this.label41 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -207,7 +212,7 @@
             this.FilterResultsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.FilterResultsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column1,
-            this.Column2});
+            this.AverageScoreColumn});
             this.FilterResultsGrid.Location = new System.Drawing.Point(6, 26);
             this.FilterResultsGrid.Name = "FilterResultsGrid";
             this.FilterResultsGrid.ReadOnly = true;
@@ -220,20 +225,23 @@
             // Column1
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle1.NullValue = null;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.HeaderText = "Filter Name";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             this.Column1.Width = 85;
             // 
-            // Column2
+            // AverageScoreColumn
             // 
-            this.Column2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.Column2.DefaultCellStyle = dataGridViewCellStyle46;
-            this.Column2.HeaderText = "Average Score";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 103;
+            this.AverageScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "0%";
+            this.AverageScoreColumn.DefaultCellStyle = dataGridViewCellStyle2;
+            this.AverageScoreColumn.HeaderText = "Average Score";
+            this.AverageScoreColumn.Name = "AverageScoreColumn";
+            this.AverageScoreColumn.ReadOnly = true;
+            this.AverageScoreColumn.Width = 103;
             // 
             // label1
             // 
@@ -707,9 +715,9 @@
             // ModValueMinColumn
             // 
             this.ModValueMinColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle47.Format = "N0";
-            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle47;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N0";
+            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.ModValueMinColumn.HeaderText = "Value Min";
             this.ModValueMinColumn.Name = "ModValueMinColumn";
             this.ModValueMinColumn.ReadOnly = true;
@@ -718,9 +726,9 @@
             // ModValueMaxColumn
             // 
             this.ModValueMaxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle48.Format = "N0";
-            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle48;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.ModValueMaxColumn.HeaderText = "Value Max";
             this.ModValueMaxColumn.Name = "ModValueMaxColumn";
             this.ModValueMaxColumn.ReadOnly = true;
@@ -729,9 +737,9 @@
             // ModItemValueColumn
             // 
             this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle49.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle49.Format = "N0";
-            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle49;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "N0";
+            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle5;
             this.ModItemValueColumn.HeaderText = "Item Value";
             this.ModItemValueColumn.Name = "ModItemValueColumn";
             this.ModItemValueColumn.ReadOnly = true;
@@ -825,9 +833,9 @@
             // AffixLevelColumn
             // 
             this.AffixLevelColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle50.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle50.Format = "N0";
-            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle50;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.AffixLevelColumn.HeaderText = "Level";
             this.AffixLevelColumn.Name = "AffixLevelColumn";
             this.AffixLevelColumn.ReadOnly = true;
@@ -860,8 +868,8 @@
             // AffixPrimaryModRangeColumn
             // 
             this.AffixPrimaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle51.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle51;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.AffixPrimaryModRangeColumn.HeaderText = "Range";
             this.AffixPrimaryModRangeColumn.Name = "AffixPrimaryModRangeColumn";
             this.AffixPrimaryModRangeColumn.ReadOnly = true;
@@ -870,9 +878,9 @@
             // AffixPrimaryModValueColumn
             // 
             this.AffixPrimaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle52.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle52.Format = "N0";
-            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle52;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle8;
             this.AffixPrimaryModValueColumn.HeaderText = "Value";
             this.AffixPrimaryModValueColumn.Name = "AffixPrimaryModValueColumn";
             this.AffixPrimaryModValueColumn.ReadOnly = true;
@@ -889,8 +897,8 @@
             // AffixSecondaryModRangeColumn
             // 
             this.AffixSecondaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle53.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle53;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle9;
             this.AffixSecondaryModRangeColumn.HeaderText = "Range";
             this.AffixSecondaryModRangeColumn.Name = "AffixSecondaryModRangeColumn";
             this.AffixSecondaryModRangeColumn.ReadOnly = true;
@@ -899,9 +907,9 @@
             // AffixSecondaryModValueColumn
             // 
             this.AffixSecondaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle54.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle54.Format = "N0";
-            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle54;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "N0";
+            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle10;
             this.AffixSecondaryModValueColumn.HeaderText = "Value";
             this.AffixSecondaryModValueColumn.Name = "AffixSecondaryModValueColumn";
             this.AffixSecondaryModValueColumn.ReadOnly = true;
@@ -1513,6 +1521,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.ReqLevelBase);
+            this.groupBox4.Controls.Add(this.label41);
             this.groupBox4.Controls.Add(this.ReqInt);
             this.groupBox4.Controls.Add(this.label32);
             this.groupBox4.Controls.Add(this.ReqStr);
@@ -1525,7 +1535,7 @@
             this.groupBox4.Controls.Add(this.label28);
             this.groupBox4.Location = new System.Drawing.Point(710, 12);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(141, 154);
+            this.groupBox4.Size = new System.Drawing.Size(167, 187);
             this.groupBox4.TabIndex = 21;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Requirements";
@@ -1533,7 +1543,7 @@
             // ReqInt
             // 
             this.ReqInt.Enabled = false;
-            this.ReqInt.Location = new System.Drawing.Point(90, 123);
+            this.ReqInt.Location = new System.Drawing.Point(107, 149);
             this.ReqInt.Name = "ReqInt";
             this.ReqInt.Size = new System.Drawing.Size(38, 20);
             this.ReqInt.TabIndex = 31;
@@ -1542,7 +1552,7 @@
             // label32
             // 
             this.label32.AutoSize = true;
-            this.label32.Location = new System.Drawing.Point(12, 126);
+            this.label32.Location = new System.Drawing.Point(12, 152);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(42, 13);
             this.label32.TabIndex = 30;
@@ -1551,7 +1561,7 @@
             // ReqStr
             // 
             this.ReqStr.Enabled = false;
-            this.ReqStr.Location = new System.Drawing.Point(90, 71);
+            this.ReqStr.Location = new System.Drawing.Point(107, 97);
             this.ReqStr.Name = "ReqStr";
             this.ReqStr.Size = new System.Drawing.Size(38, 20);
             this.ReqStr.TabIndex = 29;
@@ -1560,7 +1570,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(12, 74);
+            this.label31.Location = new System.Drawing.Point(12, 100);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(43, 13);
             this.label31.TabIndex = 28;
@@ -1569,7 +1579,7 @@
             // ReqDex
             // 
             this.ReqDex.Enabled = false;
-            this.ReqDex.Location = new System.Drawing.Point(90, 97);
+            this.ReqDex.Location = new System.Drawing.Point(107, 123);
             this.ReqDex.Name = "ReqDex";
             this.ReqDex.Size = new System.Drawing.Size(38, 20);
             this.ReqDex.TabIndex = 27;
@@ -1578,7 +1588,7 @@
             // label30
             // 
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(12, 100);
+            this.label30.Location = new System.Drawing.Point(12, 126);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(49, 13);
             this.label30.TabIndex = 26;
@@ -1587,7 +1597,7 @@
             // ReqLevel
             // 
             this.ReqLevel.Enabled = false;
-            this.ReqLevel.Location = new System.Drawing.Point(90, 45);
+            this.ReqLevel.Location = new System.Drawing.Point(107, 45);
             this.ReqLevel.Name = "ReqLevel";
             this.ReqLevel.Size = new System.Drawing.Size(38, 20);
             this.ReqLevel.TabIndex = 25;
@@ -1605,7 +1615,7 @@
             // ItemLevel
             // 
             this.ItemLevel.Enabled = false;
-            this.ItemLevel.Location = new System.Drawing.Point(90, 19);
+            this.ItemLevel.Location = new System.Drawing.Point(107, 19);
             this.ItemLevel.Name = "ItemLevel";
             this.ItemLevel.Size = new System.Drawing.Size(38, 20);
             this.ItemLevel.TabIndex = 23;
@@ -1648,11 +1658,51 @@
             this.label38.TabIndex = 14;
             this.label38.Text = "Sockets";
             // 
+            // AddStash
+            // 
+            this.AddStash.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.AddStash.Location = new System.Drawing.Point(883, 12);
+            this.AddStash.Name = "AddStash";
+            this.AddStash.Size = new System.Drawing.Size(101, 23);
+            this.AddStash.TabIndex = 27;
+            this.AddStash.Text = "Add to Stash";
+            this.AddStash.UseVisualStyleBackColor = true;
+            // 
+            // Exit
+            // 
+            this.Exit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Exit.Location = new System.Drawing.Point(883, 41);
+            this.Exit.Name = "Exit";
+            this.Exit.Size = new System.Drawing.Size(101, 23);
+            this.Exit.TabIndex = 26;
+            this.Exit.Text = "Dismiss";
+            this.Exit.UseVisualStyleBackColor = true;
+            // 
+            // ReqLevelBase
+            // 
+            this.ReqLevelBase.Enabled = false;
+            this.ReqLevelBase.Location = new System.Drawing.Point(107, 71);
+            this.ReqLevelBase.Name = "ReqLevelBase";
+            this.ReqLevelBase.Size = new System.Drawing.Size(38, 20);
+            this.ReqLevelBase.TabIndex = 33;
+            this.ReqLevelBase.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(12, 74);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(89, 13);
+            this.label41.TabIndex = 32;
+            this.label41.Text = "Req Level (Base)";
+            // 
             // FilterResults
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(996, 474);
+            this.Controls.Add(this.AddStash);
+            this.Controls.Add(this.Exit);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.tabControl1);
@@ -1813,8 +1863,6 @@
         private System.Windows.Forms.Button RefreshResults;
         private System.Windows.Forms.NumericUpDown CharacterLevel;
         private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
         private System.Windows.Forms.CheckBox HideSecondary;
         private System.Windows.Forms.Button AffixDetails;
         private System.Windows.Forms.Button Suffix3Details;
@@ -1840,5 +1888,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModNameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModRangeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModValueColumn;
+        private System.Windows.Forms.Button AddStash;
+        private System.Windows.Forms.Button Exit;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AverageScoreColumn;
+        private System.Windows.Forms.TextBox ReqLevelBase;
+        private System.Windows.Forms.Label label41;
     }
 }

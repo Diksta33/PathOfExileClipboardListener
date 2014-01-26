@@ -16,8 +16,8 @@ namespace ExileClipboardListener.Classes
         public static int CommandTimeout = 600;
 
         //Current League and Character
-        public static Guid CurrentLeagueId = Properties.Settings.Default.DefaultLeagueId;
-        public static Guid CurrentCharacterId = Properties.Settings.Default.DefaultCharacterId;
+        public static int CurrentLeagueId = Properties.Settings.Default.DefaultLeagueId;
+        public static int CurrentCharacterId = Properties.Settings.Default.DefaultCharacterId;
 
         //Modification
         public struct Mod
@@ -49,6 +49,7 @@ namespace ExileClipboardListener.Classes
             public static  int Quality;
             public static int ItemLevel;
             public static int ReqLevel;
+            public static int ReqLevelBase;
             public static int Armour;
             public static int Evasion;
             public static int EnergyShield;
@@ -64,6 +65,12 @@ namespace ExileClipboardListener.Classes
             public static Affix[] Affix = new Affix[7]; //0 = Implicit, 1-3 - Prefix, 4-6 = Suffix
         }
 
+        //Storage for filter results
+        public static List<object[]> BISResults = new List<object[]>();
+        public static List<object[]> ILevelResults = new List<object[]>();
+        public static List<object[]> CLevelResults = new List<object[]>();
+        public static List<object[]> ItemResults = new List<object[]>();
+
         public static void ClearStash()
         {
             StashItem.ItemName = "";
@@ -72,6 +79,7 @@ namespace ExileClipboardListener.Classes
             StashItem.Quality = 0;
             StashItem.ItemLevel = 0;
             StashItem.ReqLevel = 0;
+            StashItem.ReqLevelBase = 0;
             StashItem.Armour = 0;
             StashItem.Evasion = 0;
             StashItem.EnergyShield = 0;
