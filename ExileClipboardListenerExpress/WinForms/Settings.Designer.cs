@@ -38,6 +38,7 @@
             this.StashPopUpTimed = new System.Windows.Forms.RadioButton();
             this.StashNoPopUp = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.DefaultTab = new System.Windows.Forms.ComboBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.CompareLevel = new System.Windows.Forms.RadioButton();
             this.CompareBest = new System.Windows.Forms.RadioButton();
@@ -67,7 +68,6 @@
             this.CollectionPopUpSeconds = new System.Windows.Forms.NumericUpDown();
             this.CollectionPopUpPerm = new System.Windows.Forms.RadioButton();
             this.CollectionPopUpTimed = new System.Windows.Forms.RadioButton();
-            this.DefaultTab = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StashPopUpSeconds)).BeginInit();
@@ -145,7 +145,7 @@
             // 
             this.StashPopUpSeconds.Location = new System.Drawing.Point(96, 40);
             this.StashPopUpSeconds.Maximum = new decimal(new int[] {
-            10,
+            60,
             0,
             0,
             0});
@@ -205,6 +205,15 @@
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Default Tab";
+            // 
+            // DefaultTab
+            // 
+            this.DefaultTab.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.DefaultTab.FormattingEnabled = true;
+            this.DefaultTab.Location = new System.Drawing.Point(12, 19);
+            this.DefaultTab.Name = "DefaultTab";
+            this.DefaultTab.Size = new System.Drawing.Size(121, 21);
+            this.DefaultTab.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -370,7 +379,7 @@
             0,
             0});
             this.ToleranceAverageTo.Minimum = new decimal(new int[] {
-            20,
+            2,
             0,
             0,
             0});
@@ -393,7 +402,7 @@
             0,
             0});
             this.TolerancePoorTo.Minimum = new decimal(new int[] {
-            10,
+            1,
             0,
             0,
             0});
@@ -465,7 +474,7 @@
             // 
             this.ToleranceGoodFrom.Location = new System.Drawing.Point(65, 71);
             this.ToleranceGoodFrom.Minimum = new decimal(new int[] {
-            21,
+            3,
             0,
             0,
             0});
@@ -488,7 +497,7 @@
             0,
             0});
             this.ToleranceAverageFrom.Minimum = new decimal(new int[] {
-            11,
+            2,
             0,
             0,
             0});
@@ -507,7 +516,7 @@
             this.TolerancePoorFrom.Enabled = false;
             this.TolerancePoorFrom.Location = new System.Drawing.Point(65, 19);
             this.TolerancePoorFrom.Maximum = new decimal(new int[] {
-            30,
+            0,
             0,
             0,
             0});
@@ -541,7 +550,7 @@
             // 
             this.CollectionPopUpSeconds.Location = new System.Drawing.Point(96, 17);
             this.CollectionPopUpSeconds.Maximum = new decimal(new int[] {
-            10,
+            60,
             0,
             0,
             0});
@@ -580,15 +589,6 @@
             this.CollectionPopUpTimed.TabStop = true;
             this.CollectionPopUpTimed.Text = "Pops Up For";
             this.CollectionPopUpTimed.UseVisualStyleBackColor = true;
-            // 
-            // DefaultTab
-            // 
-            this.DefaultTab.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.DefaultTab.FormattingEnabled = true;
-            this.DefaultTab.Location = new System.Drawing.Point(12, 19);
-            this.DefaultTab.Name = "DefaultTab";
-            this.DefaultTab.Size = new System.Drawing.Size(121, 21);
-            this.DefaultTab.TabIndex = 0;
             // 
             // Settings
             // 

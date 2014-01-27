@@ -25,7 +25,7 @@ namespace ExileClipboardListener.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int StashMode {
             get {
                 return ((int)(this["StashMode"]));
@@ -109,7 +109,7 @@ namespace ExileClipboardListener.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
         public int StashPopUpMode {
             get {
                 return ((int)(this["StashPopUpMode"]));
@@ -121,7 +121,7 @@ namespace ExileClipboardListener.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int StashPopUpSeconds {
             get {
                 return ((int)(this["StashPopUpSeconds"]));
@@ -133,7 +133,7 @@ namespace ExileClipboardListener.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int CollectionPopUpMode {
             get {
                 return ((int)(this["CollectionPopUpMode"]));
@@ -145,7 +145,7 @@ namespace ExileClipboardListener.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
         public int CollectionPopUpSeconds {
             get {
                 return ((int)(this["CollectionPopUpSeconds"]));
@@ -181,7 +181,7 @@ namespace ExileClipboardListener.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int DefaultTabId {
             get {
                 return ((int)(this["DefaultTabId"]));

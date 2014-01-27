@@ -23,18 +23,35 @@ namespace ExileClipboardListener.WinForms
             DuplicatesYes.Checked = Properties.Settings.Default.StashDuplicates;
             DuplicatesNo.Checked = !Properties.Settings.Default.StashDuplicates;
             TolerancePoorTo.Value = Properties.Settings.Default.TolerancePoorTo;
-            ToleranceAverageFrom.Value = Properties.Settings.Default.ToleranceAverageFrom;
-            ToleranceAverageTo.Value = Properties.Settings.Default.ToleranceAverageTo;
-            ToleranceGoodFrom.Value = Properties.Settings.Default.ToleranceGoodFrom;
+
+            //Use defaults if these settings are missing
+            if (Properties.Settings.Default.ToleranceAverageFrom == 0 || Properties.Settings.Default.ToleranceAverageTo == 0 || Properties.Settings.Default.ToleranceGoodFrom == 0)
+            {
+                ToleranceAverageFrom.Value = 26;
+                ToleranceAverageTo.Value = 74;
+                ToleranceGoodFrom.Value = 75;
+            }
+            else
+            {
+                ToleranceAverageFrom.Value = Properties.Settings.Default.ToleranceAverageFrom;
+                ToleranceAverageTo.Value = Properties.Settings.Default.ToleranceAverageTo;
+                ToleranceGoodFrom.Value = Properties.Settings.Default.ToleranceGoodFrom;
+            }
             CompareBest.Checked = Properties.Settings.Default.RatingMode == 0;
             CompareLevel.Checked = Properties.Settings.Default.RatingMode == 1;
             StashNoPopUp.Checked = Properties.Settings.Default.StashPopUpMode == 0;
             StashPopUpTimed.Checked = Properties.Settings.Default.StashPopUpMode == 1;
             StashPopUpPerm.Checked = Properties.Settings.Default.StashPopUpMode == 2;
-            StashPopUpSeconds.Value = Properties.Settings.Default.StashPopUpSeconds;
+            if (Properties.Settings.Default.StashPopUpSeconds == 0)
+                StashPopUpSeconds.Value = 1;
+            else
+                StashPopUpSeconds.Value = Properties.Settings.Default.StashPopUpSeconds;
             CollectionPopUpTimed.Checked = Properties.Settings.Default.CollectionPopUpMode == 1;
             CollectionPopUpPerm.Checked = Properties.Settings.Default.CollectionPopUpMode == 2;
-            CollectionPopUpSeconds.Value = Properties.Settings.Default.CollectionPopUpSeconds;
+            if (Properties.Settings.Default.CollectionPopUpSeconds == 0)
+                CollectionPopUpSeconds.Value = 1;
+            else
+                CollectionPopUpSeconds.Value = Properties.Settings.Default.CollectionPopUpSeconds;
             DefaultTab.SelectedIndex = Properties.Settings.Default.DefaultTabId;
         }
 

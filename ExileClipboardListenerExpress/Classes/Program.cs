@@ -11,12 +11,19 @@ namespace ExileClipboardListener.Classes
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            using (var pi = new ProcessIcon())
+            try
             {
-                pi.Display();
-                Application.Run();
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                using (var pi = new ProcessIcon())
+                {
+                    pi.Display();
+                    Application.Run();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

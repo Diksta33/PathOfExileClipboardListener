@@ -17,23 +17,30 @@ namespace ExileClipboardListener.Classes
 
         public void Display()
         {
-            //Put the icon in the system tray and allow it react to mouse clicks.			
-            _ni.MouseClick += MouseClick;
-            _ni.Icon = Resources.PathOfExile;
-            _ni.Text = "Path of Exile Clipboard Listener";
-            _ni.Visible = true;
+            try
+            {
+                //Put the icon in the system tray and allow it react to mouse clicks.			
+                _ni.MouseClick += MouseClick;
+                _ni.Icon = Resources.PathOfExile;
+                _ni.Text = "Path of Exile Clipboard Listener";
+                _ni.Visible = true;
 
-            //Load the default user settings
-            LoadSettings();
+                //Load the default user settings
+                LoadSettings();
 
-            //Attach a context menu.
-            _ni.ContextMenuStrip = new ContextMenu().Create();
+                //Attach a context menu.
+                _ni.ContextMenuStrip = new ContextMenu().Create();
 
-            //Put up the test form
-            //new Test().ShowDialog();
+                //Put up the test form
+                //new Test().ShowDialog();
 
-            //Start listening
-            new ClipboardNotification();
+                //Start listening
+                new ClipboardNotification();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private static void LoadSettings()
