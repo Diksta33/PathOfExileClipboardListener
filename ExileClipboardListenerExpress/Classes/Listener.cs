@@ -45,9 +45,17 @@ namespace ExileClipboardListener.Classes
                 item = item.Replace(" (augmented)", "");
                 item = item.Replace("Adds ", "");
                 item = item.Replace("Reflects ", "");
+                item = item.Replace("Recharges ", "");
+                item = item.Replace("Grants ", "");
+                item = item.Replace("Removes ", "");
 
                 //Parse the details
-                var entity = item.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                var entity = item.Split(new[] { "\n" }, StringSplitOptions.None);
+                for (int i = 0; i < entity.Count(); i++)
+                {
+                    entity[i] = entity[i].Replace("\n", "");
+                    entity[i] = entity[i].Replace("\r", "");
+                }
 
                 //If we get here then something is going to end up being messed up if we already have the pop up form open
                 _loaded = true;
@@ -97,6 +105,12 @@ namespace ExileClipboardListener.Classes
             try
             {
                 //The first section is always the basic details
+                if (entity.Count() < 2)
+                {
+                    MessageBox.Show("Couldn't split item did you lose the carriage-returns somehow?");
+                    return;
+                }
+
                 GlobalMethods.StashItem.ItemName = entity[1];
                 GlobalMethods.StashItem.Quality = FindAnyValue<int>(entity, "Quality");
                 GlobalMethods.StashItem.RarityId = GlobalMethods.GetScalarInt("SELECT RarityId FROM Rarity WHERE RarityName = '" + entity[0].Split(':')[1].Trim() + "';");
@@ -157,9 +171,9 @@ namespace ExileClipboardListener.Classes
                     GlobalMethods.StashItem.EnergyShield = FindAnyValue<int>(entity, "Energy Shield");
 
                     //Weapons
-                    GlobalMethods.StashItem.PhysicalDamageMin = FindAnyValue<int>(entity, "Physical Damage");
+                    GlobalMethods.StashItem.PhysicalDamageMin = FindAnyValue<int>(entity, "Physical Damage", 0);
                     GlobalMethods.StashItem.PhysicalDamageMax = FindAnyValue<int>(entity, "Physical Damage", 1);
-                    GlobalMethods.StashItem.ElementalDamageMin = FindAnyValue<int>(entity, "Elemental Damage");
+                    GlobalMethods.StashItem.ElementalDamageMin = FindAnyValue<int>(entity, "Elemental Damage", 0);
                     GlobalMethods.StashItem.ElementalDamageMax = FindAnyValue<int>(entity, "Elemental Damage", 1);
                     GlobalMethods.StashItem.CriticalStrikeChance = FindAnyValue<decimal>(entity, "Critical Strike Chance");
                     GlobalMethods.StashItem.AttacksPerSecond = FindAnyValue<decimal>(entity, "Attacks per Second");
@@ -530,31 +544,61 @@ namespace ExileClipboardListener.Classes
         //Generic method
         private static T FindAnyValue<T>(IEnumerable<string> entity, string tag, int pair = -1)
         {
-            //Look for a tag and if found return the value associated with it as an integer
-            foreach (var item in entity)
+            try
             {
-                //If we hit a seperator then stop
-                if (item == "--------")
-                    break;
-                if (item.Contains(":"))
+                //Look for a tag and if found return the value associated with it as an integer
+                foreach (var item in entity)
                 {
-                    var tagName = item.Split(':')[0];
-                    if (tagName == tag)
+                    //If we hit a seperator then stop
+                    if (item == "--------")
+                        break;
+                    if (item.Contains(":"))
                     {
-                        var valueString = item.Split(':')[1];
-                        valueString = valueString.Replace("+", "");
-                        valueString = valueString.Replace("%", "");
-                        valueString = valueString.Replace("(augmented)", "");
-                        valueString = valueString.Replace("(gem)", "");
-                        valueString = valueString.Replace("(unmet)", "");
-                        valueString = valueString.Trim();
-                        if (valueString.Contains("-") && pair != -1)
-                            valueString = valueString.Split('-')[pair];
-                        return (T) Convert.ChangeType(valueString, typeof (T));
+                        var tagName = item.Split(':')[0];
+                        if (tagName == tag)
+                        {
+                            var valueString = item.Split(':')[1];
+                            valueString = valueString.Replace("+", "");
+                            valueString = valueString.Replace("%", "");
+                            valueString = valueString.Replace(" (augmented)", "");
+                            valueString = valueString.Replace(" (gem)", "");
+                            valueString = valueString.Replace(" (unmet)", "");
+                            valueString = valueString.Trim();
+                            if (valueString.Contains("-") && pair != -1)
+                            {
+                                //We need to cope with two sorts of ranges
+                                //Physical Damage: 20-52
+                                //Elemental Damage: 10-32, 11-12, 5-10
+                                var valuePair = valueString.Split(',');
+                                for (int i = 0; i < valuePair.Count(); i++)
+                                {
+                                    if (i == 0)
+                                        valueString = valuePair[i].Split('-')[pair];
+                                    else
+                                    {
+                                        int value;
+                                        if (int.TryParse(valueString, out value))
+                                        {
+                                            int nextValue;
+                                            if (int.TryParse(valuePair[i].Split('-')[pair], out nextValue))
+                                            {
+                                                valueString = (value + nextValue).ToString();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return (T)Convert.ChangeType(valueString, typeof(T));
+                        }
                     }
                 }
+                return (T)Convert.ChangeType(0, typeof(T));
             }
-            return (T) Convert.ChangeType(0, typeof (T));
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return (T)Convert.ChangeType(0, typeof(T));
+            }
         }
 
         private static int FindMod(IEnumerable<string> entity, string tag)

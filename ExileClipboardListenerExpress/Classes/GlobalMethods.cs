@@ -98,6 +98,13 @@ namespace ExileClipboardListener.Classes
                 StashItem.Affix[affix].Mod2.Id = 0;
                 StashItem.Affix[affix].Mod2.Value = 0;
             }
+            for (int mod = 0; mod < StashItem.Mod.GetUpperBound(0); mod++)
+            {
+                StashItem.Mod[mod].Id = 0;
+                StashItem.Mod[mod].Value = 0;
+                StashItem.Mod[mod].ValueMax = 0;
+                StashItem.Mod[mod].ValueMin = 0;
+            }
             StashItem.OriginalText = "";
         }
 
