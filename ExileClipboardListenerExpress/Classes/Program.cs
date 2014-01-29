@@ -17,6 +17,7 @@ namespace ExileClipboardListener.Classes
                 Application.SetCompatibleTextRenderingDefault(false);
                 using (var pi = new ProcessIcon())
                 {
+                    GlobalMethods.LoadCache();
                     pi.Display();
                     Application.Run();
                 }

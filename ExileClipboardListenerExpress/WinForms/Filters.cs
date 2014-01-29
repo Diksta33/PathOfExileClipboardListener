@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 
@@ -122,10 +116,10 @@ namespace ExileClipboardListener.WinForms
             LoadModClass(Suffix3ModClass, "Suffix");
         }
 
-        private void LoadModClass(ComboBox AffixModClass, string AffixType)
+        private void LoadModClass(ComboBox affixModClass, string affixType)
         {
             //Load the mod classes
-            string sql = "SELECT '(Any)' UNION ALL SELECT DISTINCT ModClass FROM Mod m INNER JOIN " + AffixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
+            string sql = "SELECT '(Any)' UNION ALL SELECT DISTINCT ModClass FROM Mod m INNER JOIN " + affixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
 
             //Filter by Item Type
             if (ItemType.Text == "Armour")
@@ -141,9 +135,9 @@ namespace ExileClipboardListener.WinForms
             sql += " ORDER BY 1;";
 
             //Push this into the combo
-            GlobalMethods.StuffCombo(sql, AffixModClass);
-            if (AffixModClass.Items.Count > 0)
-                AffixModClass.SelectedIndex = 0;
+            GlobalMethods.StuffCombo(sql, affixModClass);
+            if (affixModClass.Items.Count > 0)
+                affixModClass.SelectedIndex = 0;
         }
 
         private void Prefix1ModClass_SelectedIndexChanged(object sender, EventArgs e)
@@ -176,14 +170,14 @@ namespace ExileClipboardListener.WinForms
             LoadMod(Suffix3Mod, "Suffix", Suffix3ModClass.Text);
         }
 
-        private void LoadMod(ComboBox AffixMod, string AffixType, string ModClassName)
+        private void LoadMod(ComboBox affixMod, string affixType, string modClassName)
         {
             //Load the mods 
-            string sql = "SELECT '(Any)' UNION ALL SELECT DISTINCT m.ModName FROM Mod m INNER JOIN " + AffixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
+            string sql = "SELECT '(Any)' UNION ALL SELECT DISTINCT m.ModName FROM Mod m INNER JOIN " + affixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
 
             //Filter by class
-            if (ModClassName != "(Any)")
-                sql += " AND ModClass = '" + ModClassName + "'";
+            if (modClassName != "(Any)")
+                sql += " AND ModClass = '" + modClassName + "'";
 
             //Filter by Item Type
             if (ItemType.Text == "Armour")
@@ -199,9 +193,9 @@ namespace ExileClipboardListener.WinForms
             sql += " ORDER BY 1;";
 
             //Push this into the combo
-            GlobalMethods.StuffCombo(sql, AffixMod);
-            if (AffixMod.Items.Count > 0)
-                AffixMod.SelectedIndex = 0;
+            GlobalMethods.StuffCombo(sql, affixMod);
+            if (affixMod.Items.Count > 0)
+                affixMod.SelectedIndex = 0;
         }
 
         private void CancelFilter_Click(object sender, EventArgs e)
@@ -222,20 +216,20 @@ namespace ExileClipboardListener.WinForms
             FilterName.Text = FilterGrid.CurrentRow.Cells[0].Value.ToString();
             _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterName.Text.Replace("'", "''") + "';");
             _itemTypeId = GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM FilterHeader WHERE FilterId = " + _filterId + ";");
-            int OldIndex = ItemType.SelectedIndex;
+            int oldIndex = ItemType.SelectedIndex;
             if (_itemTypeId == 0)
                 ItemType.SelectedIndex = 0;
             else
                 ItemType.Text = GlobalMethods.GetScalarString("SELECT ItemTypeName FROM ItemType WHERE ItemTypeId = " + _itemTypeId + ";");
-            if (OldIndex == ItemType.SelectedIndex)
+            if (oldIndex == ItemType.SelectedIndex)
                 ItemType_SelectedIndexChanged(null, null);
-            OldIndex = ItemSubType.SelectedIndex;
+            oldIndex = ItemSubType.SelectedIndex;
             _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM FilterHeader WHERE FilterId = " + _filterId + ";");
             if (_itemSubTypeId == 0)
                 ItemSubType.SelectedIndex = 0;
             else
                 ItemSubType.Text = GlobalMethods.GetScalarString("SELECT ItemSubTypeName FROM ItemSubType WHERE ItemTypeId = " + _itemTypeId + " AND ItemSubTypeId = " + _itemSubTypeId + ";");
-            if (OldIndex == ItemSubType.SelectedIndex)
+            if (oldIndex == ItemSubType.SelectedIndex)
                 ItemSubType_SelectedIndexChanged(null, null);
 
             //Then the details

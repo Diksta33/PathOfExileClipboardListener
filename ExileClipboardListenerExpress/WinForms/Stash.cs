@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ExileClipboardListener.Classes;
-using System.Data.SQLite;
-using System.Data.SqlClient;
 
 namespace ExileClipboardListener.WinForms
 {

@@ -19,7 +19,7 @@ namespace ExileClipboardListener.WinForms
             DefaultTab.Items.Add("Filter Results");
 
             //Show the current settings
-            CollectionMode.Checked = Properties.Settings.Default.StashMode == (int)GlobalMethods.COLLECTION_MODE;
+            CollectionMode.Checked = Properties.Settings.Default.StashMode == GlobalMethods.COLLECTION_MODE;
             DuplicatesYes.Checked = Properties.Settings.Default.StashDuplicates;
             DuplicatesNo.Checked = !Properties.Settings.Default.StashDuplicates;
             TolerancePoorTo.Value = Properties.Settings.Default.TolerancePoorTo;
@@ -42,25 +42,16 @@ namespace ExileClipboardListener.WinForms
             StashNoPopUp.Checked = Properties.Settings.Default.StashPopUpMode == 0;
             StashPopUpTimed.Checked = Properties.Settings.Default.StashPopUpMode == 1;
             StashPopUpPerm.Checked = Properties.Settings.Default.StashPopUpMode == 2;
-            if (Properties.Settings.Default.StashPopUpSeconds == 0)
-                StashPopUpSeconds.Value = 1;
-            else
-                StashPopUpSeconds.Value = Properties.Settings.Default.StashPopUpSeconds;
+            StashPopUpSeconds.Value = Properties.Settings.Default.StashPopUpSeconds == 0 ? 1 : Properties.Settings.Default.StashPopUpSeconds;
             CollectionPopUpTimed.Checked = Properties.Settings.Default.CollectionPopUpMode == 1;
             CollectionPopUpPerm.Checked = Properties.Settings.Default.CollectionPopUpMode == 2;
-            if (Properties.Settings.Default.CollectionPopUpSeconds == 0)
-                CollectionPopUpSeconds.Value = 1;
-            else
-                CollectionPopUpSeconds.Value = Properties.Settings.Default.CollectionPopUpSeconds;
+            CollectionPopUpSeconds.Value = Properties.Settings.Default.CollectionPopUpSeconds == 0 ? 1 : Properties.Settings.Default.CollectionPopUpSeconds;
             DefaultTab.SelectedIndex = Properties.Settings.Default.DefaultTabId;
         }
 
         private void Save_Click(object sender, EventArgs e)
         {
-            if (StashMode.Checked)
-                Properties.Settings.Default.StashMode = (int)GlobalMethods.STASH_MODE;
-            else
-                Properties.Settings.Default.StashMode = (int)GlobalMethods.COLLECTION_MODE;
+            Properties.Settings.Default.StashMode = StashMode.Checked ? GlobalMethods.STASH_MODE : GlobalMethods.COLLECTION_MODE;
             Properties.Settings.Default.TolerancePoorTo = (int)TolerancePoorTo.Value;
             Properties.Settings.Default.ToleranceAverageFrom = (int)ToleranceAverageFrom.Value;
             Properties.Settings.Default.ToleranceAverageTo = (int)ToleranceAverageTo.Value;

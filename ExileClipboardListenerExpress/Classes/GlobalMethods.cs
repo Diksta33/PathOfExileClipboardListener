@@ -19,6 +19,43 @@ namespace ExileClipboardListener.Classes
         public static int CurrentLeagueId = Properties.Settings.Default.DefaultLeagueId;
         public static int CurrentCharacterId = Properties.Settings.Default.DefaultCharacterId;
 
+        //Base Item class
+        public static class BaseItem
+        {
+            public static int BaseItemId;
+            public static string ItemName;
+            public static string ItemTypeName;
+            public static string ItemSubTypeName;
+            public static int ReqLevel;
+            public static int ReqStr;
+            public static int ReqDex;
+            public static int ReqInt;
+            public static int Armour;
+            public static int Evasion;
+            public static int EnergyShield;
+            public static int DamagePhysicalMin;
+            public static int DamagePhysicalMax;
+            public static decimal AttackSpeed;
+            public static decimal DPS;
+            public static Mod Mod1;
+            public static Mod Mod2;
+        }
+
+        //Affix Local class - this could also be materialised as a view in the database
+        //This is used to reduce database access
+        public class AffixLocal
+        {
+            public int AffixId;
+            public string AffixType;
+            public string Name;
+            public int Level;
+            public int ModCategoryId;
+            public string ModCategoryName;
+            public Mod Mod1;
+            public Mod Mod2;
+        }
+        public static List<AffixLocal> AffixCache = new List<AffixLocal>();
+
         //Modification
         public struct Mod
         {
@@ -57,7 +94,9 @@ namespace ExileClipboardListener.Classes
             public static int PhysicalDamageMax;
             public static int ElementalDamageMin;
             public static int ElementalDamageMax;
+            public static decimal BaseAttacksPerSecond;
             public static decimal AttacksPerSecond;
+            public static decimal BaseDamagePerSecond;
             public static decimal DamagePerSecond;
             public static decimal CriticalStrikeChance;
             public static string Sockets;
@@ -108,6 +147,123 @@ namespace ExileClipboardListener.Classes
             StashItem.OriginalText = "";
         }
 
+        public static void LoadCache()
+        {
+            //Loads data from the system into memory to reduce unnecessary database access
+            try
+            {
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+
+                        //Prefixes first
+                        com.CommandText = "SELECT * FROM Prefix p INNER JOIN ModCategory mc ON mc.ModCategoryId = p.ModCategoryId;";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                var affix = new AffixLocal();
+                                affix.AffixId = dr["PrefixId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["PrefixId"]);
+                                affix.AffixType = "Prefix";
+                                affix.Name = dr["Name"].ToString();
+                                affix.Level = dr["Level"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Level"]);
+                                affix.ModCategoryId = dr["ModCategoryId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModCategoryId"]);
+                                affix.ModCategoryName = dr["ModCategoryName"].ToString();
+                                affix.Mod1.Id = dr["Mod1Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1Id"]);
+                                affix.Mod1.ValueMin = dr["Mod1ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMin"]);
+                                affix.Mod1.ValueMax = dr["Mod1ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMax"]);
+                                affix.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
+                                affix.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
+                                affix.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                AffixCache.Add(affix);
+                            }
+                        }
+
+                        //Suffixes next
+                        com.CommandText = "SELECT * FROM Suffix s INNER JOIN ModCategory mc ON mc.ModCategoryId = s.ModCategoryId;";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                var affix = new AffixLocal();
+                                affix.AffixId = dr["SuffixId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["SuffixId"]);
+                                affix.AffixType = "Suffix";
+                                affix.Name = dr["Name"].ToString();
+                                affix.Level = dr["Level"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Level"]);
+                                affix.ModCategoryId = dr["ModCategoryId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModCategoryId"]);
+                                affix.ModCategoryName = dr["ModCategoryName"].ToString();
+                                affix.Mod1.Id = dr["Mod1Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1Id"]);
+                                affix.Mod1.ValueMin = dr["Mod1ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMin"]);
+                                affix.Mod1.ValueMax = dr["Mod1ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMax"]);
+                                affix.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
+                                affix.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
+                                affix.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                AffixCache.Add(affix);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
+            return;
+        }
+
+        public static void LoadBaseItem(int baseItemId)
+        {
+            try
+            {
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+                        com.CommandText = "SELECT * FROM BaseItem b INNER JOIN ItemType i1 ON i1.ItemTypeId = b.ItemTypeId INNER JOIN ItemSubType i2 ON i2.ItemTypeId = b.ItemTypeId AND i2.ItemSubTypeId = b.ItemSubTypeId WHERE b.BaseItemId = " + baseItemId + ";";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                BaseItem.BaseItemId = baseItemId;
+                                BaseItem.ItemName = dr["ItemName"].ToString();
+                                BaseItem.ItemTypeName = dr["ItemTypeName"].ToString();
+                                BaseItem.ItemSubTypeName = dr["ItemSubTypeName"].ToString();
+                                BaseItem.ReqLevel = dr["ReqLevel"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ReqLevel"]);
+                                BaseItem.ReqStr = dr["ReqStr"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ReqStr"]);
+                                BaseItem.ReqDex = dr["ReqDex"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ReqDex"]);
+                                BaseItem.ReqInt = dr["ReqInt"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ReqInt"]);
+                                BaseItem.Armour = dr["Armour"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Armour"]);
+                                BaseItem.Evasion = dr["Evasion"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Evasion"]);
+                                BaseItem.EnergyShield = dr["EnergyShield"] == DBNull.Value ? 0 : Convert.ToInt32(dr["EnergyShield"]);
+                                BaseItem.DamagePhysicalMin = dr["DamagePhysicalMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["DamagePhysicalMin"]);
+                                BaseItem.DamagePhysicalMax = dr["DamagePhysicalMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["DamagePhysicalMax"]);
+                                BaseItem.AttackSpeed = dr["AttackSpeed"] == DBNull.Value ? 0 : Convert.ToDecimal(dr["AttackSpeed"]);
+                                BaseItem.DPS = dr["DPS"] == DBNull.Value ? 0 : Convert.ToDecimal(dr["DPS"]);
+                                BaseItem.Mod1.Id = dr["Mod1Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1Id"]);
+                                BaseItem.Mod1.ValueMin = dr["Mod1ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMin"]);
+                                BaseItem.Mod1.ValueMax = dr["Mod1ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMax"]);
+                                BaseItem.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
+                                BaseItem.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
+                                BaseItem.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
+            return;
+        }
+
         public static int RunQuery(string sql)
         {
             //This method just runs a SQL query that has no results against the standard connection
@@ -146,10 +302,7 @@ namespace ExileClipboardListener.Classes
                         com.CommandTimeout = CommandTimeout;
                         com.CommandText = sql;
                         object result = com.ExecuteScalar();
-                        if (result == DBNull.Value)
-                            value = 0;
-                        else
-                            value = Convert.ToInt32(result);
+                        value = result == DBNull.Value ? 0 : Convert.ToInt32(result);
                         //value = (com.ExecuteScalar() as int?) ?? 0;
                     }
                 }
@@ -246,7 +399,7 @@ namespace ExileClipboardListener.Classes
             return value ?? "";
         }
 
-        public static int StuffGrid(string sql, DataGridView gridTarget, bool ReloadColumns = true)
+        public static int StuffGrid(string sql, DataGridView gridTarget, bool reloadColumns = true)
         {
             //This method will run a SQL query and load the results into the specified data grid
             //We try to be clever with dates, if we have a column with a date format then we will convert the SQL results to a date before loading them
@@ -255,7 +408,7 @@ namespace ExileClipboardListener.Classes
             try
             {
                 gridTarget.Rows.Clear();
-                if (ReloadColumns)
+                if (reloadColumns)
                     gridTarget.Columns.Clear();
                 using (var con = new SQLiteConnection (Connection))
                 {
@@ -267,7 +420,7 @@ namespace ExileClipboardListener.Classes
                         using (var dr = com.ExecuteReader())
                         {
                             int columnCount = dr.FieldCount;
-                            if (ReloadColumns)
+                            if (reloadColumns)
                             {
                                 //Add the columns dynamically
                                 for (int i = 0; i < columnCount; i++)
@@ -371,9 +524,9 @@ namespace ExileClipboardListener.Classes
             return;
         }
 
-        public static List<GlobalMethods.Affix> StuffList(string sql)
+        public static List<Affix> StuffList(string sql)
         {
-            var results = new List<GlobalMethods.Affix>();
+            var results = new List<Affix>();
             try
             {
                 using (var con = new SQLiteConnection(Connection))
@@ -388,15 +541,19 @@ namespace ExileClipboardListener.Classes
                             //Now process the results set
                             while (dr.Read())
                             {
-                                var affix = new GlobalMethods.Affix();
-                                affix.AffixId = Convert.ToInt32(dr["AffixId"]);
-                                affix.Level = Convert.ToInt32(dr["Level"]);
-                                affix.Mod1.Id = Convert.ToInt32(dr["Mod1Id"]);
-                                affix.Mod1.ValueMin = Convert.ToInt32(dr["Mod1ValueMin"]);
-                                affix.Mod1.ValueMax = Convert.ToInt32(dr["Mod1ValueMax"]);
-                                affix.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
-                                affix.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
-                                affix.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                var affix = new Affix
+                                                {
+                                                    AffixId = Convert.ToInt32(dr["AffixId"]),
+                                                    Level = Convert.ToInt32(dr["Level"]),
+                                                    Mod1 = {
+                                                        Id = Convert.ToInt32(dr["Mod1Id"]), 
+                                                        ValueMin = Convert.ToInt32(dr["Mod1ValueMin"]), 
+                                                        ValueMax = Convert.ToInt32(dr["Mod1ValueMax"])}, 
+                                                    Mod2 = {
+                                                        Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]), 
+                                                        ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]), 
+                                                        ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"])}
+                                                };
                                 results.Add(affix);
                             }
                         }

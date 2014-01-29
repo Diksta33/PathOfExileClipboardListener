@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 using ExileClipboardListener.Properties;
@@ -13,10 +10,10 @@ namespace ExileClipboardListener.WinForms
 {
     public partial class FilterResults : Form
     {
-        private int FilterId;
+        private int _filterId;
         private int _itemTypeId;
         private int _itemSubTypeId;
-        private List<int> _filters = new List<int>();
+        private readonly List<int> _filters = new List<int>();
 
         public FilterResults()
         {
@@ -38,16 +35,16 @@ namespace ExileClipboardListener.WinForms
             //Load the mod classes
             for (int affix = 0; affix < 6; affix++)
             {
-                string AffixType = affix < 3 ? "Prefix" : "Suffix";
-                string AffixName = affix < 3 ? "Prefix" + (affix + 1) : "Suffix" + (affix - 2);
-                string sql = "SELECT '(Any)' UNION ALL SELECT '' UNION ALL SELECT DISTINCT ModClass FROM Mod m INNER JOIN " + AffixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
+                string affixType = affix < 3 ? "Prefix" : "Suffix";
+                string affixName = affix < 3 ? "Prefix" + (affix + 1) : "Suffix" + (affix - 2);
+                string sql = "SELECT '(Any)' UNION ALL SELECT '' UNION ALL SELECT DISTINCT ModClass FROM Mod m INNER JOIN " + affixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
                 sql += " ORDER BY 1;";
 
                 //Push this into the combo
-                ComboBox AffixModClass = (ComboBox)tabControl1.Controls.Find(AffixName + "ModClass", true)[0];
-                GlobalMethods.StuffCombo(sql, AffixModClass);
-                if (AffixModClass.Items.Count > 0)
-                    AffixModClass.SelectedIndex = 0;
+                var affixModClass = (ComboBox)tabControl1.Controls.Find(affixName + "ModClass", true)[0];
+                GlobalMethods.StuffCombo(sql, affixModClass);
+                if (affixModClass.Items.Count > 0)
+                    affixModClass.SelectedIndex = 0;
             }
         }
 
@@ -56,16 +53,16 @@ namespace ExileClipboardListener.WinForms
             //Load the mods
             for (int affix = 0; affix < 6; affix++)
             {
-                string AffixType = affix < 3 ? "Prefix" : "Suffix";
-                string AffixName = affix < 3 ? "Prefix" + (affix + 1) : "Suffix" + (affix - 2);
-                string sql = "SELECT '(Any)' UNION ALL SELECT '' UNION ALL SELECT DISTINCT m.ModName FROM Mod m INNER JOIN " + AffixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL"; 
+                string affixType = affix < 3 ? "Prefix" : "Suffix";
+                string affixName = affix < 3 ? "Prefix" + (affix + 1) : "Suffix" + (affix - 2);
+                string sql = "SELECT '(Any)' UNION ALL SELECT '' UNION ALL SELECT DISTINCT m.ModName FROM Mod m INNER JOIN " + affixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL"; 
                 sql += " ORDER BY 1;";
 
                 //Push this into the combo
-                ComboBox AffixMod = (ComboBox)tabControl1.Controls.Find(AffixName + "Mod", true)[0];
-                GlobalMethods.StuffCombo(sql, AffixMod);
-                if (AffixMod.Items.Count > 0)
-                    AffixMod.SelectedIndex = 0;
+                var affixMod = (ComboBox)tabControl1.Controls.Find(affixName + "Mod", true)[0];
+                GlobalMethods.StuffCombo(sql, affixMod);
+                if (affixMod.Items.Count > 0)
+                    affixMod.SelectedIndex = 0;
             }
         }
 
@@ -74,15 +71,15 @@ namespace ExileClipboardListener.WinForms
             //Load up the current stash item onto the form
             Rarity.Text = GlobalMethods.GetScalarString("SELECT RarityName FROM Rarity WHERE RarityId = " + GlobalMethods.StashItem.RarityId + ";");
             ItemName.Text = GlobalMethods.StashItem.ItemName;
-            BaseItemName.Text = GlobalMethods.GetScalarString("SELECT ItemName FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+            BaseItemName.Text = GlobalMethods.BaseItem.ItemName; //GlobalMethods.GetScalarString("SELECT ItemName FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
             Quality.Text = GlobalMethods.StashItem.Quality.ToString();
             ItemType.Text = GlobalMethods.StashItem.ItemTypeName;
             ItemSubType.Text = GlobalMethods.StashItem.ItemSubTypeName;
 
             //Defense
-            BaseArmour.Text = GlobalMethods.GetScalarInt("SELECT Armour FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            BaseEvasion.Text = GlobalMethods.GetScalarInt("SELECT Evasion FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            BaseEnergyShield.Text = GlobalMethods.GetScalarInt("SELECT EnergyShield FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            BaseArmour.Text = GlobalMethods.BaseItem.Armour.ToString(); // GlobalMethods.GetScalarInt("SELECT Armour FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            BaseEvasion.Text = GlobalMethods.BaseItem.Evasion.ToString(); // GlobalMethods.GetScalarInt("SELECT Evasion FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            BaseEnergyShield.Text = GlobalMethods.BaseItem.EnergyShield.ToString(); // GlobalMethods.GetScalarInt("SELECT EnergyShield FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
             Armour.Text = GlobalMethods.StashItem.Armour.ToString();
             Evasion.Text = GlobalMethods.StashItem.Evasion.ToString();
             EnergyShield.Text = GlobalMethods.StashItem.EnergyShield.ToString();
@@ -92,16 +89,29 @@ namespace ExileClipboardListener.WinForms
             PhysicalDamageTo.Text = GlobalMethods.StashItem.PhysicalDamageMax.ToString();
             ElementalDamageFrom.Text = GlobalMethods.StashItem.ElementalDamageMin.ToString();
             ElementalDamageTo.Text = GlobalMethods.StashItem.ElementalDamageMax.ToString();
+            BaseAttackSpeed.Text = GlobalMethods.StashItem.BaseAttacksPerSecond.ToString();
             AttackSpeed.Text = GlobalMethods.StashItem.AttacksPerSecond.ToString();
-            DPS.Text = GlobalMethods.StashItem.DamagePerSecond.ToString();
+            BaseDPS.Text = GlobalMethods.StashItem.DamagePerSecond.ToString();
+
+            //Work out the pDPS and eDPS
+            decimal attackSpeed;
+            if (decimal.TryParse(AttackSpeed.Text, out attackSpeed))
+            {
+                int damMin;
+                int damMax;
+                if (int.TryParse(PhysicalDamageFrom.Text, out damMin) && int.TryParse(PhysicalDamageTo.Text, out damMax))
+                    PhysicalDPS.Text = (((damMax + damMin) / 2) * attackSpeed).ToString("#0.00");
+                if (int.TryParse(ElementalDamageFrom.Text, out damMin) && int.TryParse(ElementalDamageTo.Text, out damMax))
+                    ElementalDPS.Text = (((damMax + damMin) / 2) * attackSpeed).ToString("#0.00");
+            }
 
             //Requirements
             ItemLevel.Text = GlobalMethods.StashItem.ItemLevel.ToString();
             ReqLevel.Text = GlobalMethods.StashItem.ReqLevel.ToString();
             ReqLevelBase.Text = GlobalMethods.StashItem.ReqLevelBase.ToString();
-            ReqStr.Text = GlobalMethods.GetScalarInt("SELECT ReqStr FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            ReqDex.Text = GlobalMethods.GetScalarInt("SELECT ReqDex FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            ReqInt.Text = GlobalMethods.GetScalarInt("SELECT ReqInt FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            ReqStr.Text = GlobalMethods.BaseItem.ReqStr.ToString(); // GlobalMethods.GetScalarInt("SELECT ReqStr FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            ReqDex.Text = GlobalMethods.BaseItem.ReqDex.ToString(); // GlobalMethods.GetScalarInt("SELECT ReqDex FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            ReqInt.Text = GlobalMethods.BaseItem.ReqInt.ToString(); // GlobalMethods.GetScalarInt("SELECT ReqInt FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
 
             //Sockets
             Sockets.Text = GlobalMethods.StashItem.Sockets;
@@ -129,9 +139,9 @@ namespace ExileClipboardListener.WinForms
                 int affixId = GlobalMethods.StashItem.Affix[i].AffixId;
                 if (GlobalMethods.StashItem.Affix[i].Mod1.Value != 0)
                 {
-                    string AffixName = i == 0 ? "Implicit" : (i < 4 ? "Prefix" : "Suffix");
+                    string affixName = i == 0 ? "Implicit" : (i < 4 ? "Prefix" : "Suffix");
                     row[AffixIdColumn.Index] = affixId;
-                    row[AffixTypeColumn.Index] = AffixName;
+                    row[AffixTypeColumn.Index] = affixName;
                     if (i == 0)
                     {
                         row[AffixLevelColumn.Index] = "";
@@ -141,8 +151,8 @@ namespace ExileClipboardListener.WinForms
                     else
                     {
                         row[AffixLevelColumn.Index] = GlobalMethods.StashItem.Affix[i].Level;
-                        row[AffixCategoryColumn.Index] = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory mc INNER JOIN " + AffixName + " a ON a.ModCategoryId = mc.ModCategoryId WHERE a." + AffixName + "Id = " + affixId + ";");
-                        row[AffixNameColumn.Index] = GlobalMethods.GetScalarString("SELECT Name FROM " + AffixName + " WHERE " + AffixName + "Id = " + affixId + ";");
+                        row[AffixCategoryColumn.Index] = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory mc INNER JOIN " + affixName + " a ON a.ModCategoryId = mc.ModCategoryId WHERE a." + affixName + "Id = " + affixId + ";");
+                        row[AffixNameColumn.Index] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixName + " WHERE " + affixName + "Id = " + affixId + ";");
                     }
                     row[AffixPrimaryModNameColumn.Index] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + GlobalMethods.StashItem.Affix[i].Mod1.Id + ";");
                     row[AffixPrimaryModRangeColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod1.ValueMin + "-" + GlobalMethods.StashItem.Affix[i].Mod1.ValueMax;
@@ -188,10 +198,10 @@ namespace ExileClipboardListener.WinForms
             AverageScoreColumn.DefaultCellStyle.Format = "0\\%";
             foreach (int filterId in _filters)
             {
-                int _filterScore = ScoreFilter(filterId);
+                int filterScore = ScoreFilter(filterId);
                 var row = new object[2];
                 row[0] = GlobalMethods.GetScalarString("SELECT FilterName FROM FilterHeader WHERE FilterId = " + filterId + ";");
-                row[1] = _filterScore;
+                row[1] = filterScore;
                 FilterResultsGrid.Rows.Add(row);
             }
 
@@ -199,7 +209,7 @@ namespace ExileClipboardListener.WinForms
             FilterResultsGrid.Sort(FilterResultsGrid.Columns[1], ListSortDirection.Descending);
         }
 
-        private int ScoreFilter(int FilterId, bool showDetail = false, int filterAffixSlot = 0)
+        private int ScoreFilter(int filterId, bool showDetail = false, int filterAffixSlot = 0)
         {
             //This is where the fun begins, we pull out the various mods we were looking for and mark the item against them
             //We return a score but we also load the specified filter and the results into a static class in case we need to do more work with them
@@ -209,8 +219,8 @@ namespace ExileClipboardListener.WinForms
             {
                 string affixType = affixSlot < 4 ? "Prefix" : "Suffix";
                 string affixName = affixSlot < 4 ? "Prefix" + affixSlot : "Suffix" + (affixSlot - 3);
-                string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM FilterDetail WHERE FilterId = " + FilterId + " AND AffixSlot = " + affixSlot + ";");
-                int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM FilterDetail WHERE FilterId = " + FilterId + " AND AffixSlot = " + affixSlot + ";");
+                string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM FilterDetail WHERE FilterId = " + filterId + " AND AffixSlot = " + affixSlot + ";");
+                int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM FilterDetail WHERE FilterId = " + filterId + " AND AffixSlot = " + affixSlot + ";");
              
                 //Clean down any previous values
                 if (showDetail)
@@ -236,7 +246,7 @@ namespace ExileClipboardListener.WinForms
                 //Otherwise we have to work out which mods the item could have based on the mod class
                 else
                 {
-                    List<int> match = new List<int>();
+                    var match = new List<int>();
                     string sql = "SELECT m.ModId FROM Mod m WHERE m.ModClass = '" + modClass + "'";
 
                     //We filter by the current item type
@@ -454,14 +464,14 @@ namespace ExileClipboardListener.WinForms
                 return;
 
             //Determine the filter
-            FilterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterResultsGrid.CurrentRow.Cells[0].Value + "';");
+            _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterResultsGrid.CurrentRow.Cells[0].Value + "';");
 
             //Load up the mods into the controls
             for (int affixSlot = 1; affixSlot < 7; affixSlot++)
             {
                 string affixName = affixSlot < 4 ? "Prefix" + affixSlot : "Suffix" + (affixSlot - 3);
-                string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM FilterDetail WHERE FilterId = " + FilterId + " AND AffixSlot = " + affixSlot + ";");
-                int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM FilterDetail WHERE FilterId = " + FilterId + " AND AffixSlot = " + affixSlot + ";");
+                string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM FilterDetail WHERE FilterId = " + _filterId + " AND AffixSlot = " + affixSlot + ";");
+                int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM FilterDetail WHERE FilterId = " + _filterId + " AND AffixSlot = " + affixSlot + ";");
                 if (modClass != "")
                 {
                     Controls.Find(affixName + "ModClass", true)[0].Text = modClass;
@@ -483,7 +493,7 @@ namespace ExileClipboardListener.WinForms
             }
 
             //Show a breakdown of the score
-            ScoreFilter(FilterId, true);
+            ScoreFilter(_filterId, true);
         }
 
         private void RefreshResults_Click(object sender, EventArgs e)
@@ -510,7 +520,7 @@ namespace ExileClipboardListener.WinForms
             string affixType = AffixGrid.CurrentRow.Cells[AffixTypeColumn.Index].Value.ToString();
             int mod1Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value + "';");
             int mod2Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value + "';");
-            new AffixDetails() { AffixId = affixId, AffixType = affixType, Mod1Id = mod1Id, Mod2Id = mod2Id }.ShowDialog();
+            new AffixDetails { AffixId = affixId, AffixType = affixType, Mod1Id = mod1Id, Mod2Id = mod2Id }.ShowDialog();
         }
 
         private void ModDetails_Click(object sender, EventArgs e)
@@ -518,43 +528,43 @@ namespace ExileClipboardListener.WinForms
             if (ModGrid.CurrentRow == null)
                 return;
             int modId = Convert.ToInt32(ModGrid.CurrentRow.Cells[ModIdColumn.Index].Value);
-            new ModDetails() { ModId = modId }.ShowDialog();
+            new ModDetails { ModId = modId }.ShowDialog();
         }
 
         private void Prefix1Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(FilterId, false, 1);
-            new RollDetails() { AffixTypeString = "Prefix", ModClassName = Prefix1ModClass.Text, ModNameString = Prefix1Mod.Text }.ShowDialog();
+            ScoreFilter(_filterId, false, 1);
+            new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix1ModClass.Text, ModNameString = Prefix1Mod.Text }.ShowDialog();
         }
 
         private void Prefix2Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(FilterId, false, 2);
-            new RollDetails() { AffixTypeString = "Prefix", ModClassName = Prefix2ModClass.Text, ModNameString = Prefix2Mod.Text }.ShowDialog();
+            ScoreFilter(_filterId, false, 2);
+            new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix2ModClass.Text, ModNameString = Prefix2Mod.Text }.ShowDialog();
         }
 
         private void Prefix3Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(FilterId, false, 3);
-            new RollDetails() { AffixTypeString = "Prefix", ModClassName = Prefix3ModClass.Text, ModNameString = Prefix3Mod.Text }.ShowDialog();
+            ScoreFilter(_filterId, false, 3);
+            new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix3ModClass.Text, ModNameString = Prefix3Mod.Text }.ShowDialog();
         }
 
         private void Suffix1Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(FilterId, false, 4);
-            new RollDetails() { AffixTypeString = "Suffix", ModClassName = Suffix1ModClass.Text, ModNameString = Suffix1Mod.Text }.ShowDialog();
+            ScoreFilter(_filterId, false, 4);
+            new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix1ModClass.Text, ModNameString = Suffix1Mod.Text }.ShowDialog();
         }
 
         private void Suffix2Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(FilterId, false, 5);
-            new RollDetails() { AffixTypeString = "Suffix", ModClassName = Suffix2ModClass.Text, ModNameString = Suffix2Mod.Text }.ShowDialog();
+            ScoreFilter(_filterId, false, 5);
+            new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix2ModClass.Text, ModNameString = Suffix2Mod.Text }.ShowDialog();
         }
 
         private void Suffix3Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(FilterId, false, 6);
-            new RollDetails() { AffixTypeString = "Suffix", ModClassName = Suffix3ModClass.Text, ModNameString = Suffix3Mod.Text }.ShowDialog();
+            ScoreFilter(_filterId, false, 6);
+            new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix3ModClass.Text, ModNameString = Suffix3Mod.Text }.ShowDialog();
         }
     }
 }
