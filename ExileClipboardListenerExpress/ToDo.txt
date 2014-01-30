@@ -1,0 +1,5 @@
+- Handle mods when they are implict better, remove them from the list of mods if they match on ModId and Value, be careful there might be a double +Accuracy on a weapon for example, with one mod being a prefix and the other implict;
+
+- When there are mods left unassigned put in some hardcoded fixes for hybrid affixes to try and guess the values;
+
+- Make caching work better, probably with a LINQ search in the Lists?

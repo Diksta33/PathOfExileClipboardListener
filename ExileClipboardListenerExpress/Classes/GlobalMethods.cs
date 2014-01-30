@@ -56,6 +56,20 @@ namespace ExileClipboardListener.Classes
         }
         public static List<AffixLocal> AffixCache = new List<AffixLocal>();
 
+        public class ModLocal
+        {
+            public int ModId;
+            public string ModName;
+            public string ModRealName;
+            public int ModPair;
+            public int Armour;
+            public int Weapons;
+            public int Jewellery;
+            public string ModClass;
+        }
+        public static List<ModLocal> ModCache = new List<ModLocal>();
+        public static ModLocal CurrentMod;
+
         //Modification
         public struct Mod
         {
@@ -204,6 +218,26 @@ namespace ExileClipboardListener.Classes
                                 AffixCache.Add(affix);
                             }
                         }
+
+                        //Mods last
+                        com.CommandText = "SELECT * FROM Mod;";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                var mod = new ModLocal();
+                                mod.ModId = dr["ModId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModId"]);
+                                mod.ModName = dr["ModName"].ToString();
+                                mod.ModRealName = dr["ModRealName"].ToString();
+                                mod.ModPair = dr["ModPair"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModPair"]);
+                                mod.ModId = dr["ModId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModId"]);
+                                mod.Armour = dr["Armour"] == DBNull.Value ? 1 : Convert.ToInt32(dr["Armour"]);
+                                mod.Weapons = dr["Weapons"] == DBNull.Value ? 1 : Convert.ToInt32(dr["Weapons"]);
+                                mod.Jewellery = dr["Jewellery"] == DBNull.Value ? 1 : Convert.ToInt32(dr["Jewellery"]);
+                                mod.ModClass = dr["ModClass"].ToString();
+                                ModCache.Add(mod);
+                            }
+                        }
                     }
                 }
             }
@@ -262,6 +296,24 @@ namespace ExileClipboardListener.Classes
                 return;
             }
             return;
+        }
+
+        public static void LoadMod(int modId)
+        {
+            CurrentMod.ModId = modId;
+            for (int i = 0; i < ModCache.Count; i++)
+            {
+                if (ModCache[i].ModId == modId)
+                {
+                    CurrentMod.ModName = ModCache[i].ModName;
+                    CurrentMod.ModRealName = ModCache[i].ModName;
+                    CurrentMod.ModPair = ModCache[i].ModPair;
+                    CurrentMod.Armour = ModCache[i].Armour;
+                    CurrentMod.Weapons = ModCache[i].Weapons;
+                    CurrentMod.Jewellery = ModCache[i].Jewellery;
+                    CurrentMod.ModClass = ModCache[i].ModClass;
+                }
+            }
         }
 
         public static int RunQuery(string sql)

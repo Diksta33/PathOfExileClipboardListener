@@ -17,11 +17,12 @@ namespace ExileClipboardListener.WinForms
         private void ModDetails_Load(object sender, EventArgs e)
         {
             RefreshAffixGrid();
-            ModName.Text = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + ModId + ";");
-            ModClass.Text = GlobalMethods.GetScalarString("SELECT ModClass FROM Mod WHERE ModId = " + ModId + ";");
-            Weapons.Checked = GlobalMethods.GetScalarInt("SELECT IFNULL(Weapons, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
-            Armour.Checked = GlobalMethods.GetScalarInt("SELECT IFNULL(Armour, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
-            Jewellery.Checked = GlobalMethods.GetScalarInt("SELECT IFNULL(Jewellery, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
+            GlobalMethods.LoadMod(ModId);
+            ModName.Text = GlobalMethods.CurrentMod.ModName;// GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + ModId + ";");
+            ModClass.Text = GlobalMethods.CurrentMod.ModClass; // GlobalMethods.GetScalarString("SELECT ModClass FROM Mod WHERE ModId = " + ModId + ";");
+            Weapons.Checked = GlobalMethods.CurrentMod.Weapons == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Weapons, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
+            Armour.Checked = GlobalMethods.CurrentMod.Armour == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Armour, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
+            Jewellery.Checked = GlobalMethods.CurrentMod.Jewellery == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Jewellery, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
         }
 
         private void RefreshAffixGrid()

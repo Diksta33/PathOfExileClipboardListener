@@ -188,6 +188,7 @@ namespace ExileClipboardListener.WinForms
         private void RefreshFilters()
         {
             //Show the filters that match the current item and score them
+            FilterResultsGrid.Rows.Clear();
             _itemTypeId = GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + GlobalMethods.StashItem.ItemTypeName + "';");
             _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemSubTypeName = '" + GlobalMethods.StashItem.ItemSubTypeName + "';");
 

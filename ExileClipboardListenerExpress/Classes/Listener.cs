@@ -271,30 +271,37 @@ namespace ExileClipboardListener.Classes
                         else
                         {
                             //We found a mod, so cache it
-                            var mod = new GlobalMethods.Mod { Id = modId };
-                            modValue = modValue.Replace("%", "");
-                            modValue = modValue.Replace("+", "");
+                            //Unless it's an implict mod in which case we ignore it
+                            string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM [Mod] WHERE ModId = " + modId + ";");
+                            if (modClass != "<implicit>")
+                            {
+                                var mod = new GlobalMethods.Mod { Id = modId };
+                                modValue = modValue.Replace("%", "");
+                                modValue = modValue.Replace("+", "");
 
-                            //Life Regen is a pain because it needs multiplying up to get a value we can use
-                            if (modName == "Life Regenerated per second")
-                            {
-                                mod.Value = Convert.ToInt32(Convert.ToDecimal(modValue) * 60);
-                            }
-                            else
-                            {
-                                mod.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
-                            }
-                            mods.Add(mod);
+                                //Life Regen is a pain because it needs multiplying up to get a value we can use
+                                if (modName == "Life Regenerated per second")
+                                {
+                                    mod.Value = Convert.ToInt32(Convert.ToDecimal(modValue) * 60);
+                                }
+                                else
+                                {
+                                    mod.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
+                                }
+                                mods.Add(mod);
 
-                            //Check to see if this is a mod pair, if it is then match the secondary mod
-                            //Mod Pairs always have range values, e.g. 1-5, the minimum value is recorded against the first mod and the maximum value is recorded against the second mod
-                            modId = GlobalMethods.GetScalarInt("SELECT ModId FROM [Mod] WHERE IFNULL(ModRealName, ModName) = '" + modName + "' AND IFNULL(ModPair, 1) = 2 AND IFNULL(" + itemTypeName + ", 1) = 1;");
-                            if (modId != 0)
-                            {
-                                var mod2 = new GlobalMethods.Mod {
-                                    Id = modId, 
-                                    Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] {"-"}, StringSplitOptions.None)[1]) : 0};
-                                mods.Add(mod2);
+                                //Check to see if this is a mod pair, if it is then match the secondary mod
+                                //Mod Pairs always have range values, e.g. 1-5, the minimum value is recorded against the first mod and the maximum value is recorded against the second mod
+                                modId = GlobalMethods.GetScalarInt("SELECT ModId FROM [Mod] WHERE IFNULL(ModRealName, ModName) = '" + modName + "' AND IFNULL(ModPair, 1) = 2 AND IFNULL(" + itemTypeName + ", 1) = 1;");
+                                if (modId != 0)
+                                {
+                                    var mod2 = new GlobalMethods.Mod
+                                    {
+                                        Id = modId,
+                                        Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[1]) : 0
+                                    };
+                                    mods.Add(mod2);
+                                }
                             }
                         }
                     }
@@ -326,12 +333,12 @@ namespace ExileClipboardListener.Classes
                     var mpMod2 = new GlobalMethods.Mod();
                     foreach (var mp in mods)
                     {
-                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax)
+                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= GlobalMethods.StashItem.ItemLevel)
                         {
                             mpMod1 = mp;
                             matched++;
                         }
-                        if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax)
+                        if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax && f.Level <= GlobalMethods.StashItem.ItemLevel)
                         {
                             mpMod2 = mp;
                             matched++;
@@ -360,7 +367,7 @@ namespace ExileClipboardListener.Classes
                     var mpMod = new GlobalMethods.Mod();
                     foreach (var mp in mods)
                     {
-                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax)
+                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= GlobalMethods.StashItem.ItemLevel)
                         {
                             //We got a hit
                             mpMod = mp;
