@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
+using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 
 namespace ExileClipboardListener.WinForms
 {
@@ -35,7 +36,7 @@ namespace ExileClipboardListener.WinForms
             {
                 int affixId = Convert.ToInt32(AffixGrid.Rows[row].Cells[AffixIdColumn.Index].Value);
                 int level = Convert.ToInt32(AffixGrid.Rows[row].Cells[AffixLevelColumn.Index].Value);
-                if (level <= GlobalMethods.StashItem.ItemLevel)
+                if (level <= si.ItemLevel)
                     AffixGrid.Rows[row].DefaultCellStyle.BackColor = Color.LightGreen;
                 if (affixId == AffixId)
                 {

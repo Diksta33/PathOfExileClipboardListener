@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using ExileClipboardListener.WinForms;
+using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
+using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
 
 namespace ExileClipboardListener.Classes
 {
@@ -41,7 +43,7 @@ namespace ExileClipboardListener.Classes
 
                 //Remove any superfluous text but store the original text first
                 GlobalMethods.ClearStash();
-                GlobalMethods.StashItem.OriginalText = item;
+                si.OriginalText = item;
                 item = item.Replace(" (augmented)", "");
                 item = item.Replace("Adds ", "");
                 item = item.Replace("Reflects ", "");
@@ -111,12 +113,12 @@ namespace ExileClipboardListener.Classes
                     return;
                 }
 
-                GlobalMethods.StashItem.ItemName = entity[1];
-                GlobalMethods.StashItem.Quality = FindAnyValue<int>(entity, "Quality");
-                GlobalMethods.StashItem.RarityId = GlobalMethods.GetScalarInt("SELECT RarityId FROM Rarity WHERE RarityName = '" + entity[0].Split(':')[1].Trim() + "';");
+                si.ItemName = entity[1];
+                si.Quality = FindAnyValue<int>(entity, "Quality");
+                si.RarityId = GlobalMethods.GetScalarInt("SELECT RarityId FROM Rarity WHERE RarityName = '" + entity[0].Split(':')[1].Trim() + "';");
 
                 //Parse out the base item name
-                if (GlobalMethods.StashItem.RarityId == 0)
+                if (si.RarityId == 0)
                 {
                     MessageBox.Show("Catastrophic Failure!");
                     _loaded = false;
@@ -124,66 +126,66 @@ namespace ExileClipboardListener.Classes
                 }
 
                 //For normal items there is no item name other than the base item name
-                if (GlobalMethods.StashItem.RarityId == 1)
-                    GlobalMethods.StashItem.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + GlobalMethods.StashItem.ItemName.Replace("'", "''") + "';");
+                if (si.RarityId == 1)
+                    si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + si.ItemName.Replace("'", "''") + "';");
 
                 //Magic items have the base item name embedded in the magic name
-                if (GlobalMethods.StashItem.RarityId == 2)
+                if (si.RarityId == 2)
                 {
-                    string name = GlobalMethods.StashItem.ItemName;
+                    string name = si.ItemName;
 
                     //Remove any suffix
                     name = name.Split(new[] { " of " }, StringSplitOptions.None)[0];
-                    GlobalMethods.StashItem.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + name.Replace("'", "''") + "';");
+                    si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + name.Replace("'", "''") + "';");
 
                     //We might also need to remove the prefix
-                    if (GlobalMethods.StashItem.BaseItemId == 0)
+                    if (si.BaseItemId == 0)
                     {
                         string prefix = name.Split(' ')[0];
                         name = name.Substring(prefix.Length + 1, name.Length - prefix.Length - 1);
-                        GlobalMethods.StashItem.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + name.Replace("'", "''") + "';");
+                        si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + name.Replace("'", "''") + "';");
                     }
                 }
 
                 //Rare items have a rare name and then the base item name, as do uniques
-                if (GlobalMethods.StashItem.RarityId == 3 || GlobalMethods.StashItem.RarityId == 4)
-                    GlobalMethods.StashItem.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + entity[2].Replace("'", "''") + "';");
+                if (si.RarityId == 3 || si.RarityId == 4)
+                    si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + entity[2].Replace("'", "''") + "';");
                 RemoveSection(ref entity);
 
                 //And we stop here for Uniques for now anyway
-                if (GlobalMethods.StashItem.RarityId == 4 || GlobalMethods.StashItem.BaseItemId == 0)
+                if (si.RarityId == 4 || si.BaseItemId == 0)
                 {
                     _loaded = false;
                     return;
                 }
 
                 //If we have a base item then load it once
-                GlobalMethods.LoadBaseItem(GlobalMethods.StashItem.BaseItemId);
+                GlobalMethods.LoadBaseItem(si.BaseItemId);
 
                 //The second section is the item data
                 //Jewellery doesn't have a section, so we need to determine the item type first from the Base Item
-                string itemTypeName = GlobalMethods.BaseItem.ItemTypeName;// GlobalMethods.GetScalarString("SELECT it.ItemTypeName FROM BaseItem bi INNER JOIN ItemType it ON it.ItemTypeId = bi.ItemTypeId WHERE bi.BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                string itemSubTypeName = GlobalMethods.BaseItem.ItemSubTypeName; //GlobalMethods.GetScalarString("SELECT it.ItemSubTypeName FROM BaseItem bi INNER JOIN ItemSubType it ON it.ItemTypeId = bi.ItemTypeId AND it.ItemSubTypeId = bi.ItemSubTypeId WHERE bi.BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                GlobalMethods.StashItem.ItemTypeName = itemTypeName;
-                GlobalMethods.StashItem.ItemSubTypeName = itemSubTypeName;
+                string itemTypeName = bi.ItemTypeName;
+                string itemSubTypeName = bi.ItemSubTypeName;
+                si.ItemTypeName = itemTypeName;
+                si.ItemSubTypeName = itemSubTypeName;
                 if (itemTypeName != "Jewellery")
                 {
                     //Armour
-                    GlobalMethods.StashItem.Armour = FindAnyValue<int>(entity, "Armour");
-                    GlobalMethods.StashItem.Evasion = FindAnyValue<int>(entity, "Evasion Rating");
-                    GlobalMethods.StashItem.EnergyShield = FindAnyValue<int>(entity, "Energy Shield");
+                    si.Armour = FindAnyValue<int>(entity, "Armour");
+                    si.Evasion = FindAnyValue<int>(entity, "Evasion Rating");
+                    si.EnergyShield = FindAnyValue<int>(entity, "Energy Shield");
 
                     //Weapons
-                    GlobalMethods.StashItem.PhysicalDamageMin = FindAnyValue<int>(entity, "Physical Damage", 0);
-                    GlobalMethods.StashItem.PhysicalDamageMax = FindAnyValue<int>(entity, "Physical Damage", 1);
-                    GlobalMethods.StashItem.ElementalDamageMin = FindAnyValue<int>(entity, "Elemental Damage", 0);
-                    GlobalMethods.StashItem.ElementalDamageMax = FindAnyValue<int>(entity, "Elemental Damage", 1);
-                    GlobalMethods.StashItem.CriticalStrikeChance = FindAnyValue<decimal>(entity, "Critical Strike Chance");
-                    GlobalMethods.StashItem.AttacksPerSecond = FindAnyValue<decimal>(entity, "Attacks per Second");
-                    GlobalMethods.StashItem.BaseAttacksPerSecond = GlobalMethods.BaseItem.AttackSpeed; //GlobalMethods.GetScalarDecimal("SELECT AttackSpeed FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+                    si.PhysicalDamageMin = FindAnyValue<int>(entity, "Physical Damage", 0);
+                    si.PhysicalDamageMax = FindAnyValue<int>(entity, "Physical Damage", 1);
+                    si.ElementalDamageMin = FindAnyValue<int>(entity, "Elemental Damage", 0);
+                    si.ElementalDamageMax = FindAnyValue<int>(entity, "Elemental Damage", 1);
+                    si.CriticalStrikeChance = FindAnyValue<decimal>(entity, "Critical Strike Chance");
+                    si.AttacksPerSecond = FindAnyValue<decimal>(entity, "Attacks per Second");
+                    si.BaseAttacksPerSecond = bi.AttackSpeed;
 
                     //We only get the base DPS for now
-                    GlobalMethods.StashItem.DamagePerSecond = GlobalMethods.BaseItem.DPS; //GlobalMethods.GetScalarDecimal("SELECT DPS FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+                    si.DamagePerSecond = bi.DPS;
                     RemoveSection(ref entity);
                 }
 
@@ -192,66 +194,59 @@ namespace ExileClipboardListener.Classes
                 //var reqStr = Math.Max(FindAnyValue<int>(entity, "Str"), FindValue(entity, "Str (gem)"));
                 //var reqInt = Math.Max(FindAnyValue<int>(entity, "Int"), FindValue(entity, "Int (gem)"));
                 //var reqDex = Math.Max(FindAnyValue<int>(entity, "Dex"), FindValue(entity, "Dex (gem)"));
-                GlobalMethods.StashItem.ReqLevel = FindAnyValue<int>(entity, "Level");
-                GlobalMethods.StashItem.ReqLevelBase = GlobalMethods.BaseItem.ReqLevel; //GlobalMethods.GetScalarInt("SELECT ReqLevel FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+                si.ReqLevel = FindAnyValue<int>(entity, "Level");
+                si.ReqLevelBase = bi.ReqLevel;
                 RemoveSection(ref entity);
 
                 //Sockets
                 //For now just store them
                 if (itemTypeName != "Jewellery")
                 {
-                    GlobalMethods.StashItem.Sockets = FindAnyValue<string>(entity, "Sockets");
+                    si.Sockets = FindAnyValue<string>(entity, "Sockets");
                     RemoveSection(ref entity);
                 }
 
                 //Item Level
-                GlobalMethods.StashItem.ItemLevel = FindAnyValue<int>(entity, "Itemlevel");
+                si.ItemLevel = FindAnyValue<int>(entity, "Itemlevel");
                 RemoveSection(ref entity);
 
                 //Implict modifiers, there may not be any so we are a little careful
                 bool seenImplicit = false;
 
                 //Primary
-                //If there is a primary implicit mod then it's just a case of looking up the Min Value as there is never a max (for now!)
-                GlobalMethods.StashItem.Affix[0].Mod1.Id = GlobalMethods.BaseItem.Mod1.Id; // GlobalMethods.GetScalarInt("SELECT Mod1Id FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                if (GlobalMethods.StashItem.Affix[0].Mod1.Id != 0)
+                si.Affix[0].Mod1.Id = bi.Mod1.Id; 
+                if (si.Affix[0].Mod1.Id != 0)
                 {
-                    //If the mod has an "<implicit" at the start of the name then the value isn't rolled, it's just taken directly from the base item and won't appear in the item text anyway
-                    if (GlobalMethods.GetScalarString("SELECT ModRealName FROM [Mod] WHERE ModId = " + GlobalMethods.StashItem.Affix[0].Mod1.Id + ";").Contains("<implicit"))
-                    {
-                        GlobalMethods.StashItem.Affix[0].Mod1.Value = GlobalMethods.BaseItem.Mod1.ValueMin; // GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                    }
-                    else
-                    {
-                        //It won't always be this easy
-                        GlobalMethods.StashItem.Affix[0].Mod1.Value = FindMod(entity, GlobalMethods.GetScalarString("SELECT IFNULL(ModRealName, ModName) FROM [Mod] WHERE ModId = " + GlobalMethods.StashItem.Affix[0].Mod1.Id + ";"));
-                        seenImplicit = true;
-                    }
+                    var implicitMod = GlobalMethods.LookUpMod(si.Affix[0].Mod1.Id);
+
+                    //For primary implicit mods there might be a roll in the item script
+                    si.Affix[0].Mod1.Value = FindMod(entity, implicitMod.Name);
+                    if (si.Affix[0].Mod1.Value == 0)
+                        si.Affix[0].Mod1.Value = bi.Mod1.ValueMin;
+                    seenImplicit = true;
 
                     //We also want the minimum and maximum values from the base item
-                    GlobalMethods.StashItem.Affix[0].Mod1.ValueMin = GlobalMethods.BaseItem.Mod1.ValueMin; //GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                    GlobalMethods.StashItem.Affix[0].Mod1.ValueMax = GlobalMethods.BaseItem.Mod1.ValueMax; //GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+                    si.Affix[0].Mod1.ValueMin = bi.Mod1.ValueMin;
+                    si.Affix[0].Mod1.ValueMax = bi.Mod1.ValueMax;
                 }
 
                 //Secondary
                 //If there is a secondary implicit mod then it's just a case of looking up the values and storing them (as there is no roll - yet!)
-                GlobalMethods.StashItem.Affix[0].Mod2.Id = GlobalMethods.BaseItem.Mod2.Id; //GlobalMethods.GetScalarInt("SELECT Mod2Id FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                if (GlobalMethods.StashItem.Affix[0].Mod2.Id != 0)
+                si.Affix[0].Mod2.Id = bi.Mod2.Id; 
+                if (si.Affix[0].Mod2.Id != 0)
                 {
                     //It won't always be this easy
-                    GlobalMethods.StashItem.Affix[0].Mod2.Value = GlobalMethods.BaseItem.Mod2.ValueMin; //GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+                    si.Affix[0].Mod2.Value = bi.Mod2.ValueMin;
 
                     //We also want the minimum and maximum values from the base item
-                    GlobalMethods.StashItem.Affix[0].Mod2.ValueMin = GlobalMethods.BaseItem.Mod2.ValueMin;  //GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-                    GlobalMethods.StashItem.Affix[0].Mod2.ValueMax = GlobalMethods.BaseItem.Mod2.ValueMax; //GlobalMethods.GetScalarInt("SELECT Mod2ValueMax FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
+                    si.Affix[0].Mod2.ValueMin = bi.Mod2.ValueMin;
+                    si.Affix[0].Mod2.ValueMax = bi.Mod2.ValueMax;
                 }
 
                 //There may not have been any implict mods so we take care removing this section
                 if (seenImplicit)
                     RemoveSection(ref entity);
 
-                //Prefixes & Suffixes
-                //These are lumped together
                 //We need to pull out all the individual mods and then see if they map to a prefix or a suffix
                 var mods = new List<GlobalMethods.Mod>();
                 foreach (string s in entity)
@@ -263,45 +258,38 @@ namespace ExileClipboardListener.Classes
 
                         //We need to be a little careful, this is the first mod so only pick mods that are 1st in a sequence, e.g. phyiscal damage min/ max
                         //We also need to check if the mod is allowed on this item type
-                        int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM [Mod] WHERE IFNULL(ModRealName, ModName) = '" + modName + "' AND IFNULL(ModPair, 1) = 1 AND IFNULL(" + itemTypeName + ", 1) = 1;");
-                        if (modId == 0)
+                        //We sometimes have implict mods that have the same name as affix mods so we try to pick the correct one
+                        var match = GlobalMethods.FindMod(modName, 1, itemTypeName);
+                        if (match.Id == 0)
                         {
                             MessageBox.Show("Failed to find a mod with a name of " + modName + "!");
                         }
                         else
                         {
                             //We found a mod, so cache it
-                            //Unless it's an implict mod in which case we ignore it
-                            string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM [Mod] WHERE ModId = " + modId + ";");
-                            if (modClass != "<implicit>")
+                            var mod = new GlobalMethods.Mod { Id = match.Id };
+                            modValue = modValue.Replace("%", "");
+                            modValue = modValue.Replace("+", "");
+
+                            //Life Regen is a pain because it needs multiplying up to get a value we can use
+                            if (modName == "Life Regenerated per second")
+                                mod.Value = Convert.ToInt32(Convert.ToDecimal(modValue) * 60);
+                            else
+                                mod.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
+                            mod.Implicit = match.Class == "<implicit>";
+                            mods.Add(mod);
+
+                            //Check to see if this is a mod pair, if it is then match the secondary mod
+                            //Mod Pairs always have range values, e.g. 1-5, the minimum value is recorded against the first mod and the maximum value is recorded against the second mod
+                            match = GlobalMethods.FindMod(modName, 2, itemTypeName);
+                            if (match.Id != 0)
                             {
-                                var mod = new GlobalMethods.Mod { Id = modId };
-                                modValue = modValue.Replace("%", "");
-                                modValue = modValue.Replace("+", "");
-
-                                //Life Regen is a pain because it needs multiplying up to get a value we can use
-                                if (modName == "Life Regenerated per second")
+                                var mod2 = new GlobalMethods.Mod
                                 {
-                                    mod.Value = Convert.ToInt32(Convert.ToDecimal(modValue) * 60);
-                                }
-                                else
-                                {
-                                    mod.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
-                                }
-                                mods.Add(mod);
-
-                                //Check to see if this is a mod pair, if it is then match the secondary mod
-                                //Mod Pairs always have range values, e.g. 1-5, the minimum value is recorded against the first mod and the maximum value is recorded against the second mod
-                                modId = GlobalMethods.GetScalarInt("SELECT ModId FROM [Mod] WHERE IFNULL(ModRealName, ModName) = '" + modName + "' AND IFNULL(ModPair, 1) = 2 AND IFNULL(" + itemTypeName + ", 1) = 1;");
-                                if (modId != 0)
-                                {
-                                    var mod2 = new GlobalMethods.Mod
-                                    {
-                                        Id = modId,
-                                        Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[1]) : 0
-                                    };
-                                    mods.Add(mod2);
-                                }
+                                    Id = match.Id,
+                                    Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[1]) : 0
+                                };
+                                mods.Add(mod2);
                             }
                         }
                     }
@@ -310,8 +298,8 @@ namespace ExileClipboardListener.Classes
                 //Now we store the mods in the stash as they are useful and we can't guarantee the affixes
                 for (int i = 0; i < mods.Count; i++)
                 {
-                    GlobalMethods.StashItem.Mod[i].Id = mods[i].Id;
-                    GlobalMethods.StashItem.Mod[i].Value = mods[i].Value;
+                    si.Mod[i].Id = mods[i].Id;
+                    si.Mod[i].Value = mods[i].Value;
                 }
 
                 //Because some prefixes/ suffixes have two mods we need to find these first and then scoop up whatever is left as single mod "-ixes"
@@ -321,11 +309,10 @@ namespace ExileClipboardListener.Classes
                 // - Prefix = 11, Suffix = 10 (both are rank #2)
                 // - Prefix = 21 (rank #1)
                 // - Suffix = 21 (rank #1)
-                var prefixes = new List<GlobalMethods.AffixLocal>();
-                var suffixes = new List<GlobalMethods.AffixLocal>();
+                var prefixes = new List<GlobalMethods.Affix>();
+                var suffixes = new List<GlobalMethods.Affix>();
 
                 //Find affixes with two mods
-                //List<GlobalMethods.Affix> test = GlobalMethods.StuffList("SELECT DISTINCT PrefixId AS AffixId, Level, Mod1Id, Mod1ValueMin, Mod1ValueMax, NULL, Mod2Id, Mod2ValueMin, Mod2ValueMax, NULL FROM Prefix WHERE Mod2Id IS NOT NULL;");
                 foreach (var f in GlobalMethods.AffixCache)
                 {
                     int matched = 0;
@@ -333,12 +320,12 @@ namespace ExileClipboardListener.Classes
                     var mpMod2 = new GlobalMethods.Mod();
                     foreach (var mp in mods)
                     {
-                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= GlobalMethods.StashItem.ItemLevel)
+                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
                         {
                             mpMod1 = mp;
                             matched++;
                         }
-                        if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax && f.Level <= GlobalMethods.StashItem.ItemLevel)
+                        if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax && f.Level <= si.ItemLevel)
                         {
                             mpMod2 = mp;
                             matched++;
@@ -360,14 +347,13 @@ namespace ExileClipboardListener.Classes
                 }
 
                 //Find affixes with one mod
-                //test = GlobalMethods.StuffList("SELECT DISTINCT PrefixId AS AffixId, Level, Mod1Id, Mod1ValueMin, Mod1ValueMax, Mod2Id, Mod2ValueMin, Mod2ValueMax FROM Prefix WHERE Mod2Id IS NULL;");
                 foreach (var f in GlobalMethods.AffixCache)
                 {
                     int matched = 0;
                     var mpMod = new GlobalMethods.Mod();
                     foreach (var mp in mods)
                     {
-                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= GlobalMethods.StashItem.ItemLevel)
+                        if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
                         {
                             //We got a hit
                             mpMod = mp;
@@ -386,37 +372,37 @@ namespace ExileClipboardListener.Classes
                     }
                 }
 
+                //Is there anything left over?
+                //If we only have implict mods left over then this is fine
+                bool allAssigned = true;
+                if (mods.Count() != 0)
+                {
+                    for (int i = 0; i < mods.Count; i++)
+                    {
+                        if (!mods[i].Implicit)
+                        {
+                            MessageBox.Show("Not all affixes were parsed!");
+                            allAssigned = false;
+                            break;
+                        }
+                    }
+                }
+
+                //If we have any unassigned mods then the chances are that we have a double-mod affix combined with a single-mod affix
+                //For example, we could have the affix for +Accuracy combined with the affix for +Accuracy/ +Evasion
+                if (!allAssigned)
+                {
+                }
+
                 //Pop off the prefixes and suffixes into the StashItem class
                 for (int prefix = 0; prefix < Math.Min(prefixes.Count(), 3); prefix++)
                 {
-                    GlobalMethods.StashItem.Affix[prefix + 1].AffixId = prefixes[prefix].AffixId;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Level = prefixes[prefix].Level;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod1.Id = prefixes[prefix].Mod1.Id;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod1.Value = prefixes[prefix].Mod1.Value;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod1.ValueMin = prefixes[prefix].Mod1.ValueMin;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod1.ValueMax = prefixes[prefix].Mod1.ValueMax;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod2.Id = prefixes[prefix].Mod2.Id;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod2.Value = prefixes[prefix].Mod2.Value;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod2.ValueMin = prefixes[prefix].Mod2.ValueMin;
-                    GlobalMethods.StashItem.Affix[prefix + 1].Mod2.ValueMax = prefixes[prefix].Mod2.ValueMax;
+                    si.Affix[prefix + 1] = prefixes[prefix];
                 }
                 for (int suffix = 0; suffix < Math.Min(suffixes.Count(), 3); suffix++)
                 {
-                    GlobalMethods.StashItem.Affix[suffix + 4].AffixId = suffixes[suffix].AffixId;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Level = suffixes[suffix].Level;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod1.Id = suffixes[suffix].Mod1.Id;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod1.Value = suffixes[suffix].Mod1.Value;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod1.ValueMin = suffixes[suffix].Mod1.ValueMin;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod1.ValueMax = suffixes[suffix].Mod1.ValueMax;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod2.Id = suffixes[suffix].Mod2.Id;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod2.Value = suffixes[suffix].Mod2.Value;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod2.ValueMin = suffixes[suffix].Mod2.ValueMin;
-                    GlobalMethods.StashItem.Affix[suffix + 4].Mod2.ValueMax = suffixes[suffix].Mod2.ValueMax;
+                    si.Affix[suffix + 4] = suffixes[suffix];
                 }
-
-                //Is there anything left over?
-                if (mods.Count() != 0)
-                    MessageBox.Show("Not all affixes were parsed!");
 
                 //If we are in collection mode pop up a window
                 DialogResult dr = DialogResult.None;
@@ -453,17 +439,17 @@ namespace ExileClipboardListener.Classes
             sql += " VALUES(";
 
             //Basic Details
-            sql += "'" + GlobalMethods.StashItem.ItemName + "',";
-            sql += (GlobalMethods.StashItem.BaseItemId == 0 ? "NULL" : GlobalMethods.StashItem.BaseItemId.ToString()) + ",";
-            sql += GlobalMethods.StashItem.RarityId + ",";
-            sql += GlobalMethods.StashItem.Quality + ",";
-            sql += GlobalMethods.StashItem.ItemLevel + ",";
-            sql += GlobalMethods.StashItem.ReqLevelBase + ",";
+            sql += "'" + si.ItemName + "',";
+            sql += (si.BaseItemId == 0 ? "NULL" : si.BaseItemId.ToString()) + ",";
+            sql += si.RarityId + ",";
+            sql += si.Quality + ",";
+            sql += si.ItemLevel + ",";
+            sql += si.ReqLevelBase + ",";
 
             //Armour
-            sql += GlobalMethods.StashItem.Armour + ",";
-            sql += GlobalMethods.StashItem.Evasion + ",";
-            sql += GlobalMethods.StashItem.EnergyShield + ",";
+            sql += si.Armour + ",";
+            sql += si.Evasion + ",";
+            sql += si.EnergyShield + ",";
 
             //Weapons
             sql += "NULL, NULL, NULL, NULL,";
@@ -473,13 +459,13 @@ namespace ExileClipboardListener.Classes
             {
                 //Implict Mods don't have an affix
                 if (key != 0)
-                    sql += (GlobalMethods.StashItem.Affix[key].AffixId == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].AffixId.ToString()) + ",";
-                sql += (GlobalMethods.StashItem.Affix[key].Mod1.Id == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod1.Id.ToString()) + ",";
-                sql += (GlobalMethods.StashItem.Affix[key].Mod1.Value == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod1.Value.ToString()) + ",";
-                sql += (GlobalMethods.StashItem.Affix[key].Mod2.Id == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod2.Id.ToString()) + ",";
-                sql += (GlobalMethods.StashItem.Affix[key].Mod2.Value == 0 ? "NULL" : GlobalMethods.StashItem.Affix[key].Mod2.Value.ToString()) + ",";
+                    sql += (si.Affix[key].AffixId == 0 ? "NULL" : si.Affix[key].AffixId.ToString()) + ",";
+                sql += (si.Affix[key].Mod1.Id == 0 ? "NULL" : si.Affix[key].Mod1.Id.ToString()) + ",";
+                sql += (si.Affix[key].Mod1.Value == 0 ? "NULL" : si.Affix[key].Mod1.Value.ToString()) + ",";
+                sql += (si.Affix[key].Mod2.Id == 0 ? "NULL" : si.Affix[key].Mod2.Id.ToString()) + ",";
+                sql += (si.Affix[key].Mod2.Value == 0 ? "NULL" : si.Affix[key].Mod2.Value.ToString()) + ",";
             }
-            sql += "'" + GlobalMethods.StashItem.OriginalText.Replace("'", "''") + "')";
+            sql += "'" + si.OriginalText.Replace("'", "''") + "')";
 
             //Stash this item
             GlobalMethods.RunQuery(sql);

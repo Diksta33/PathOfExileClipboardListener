@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using System.Data.SQLite;
 
@@ -18,6 +19,25 @@ namespace ExileClipboardListener.Classes
         //Current League and Character
         public static int CurrentLeagueId = Properties.Settings.Default.DefaultLeagueId;
         public static int CurrentCharacterId = Properties.Settings.Default.DefaultCharacterId;
+
+        //Modification
+        public struct Mod
+        {
+            public int Id;
+            public string Name;
+            public string RealName;
+            public int ModPair;
+            public int Armour;
+            public int Weapons;
+            public int Jewellery;
+            public string Class;
+            public int Value;
+            public int ValueMin;
+            public int ValueMax;
+            public bool Implicit;
+        }
+        public static List<Mod> ModCache = new List<Mod>();
+        public static Mod CurrentMod;
 
         //Base Item class
         public static class BaseItem
@@ -41,9 +61,9 @@ namespace ExileClipboardListener.Classes
             public static Mod Mod2;
         }
 
-        //Affix Local class - this could also be materialised as a view in the database
+        //Affix class - this could also be materialised as a view in the database
         //This is used to reduce database access
-        public class AffixLocal
+        public struct Affix
         {
             public int AffixId;
             public string AffixType;
@@ -54,39 +74,7 @@ namespace ExileClipboardListener.Classes
             public Mod Mod1;
             public Mod Mod2;
         }
-        public static List<AffixLocal> AffixCache = new List<AffixLocal>();
-
-        public class ModLocal
-        {
-            public int ModId;
-            public string ModName;
-            public string ModRealName;
-            public int ModPair;
-            public int Armour;
-            public int Weapons;
-            public int Jewellery;
-            public string ModClass;
-        }
-        public static List<ModLocal> ModCache = new List<ModLocal>();
-        public static ModLocal CurrentMod;
-
-        //Modification
-        public struct Mod
-        {
-            public int Id;
-            public int Value;
-            public int ValueMin;
-            public int ValueMax;
-        }
-
-        //Affix
-        public struct Affix
-        {
-            public int AffixId;
-            public int Level;
-            public Mod Mod1;
-            public Mod Mod2;
-        }
+        public static List<Affix> AffixCache = new List<Affix>();
 
         //Stash class
         public static class StashItem
@@ -179,7 +167,7 @@ namespace ExileClipboardListener.Classes
                         {
                             while (dr.Read())
                             {
-                                var affix = new AffixLocal();
+                                var affix = new Affix();
                                 affix.AffixId = dr["PrefixId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["PrefixId"]);
                                 affix.AffixType = "Prefix";
                                 affix.Name = dr["Name"].ToString();
@@ -202,7 +190,7 @@ namespace ExileClipboardListener.Classes
                         {
                             while (dr.Read())
                             {
-                                var affix = new AffixLocal();
+                                var affix = new Affix();
                                 affix.AffixId = dr["SuffixId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["SuffixId"]);
                                 affix.AffixType = "Suffix";
                                 affix.Name = dr["Name"].ToString();
@@ -225,16 +213,16 @@ namespace ExileClipboardListener.Classes
                         {
                             while (dr.Read())
                             {
-                                var mod = new ModLocal();
-                                mod.ModId = dr["ModId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModId"]);
-                                mod.ModName = dr["ModName"].ToString();
-                                mod.ModRealName = dr["ModRealName"].ToString();
-                                mod.ModPair = dr["ModPair"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModPair"]);
-                                mod.ModId = dr["ModId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModId"]);
+                                var mod = new Mod();
+                                mod.Id = dr["ModId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModId"]);
+                                mod.Name = dr["ModName"].ToString();
+                                mod.RealName = dr["ModRealName"].ToString();
+                                mod.ModPair = dr["ModPair"] == DBNull.Value ? 1 : Convert.ToInt32(dr["ModPair"]);
                                 mod.Armour = dr["Armour"] == DBNull.Value ? 1 : Convert.ToInt32(dr["Armour"]);
                                 mod.Weapons = dr["Weapons"] == DBNull.Value ? 1 : Convert.ToInt32(dr["Weapons"]);
                                 mod.Jewellery = dr["Jewellery"] == DBNull.Value ? 1 : Convert.ToInt32(dr["Jewellery"]);
-                                mod.ModClass = dr["ModClass"].ToString();
+                                mod.Class = dr["ModClass"].ToString();
+                                mod.Implicit = mod.Class == "<implicit>";
                                 ModCache.Add(mod);
                             }
                         }
@@ -298,20 +286,46 @@ namespace ExileClipboardListener.Classes
             return;
         }
 
+        public static Mod FindMod(string modName, int modPair, string itemTypeName)
+        {
+            var mod = new Mod();
+            switch (itemTypeName)
+            {
+                case "Weapons":
+                    mod = ModCache.FirstOrDefault(m => m.RealName == modName && m.ModPair == modPair && m.Weapons == 1 && !m.Implicit);
+                    break;
+                case "Armour":
+                    mod = ModCache.FirstOrDefault(m => m.RealName == modName && m.ModPair == modPair && m.Armour == 1 && !m.Implicit);
+                    break;
+                case "Jewellery":
+                    mod = ModCache.FirstOrDefault(m => m.RealName == modName && m.ModPair == modPair && m.Jewellery == 1 && !m.Implicit);
+                    break;
+                default:
+                    mod.Id = 0;
+                    break;
+            }
+            return mod;
+        }
+
+        public static Mod LookUpMod(int modId)
+        {
+            return ModCache.FirstOrDefault(m => m.Id == modId);
+        }
+
         public static void LoadMod(int modId)
         {
-            CurrentMod.ModId = modId;
+            CurrentMod.Id = modId;
             for (int i = 0; i < ModCache.Count; i++)
             {
-                if (ModCache[i].ModId == modId)
+                if (ModCache[i].Id == modId)
                 {
-                    CurrentMod.ModName = ModCache[i].ModName;
-                    CurrentMod.ModRealName = ModCache[i].ModName;
+                    CurrentMod.Name = ModCache[i].Name;
+                    CurrentMod.RealName = ModCache[i].RealName;
                     CurrentMod.ModPair = ModCache[i].ModPair;
                     CurrentMod.Armour = ModCache[i].Armour;
                     CurrentMod.Weapons = ModCache[i].Weapons;
                     CurrentMod.Jewellery = ModCache[i].Jewellery;
-                    CurrentMod.ModClass = ModCache[i].ModClass;
+                    CurrentMod.Class = ModCache[i].Class;
                 }
             }
         }

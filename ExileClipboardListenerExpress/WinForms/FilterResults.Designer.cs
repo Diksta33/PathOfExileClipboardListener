@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FilterResultsGrid = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AverageScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,6 +53,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Sockets = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
             this.Quality = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -69,6 +71,13 @@
             this.Armour = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label45 = new System.Windows.Forms.Label();
+            this.label44 = new System.Windows.Forms.Label();
+            this.label43 = new System.Windows.Forms.Label();
+            this.ElementalDPS = new System.Windows.Forms.TextBox();
+            this.PhysicalDPS = new System.Windows.Forms.TextBox();
+            this.AttackSpeed = new System.Windows.Forms.TextBox();
+            this.label42 = new System.Windows.Forms.Label();
             this.BaseDPS = new System.Windows.Forms.TextBox();
             this.label36 = new System.Windows.Forms.Label();
             this.BaseAttackSpeed = new System.Windows.Forms.TextBox();
@@ -145,25 +154,13 @@
             this.label26 = new System.Windows.Forms.Label();
             this.Prefix1ILevel = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
-            this.Prefix1ModClass = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.Prefix1Mod = new System.Windows.Forms.ComboBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.Suffix3Mod = new System.Windows.Forms.ComboBox();
-            this.Prefix2ModClass = new System.Windows.Forms.ComboBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
-            this.Suffix3ModClass = new System.Windows.Forms.ComboBox();
-            this.Prefix2Mod = new System.Windows.Forms.ComboBox();
-            this.Suffix2Mod = new System.Windows.Forms.ComboBox();
-            this.Prefix3ModClass = new System.Windows.Forms.ComboBox();
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
-            this.Suffix2ModClass = new System.Windows.Forms.ComboBox();
-            this.Prefix3Mod = new System.Windows.Forms.ComboBox();
-            this.Suffix1Mod = new System.Windows.Forms.ComboBox();
-            this.Suffix1ModClass = new System.Windows.Forms.ComboBox();
             this.label24 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.ReqLevelBase = new System.Windows.Forms.TextBox();
@@ -178,17 +175,20 @@
             this.label29 = new System.Windows.Forms.Label();
             this.ItemLevel = new System.Windows.Forms.TextBox();
             this.label28 = new System.Windows.Forms.Label();
-            this.Sockets = new System.Windows.Forms.TextBox();
-            this.label38 = new System.Windows.Forms.Label();
             this.AddStash = new System.Windows.Forms.Button();
             this.Exit = new System.Windows.Forms.Button();
-            this.AttackSpeed = new System.Windows.Forms.TextBox();
-            this.label42 = new System.Windows.Forms.Label();
-            this.PhysicalDPS = new System.Windows.Forms.TextBox();
-            this.ElementalDPS = new System.Windows.Forms.TextBox();
-            this.label43 = new System.Windows.Forms.Label();
-            this.label44 = new System.Windows.Forms.Label();
-            this.label45 = new System.Windows.Forms.Label();
+            this.Prefix1ModClass = new System.Windows.Forms.TextBox();
+            this.Prefix2ModClass = new System.Windows.Forms.TextBox();
+            this.Prefix3ModClass = new System.Windows.Forms.TextBox();
+            this.Suffix1ModClass = new System.Windows.Forms.TextBox();
+            this.Suffix2ModClass = new System.Windows.Forms.TextBox();
+            this.Suffix3ModClass = new System.Windows.Forms.TextBox();
+            this.Prefix1Mod = new System.Windows.Forms.TextBox();
+            this.Prefix2Mod = new System.Windows.Forms.TextBox();
+            this.Prefix3Mod = new System.Windows.Forms.TextBox();
+            this.Suffix1Mod = new System.Windows.Forms.TextBox();
+            this.Suffix2Mod = new System.Windows.Forms.TextBox();
+            this.Suffix3Mod = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -230,8 +230,8 @@
             // Column1
             // 
             this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle11.NullValue = null;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle1.NullValue = null;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.HeaderText = "Filter Name";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -240,9 +240,9 @@
             // AverageScoreColumn
             // 
             this.AverageScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle12.Format = "0%";
-            this.AverageScoreColumn.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "0%";
+            this.AverageScoreColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.AverageScoreColumn.HeaderText = "Average Score";
             this.AverageScoreColumn.Name = "AverageScoreColumn";
             this.AverageScoreColumn.ReadOnly = true;
@@ -364,6 +364,23 @@
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Basic Details";
+            // 
+            // Sockets
+            // 
+            this.Sockets.Enabled = false;
+            this.Sockets.Location = new System.Drawing.Point(180, 97);
+            this.Sockets.Name = "Sockets";
+            this.Sockets.Size = new System.Drawing.Size(114, 20);
+            this.Sockets.TabIndex = 15;
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(118, 100);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(46, 13);
+            this.label38.TabIndex = 14;
+            this.label38.Text = "Sockets";
             // 
             // Quality
             // 
@@ -539,6 +556,69 @@
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Damage";
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(159, 126);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(35, 13);
+            this.label45.TabIndex = 36;
+            this.label45.Text = "eDPS";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(106, 126);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(35, 13);
+            this.label44.TabIndex = 35;
+            this.label44.Text = "pDPS";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(47, 126);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(31, 13);
+            this.label43.TabIndex = 34;
+            this.label43.Text = "Base";
+            // 
+            // ElementalDPS
+            // 
+            this.ElementalDPS.Enabled = false;
+            this.ElementalDPS.Location = new System.Drawing.Point(162, 142);
+            this.ElementalDPS.Name = "ElementalDPS";
+            this.ElementalDPS.Size = new System.Drawing.Size(50, 20);
+            this.ElementalDPS.TabIndex = 33;
+            this.ElementalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // PhysicalDPS
+            // 
+            this.PhysicalDPS.Enabled = false;
+            this.PhysicalDPS.Location = new System.Drawing.Point(106, 142);
+            this.PhysicalDPS.Name = "PhysicalDPS";
+            this.PhysicalDPS.Size = new System.Drawing.Size(50, 20);
+            this.PhysicalDPS.TabIndex = 32;
+            this.PhysicalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // AttackSpeed
+            // 
+            this.AttackSpeed.Enabled = false;
+            this.AttackSpeed.Location = new System.Drawing.Point(81, 97);
+            this.AttackSpeed.Name = "AttackSpeed";
+            this.AttackSpeed.Size = new System.Drawing.Size(38, 20);
+            this.AttackSpeed.TabIndex = 31;
+            this.AttackSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(15, 100);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(28, 13);
+            this.label42.TabIndex = 30;
+            this.label42.Text = "APS";
             // 
             // BaseDPS
             // 
@@ -729,9 +809,9 @@
             // ModValueMinColumn
             // 
             this.ModValueMinColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle13.Format = "N0";
-            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N0";
+            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.ModValueMinColumn.HeaderText = "Value Min";
             this.ModValueMinColumn.Name = "ModValueMinColumn";
             this.ModValueMinColumn.ReadOnly = true;
@@ -740,9 +820,9 @@
             // ModValueMaxColumn
             // 
             this.ModValueMaxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle14.Format = "N0";
-            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.ModValueMaxColumn.HeaderText = "Value Max";
             this.ModValueMaxColumn.Name = "ModValueMaxColumn";
             this.ModValueMaxColumn.ReadOnly = true;
@@ -751,9 +831,9 @@
             // ModItemValueColumn
             // 
             this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle15.Format = "N0";
-            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle5.Format = "N0";
+            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle5;
             this.ModItemValueColumn.HeaderText = "Item Value";
             this.ModItemValueColumn.Name = "ModItemValueColumn";
             this.ModItemValueColumn.ReadOnly = true;
@@ -847,9 +927,9 @@
             // AffixLevelColumn
             // 
             this.AffixLevelColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle16.Format = "N0";
-            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.AffixLevelColumn.HeaderText = "Level";
             this.AffixLevelColumn.Name = "AffixLevelColumn";
             this.AffixLevelColumn.ReadOnly = true;
@@ -882,8 +962,8 @@
             // AffixPrimaryModRangeColumn
             // 
             this.AffixPrimaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.AffixPrimaryModRangeColumn.HeaderText = "Range";
             this.AffixPrimaryModRangeColumn.Name = "AffixPrimaryModRangeColumn";
             this.AffixPrimaryModRangeColumn.ReadOnly = true;
@@ -892,9 +972,9 @@
             // AffixPrimaryModValueColumn
             // 
             this.AffixPrimaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle18.Format = "N0";
-            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle8;
             this.AffixPrimaryModValueColumn.HeaderText = "Value";
             this.AffixPrimaryModValueColumn.Name = "AffixPrimaryModValueColumn";
             this.AffixPrimaryModValueColumn.ReadOnly = true;
@@ -911,8 +991,8 @@
             // AffixSecondaryModRangeColumn
             // 
             this.AffixSecondaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle9;
             this.AffixSecondaryModRangeColumn.HeaderText = "Range";
             this.AffixSecondaryModRangeColumn.Name = "AffixSecondaryModRangeColumn";
             this.AffixSecondaryModRangeColumn.ReadOnly = true;
@@ -921,9 +1001,9 @@
             // AffixSecondaryModValueColumn
             // 
             this.AffixSecondaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle20.Format = "N0";
-            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle10.Format = "N0";
+            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle10;
             this.AffixSecondaryModValueColumn.HeaderText = "Value";
             this.AffixSecondaryModValueColumn.Name = "AffixSecondaryModValueColumn";
             this.AffixSecondaryModValueColumn.ReadOnly = true;
@@ -931,6 +1011,18 @@
             // 
             // tabFilterResults
             // 
+            this.tabFilterResults.Controls.Add(this.Suffix3Mod);
+            this.tabFilterResults.Controls.Add(this.Suffix2Mod);
+            this.tabFilterResults.Controls.Add(this.Suffix1Mod);
+            this.tabFilterResults.Controls.Add(this.Prefix3Mod);
+            this.tabFilterResults.Controls.Add(this.Prefix2Mod);
+            this.tabFilterResults.Controls.Add(this.Prefix1Mod);
+            this.tabFilterResults.Controls.Add(this.Suffix3ModClass);
+            this.tabFilterResults.Controls.Add(this.Suffix2ModClass);
+            this.tabFilterResults.Controls.Add(this.Suffix1ModClass);
+            this.tabFilterResults.Controls.Add(this.Prefix3ModClass);
+            this.tabFilterResults.Controls.Add(this.Prefix2ModClass);
+            this.tabFilterResults.Controls.Add(this.Prefix1ModClass);
             this.tabFilterResults.Controls.Add(this.Suffix3Details);
             this.tabFilterResults.Controls.Add(this.Suffix2Details);
             this.tabFilterResults.Controls.Add(this.Suffix1Details);
@@ -968,25 +1060,13 @@
             this.tabFilterResults.Controls.Add(this.label26);
             this.tabFilterResults.Controls.Add(this.Prefix1ILevel);
             this.tabFilterResults.Controls.Add(this.label25);
-            this.tabFilterResults.Controls.Add(this.Prefix1ModClass);
             this.tabFilterResults.Controls.Add(this.label17);
-            this.tabFilterResults.Controls.Add(this.Prefix1Mod);
             this.tabFilterResults.Controls.Add(this.label18);
             this.tabFilterResults.Controls.Add(this.label19);
-            this.tabFilterResults.Controls.Add(this.Suffix3Mod);
-            this.tabFilterResults.Controls.Add(this.Prefix2ModClass);
             this.tabFilterResults.Controls.Add(this.label20);
             this.tabFilterResults.Controls.Add(this.label21);
-            this.tabFilterResults.Controls.Add(this.Suffix3ModClass);
-            this.tabFilterResults.Controls.Add(this.Prefix2Mod);
-            this.tabFilterResults.Controls.Add(this.Suffix2Mod);
-            this.tabFilterResults.Controls.Add(this.Prefix3ModClass);
             this.tabFilterResults.Controls.Add(this.label22);
             this.tabFilterResults.Controls.Add(this.label23);
-            this.tabFilterResults.Controls.Add(this.Suffix2ModClass);
-            this.tabFilterResults.Controls.Add(this.Prefix3Mod);
-            this.tabFilterResults.Controls.Add(this.Suffix1Mod);
-            this.tabFilterResults.Controls.Add(this.Suffix1ModClass);
             this.tabFilterResults.Controls.Add(this.label24);
             this.tabFilterResults.Controls.Add(this.FilterResultsGrid);
             this.tabFilterResults.Controls.Add(this.label6);
@@ -1341,16 +1421,6 @@
             this.label25.TabIndex = 45;
             this.label25.Text = "I.Level";
             // 
-            // Prefix1ModClass
-            // 
-            this.Prefix1ModClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Prefix1ModClass.Enabled = false;
-            this.Prefix1ModClass.FormattingEnabled = true;
-            this.Prefix1ModClass.Location = new System.Drawing.Point(373, 57);
-            this.Prefix1ModClass.Name = "Prefix1ModClass";
-            this.Prefix1ModClass.Size = new System.Drawing.Size(111, 21);
-            this.Prefix1ModClass.TabIndex = 25;
-            // 
             // label17
             // 
             this.label17.AutoSize = true;
@@ -1359,16 +1429,6 @@
             this.label17.Size = new System.Drawing.Size(42, 13);
             this.label17.TabIndex = 26;
             this.label17.Text = "Prefix 1";
-            // 
-            // Prefix1Mod
-            // 
-            this.Prefix1Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Prefix1Mod.Enabled = false;
-            this.Prefix1Mod.FormattingEnabled = true;
-            this.Prefix1Mod.Location = new System.Drawing.Point(490, 57);
-            this.Prefix1Mod.Name = "Prefix1Mod";
-            this.Prefix1Mod.Size = new System.Drawing.Size(264, 21);
-            this.Prefix1Mod.TabIndex = 27;
             // 
             // label18
             // 
@@ -1388,26 +1448,6 @@
             this.label19.TabIndex = 29;
             this.label19.Text = "Mod";
             // 
-            // Suffix3Mod
-            // 
-            this.Suffix3Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Suffix3Mod.Enabled = false;
-            this.Suffix3Mod.FormattingEnabled = true;
-            this.Suffix3Mod.Location = new System.Drawing.Point(490, 192);
-            this.Suffix3Mod.Name = "Suffix3Mod";
-            this.Suffix3Mod.Size = new System.Drawing.Size(264, 21);
-            this.Suffix3Mod.TabIndex = 44;
-            // 
-            // Prefix2ModClass
-            // 
-            this.Prefix2ModClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Prefix2ModClass.Enabled = false;
-            this.Prefix2ModClass.FormattingEnabled = true;
-            this.Prefix2ModClass.Location = new System.Drawing.Point(373, 84);
-            this.Prefix2ModClass.Name = "Prefix2ModClass";
-            this.Prefix2ModClass.Size = new System.Drawing.Size(111, 21);
-            this.Prefix2ModClass.TabIndex = 30;
-            // 
             // label20
             // 
             this.label20.AutoSize = true;
@@ -1426,46 +1466,6 @@
             this.label21.TabIndex = 31;
             this.label21.Text = "Prefix 2";
             // 
-            // Suffix3ModClass
-            // 
-            this.Suffix3ModClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Suffix3ModClass.Enabled = false;
-            this.Suffix3ModClass.FormattingEnabled = true;
-            this.Suffix3ModClass.Location = new System.Drawing.Point(373, 192);
-            this.Suffix3ModClass.Name = "Suffix3ModClass";
-            this.Suffix3ModClass.Size = new System.Drawing.Size(111, 21);
-            this.Suffix3ModClass.TabIndex = 42;
-            // 
-            // Prefix2Mod
-            // 
-            this.Prefix2Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Prefix2Mod.Enabled = false;
-            this.Prefix2Mod.FormattingEnabled = true;
-            this.Prefix2Mod.Location = new System.Drawing.Point(490, 84);
-            this.Prefix2Mod.Name = "Prefix2Mod";
-            this.Prefix2Mod.Size = new System.Drawing.Size(264, 21);
-            this.Prefix2Mod.TabIndex = 32;
-            // 
-            // Suffix2Mod
-            // 
-            this.Suffix2Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Suffix2Mod.Enabled = false;
-            this.Suffix2Mod.FormattingEnabled = true;
-            this.Suffix2Mod.Location = new System.Drawing.Point(490, 165);
-            this.Suffix2Mod.Name = "Suffix2Mod";
-            this.Suffix2Mod.Size = new System.Drawing.Size(264, 21);
-            this.Suffix2Mod.TabIndex = 41;
-            // 
-            // Prefix3ModClass
-            // 
-            this.Prefix3ModClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Prefix3ModClass.Enabled = false;
-            this.Prefix3ModClass.FormattingEnabled = true;
-            this.Prefix3ModClass.Location = new System.Drawing.Point(373, 111);
-            this.Prefix3ModClass.Name = "Prefix3ModClass";
-            this.Prefix3ModClass.Size = new System.Drawing.Size(111, 21);
-            this.Prefix3ModClass.TabIndex = 33;
-            // 
             // label22
             // 
             this.label22.AutoSize = true;
@@ -1483,46 +1483,6 @@
             this.label23.Size = new System.Drawing.Size(42, 13);
             this.label23.TabIndex = 34;
             this.label23.Text = "Prefix 3";
-            // 
-            // Suffix2ModClass
-            // 
-            this.Suffix2ModClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Suffix2ModClass.Enabled = false;
-            this.Suffix2ModClass.FormattingEnabled = true;
-            this.Suffix2ModClass.Location = new System.Drawing.Point(373, 165);
-            this.Suffix2ModClass.Name = "Suffix2ModClass";
-            this.Suffix2ModClass.Size = new System.Drawing.Size(111, 21);
-            this.Suffix2ModClass.TabIndex = 39;
-            // 
-            // Prefix3Mod
-            // 
-            this.Prefix3Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Prefix3Mod.Enabled = false;
-            this.Prefix3Mod.FormattingEnabled = true;
-            this.Prefix3Mod.Location = new System.Drawing.Point(490, 111);
-            this.Prefix3Mod.Name = "Prefix3Mod";
-            this.Prefix3Mod.Size = new System.Drawing.Size(264, 21);
-            this.Prefix3Mod.TabIndex = 35;
-            // 
-            // Suffix1Mod
-            // 
-            this.Suffix1Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Suffix1Mod.Enabled = false;
-            this.Suffix1Mod.FormattingEnabled = true;
-            this.Suffix1Mod.Location = new System.Drawing.Point(490, 138);
-            this.Suffix1Mod.Name = "Suffix1Mod";
-            this.Suffix1Mod.Size = new System.Drawing.Size(264, 21);
-            this.Suffix1Mod.TabIndex = 38;
-            // 
-            // Suffix1ModClass
-            // 
-            this.Suffix1ModClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.Suffix1ModClass.Enabled = false;
-            this.Suffix1ModClass.FormattingEnabled = true;
-            this.Suffix1ModClass.Location = new System.Drawing.Point(373, 138);
-            this.Suffix1ModClass.Name = "Suffix1ModClass";
-            this.Suffix1ModClass.Size = new System.Drawing.Size(111, 21);
-            this.Suffix1ModClass.TabIndex = 36;
             // 
             // label24
             // 
@@ -1662,23 +1622,6 @@
             this.label28.TabIndex = 22;
             this.label28.Text = "Item Level";
             // 
-            // Sockets
-            // 
-            this.Sockets.Enabled = false;
-            this.Sockets.Location = new System.Drawing.Point(180, 97);
-            this.Sockets.Name = "Sockets";
-            this.Sockets.Size = new System.Drawing.Size(114, 20);
-            this.Sockets.TabIndex = 15;
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(118, 100);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(46, 13);
-            this.label38.TabIndex = 14;
-            this.label38.Text = "Sockets";
-            // 
             // AddStash
             // 
             this.AddStash.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -1699,68 +1642,101 @@
             this.Exit.Text = "Dismiss";
             this.Exit.UseVisualStyleBackColor = true;
             // 
-            // AttackSpeed
+            // Prefix1ModClass
             // 
-            this.AttackSpeed.Enabled = false;
-            this.AttackSpeed.Location = new System.Drawing.Point(81, 97);
-            this.AttackSpeed.Name = "AttackSpeed";
-            this.AttackSpeed.Size = new System.Drawing.Size(38, 20);
-            this.AttackSpeed.TabIndex = 31;
-            this.AttackSpeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Prefix1ModClass.Enabled = false;
+            this.Prefix1ModClass.Location = new System.Drawing.Point(373, 57);
+            this.Prefix1ModClass.Name = "Prefix1ModClass";
+            this.Prefix1ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Prefix1ModClass.TabIndex = 82;
             // 
-            // label42
+            // Prefix2ModClass
             // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(15, 100);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(28, 13);
-            this.label42.TabIndex = 30;
-            this.label42.Text = "APS";
+            this.Prefix2ModClass.Enabled = false;
+            this.Prefix2ModClass.Location = new System.Drawing.Point(373, 84);
+            this.Prefix2ModClass.Name = "Prefix2ModClass";
+            this.Prefix2ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Prefix2ModClass.TabIndex = 83;
             // 
-            // PhysicalDPS
+            // Prefix3ModClass
             // 
-            this.PhysicalDPS.Enabled = false;
-            this.PhysicalDPS.Location = new System.Drawing.Point(106, 142);
-            this.PhysicalDPS.Name = "PhysicalDPS";
-            this.PhysicalDPS.Size = new System.Drawing.Size(50, 20);
-            this.PhysicalDPS.TabIndex = 32;
-            this.PhysicalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Prefix3ModClass.Enabled = false;
+            this.Prefix3ModClass.Location = new System.Drawing.Point(373, 111);
+            this.Prefix3ModClass.Name = "Prefix3ModClass";
+            this.Prefix3ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Prefix3ModClass.TabIndex = 84;
             // 
-            // ElementalDPS
+            // Suffix1ModClass
             // 
-            this.ElementalDPS.Enabled = false;
-            this.ElementalDPS.Location = new System.Drawing.Point(162, 142);
-            this.ElementalDPS.Name = "ElementalDPS";
-            this.ElementalDPS.Size = new System.Drawing.Size(50, 20);
-            this.ElementalDPS.TabIndex = 33;
-            this.ElementalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.Suffix1ModClass.Enabled = false;
+            this.Suffix1ModClass.Location = new System.Drawing.Point(373, 137);
+            this.Suffix1ModClass.Name = "Suffix1ModClass";
+            this.Suffix1ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Suffix1ModClass.TabIndex = 85;
             // 
-            // label43
+            // Suffix2ModClass
             // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(47, 126);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(31, 13);
-            this.label43.TabIndex = 34;
-            this.label43.Text = "Base";
+            this.Suffix2ModClass.Enabled = false;
+            this.Suffix2ModClass.Location = new System.Drawing.Point(373, 165);
+            this.Suffix2ModClass.Name = "Suffix2ModClass";
+            this.Suffix2ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Suffix2ModClass.TabIndex = 86;
             // 
-            // label44
+            // Suffix3ModClass
             // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(106, 126);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(35, 13);
-            this.label44.TabIndex = 35;
-            this.label44.Text = "pDPS";
+            this.Suffix3ModClass.Enabled = false;
+            this.Suffix3ModClass.Location = new System.Drawing.Point(373, 192);
+            this.Suffix3ModClass.Name = "Suffix3ModClass";
+            this.Suffix3ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Suffix3ModClass.TabIndex = 87;
             // 
-            // label45
+            // Prefix1Mod
             // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(159, 126);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(35, 13);
-            this.label45.TabIndex = 36;
-            this.label45.Text = "eDPS";
+            this.Prefix1Mod.Enabled = false;
+            this.Prefix1Mod.Location = new System.Drawing.Point(490, 57);
+            this.Prefix1Mod.Name = "Prefix1Mod";
+            this.Prefix1Mod.Size = new System.Drawing.Size(264, 20);
+            this.Prefix1Mod.TabIndex = 88;
+            // 
+            // Prefix2Mod
+            // 
+            this.Prefix2Mod.Enabled = false;
+            this.Prefix2Mod.Location = new System.Drawing.Point(490, 84);
+            this.Prefix2Mod.Name = "Prefix2Mod";
+            this.Prefix2Mod.Size = new System.Drawing.Size(264, 20);
+            this.Prefix2Mod.TabIndex = 89;
+            // 
+            // Prefix3Mod
+            // 
+            this.Prefix3Mod.Enabled = false;
+            this.Prefix3Mod.Location = new System.Drawing.Point(490, 111);
+            this.Prefix3Mod.Name = "Prefix3Mod";
+            this.Prefix3Mod.Size = new System.Drawing.Size(264, 20);
+            this.Prefix3Mod.TabIndex = 90;
+            // 
+            // Suffix1Mod
+            // 
+            this.Suffix1Mod.Enabled = false;
+            this.Suffix1Mod.Location = new System.Drawing.Point(490, 137);
+            this.Suffix1Mod.Name = "Suffix1Mod";
+            this.Suffix1Mod.Size = new System.Drawing.Size(264, 20);
+            this.Suffix1Mod.TabIndex = 91;
+            // 
+            // Suffix2Mod
+            // 
+            this.Suffix2Mod.Enabled = false;
+            this.Suffix2Mod.Location = new System.Drawing.Point(490, 165);
+            this.Suffix2Mod.Name = "Suffix2Mod";
+            this.Suffix2Mod.Size = new System.Drawing.Size(264, 20);
+            this.Suffix2Mod.TabIndex = 92;
+            // 
+            // Suffix3Mod
+            // 
+            this.Suffix3Mod.Enabled = false;
+            this.Suffix3Mod.Location = new System.Drawing.Point(490, 192);
+            this.Suffix3Mod.Name = "Suffix3Mod";
+            this.Suffix3Mod.Size = new System.Drawing.Size(264, 20);
+            this.Suffix3Mod.TabIndex = 93;
             // 
             // FilterResults
             // 
@@ -1857,25 +1833,13 @@
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.TextBox Prefix1ILevel;
         private System.Windows.Forms.Label label25;
-        private System.Windows.Forms.ComboBox Prefix1ModClass;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.ComboBox Prefix1Mod;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label19;
-        private System.Windows.Forms.ComboBox Suffix3Mod;
-        private System.Windows.Forms.ComboBox Prefix2ModClass;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.ComboBox Suffix3ModClass;
-        private System.Windows.Forms.ComboBox Prefix2Mod;
-        private System.Windows.Forms.ComboBox Suffix2Mod;
-        private System.Windows.Forms.ComboBox Prefix3ModClass;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.ComboBox Suffix2ModClass;
-        private System.Windows.Forms.ComboBox Prefix3Mod;
-        private System.Windows.Forms.ComboBox Suffix1Mod;
-        private System.Windows.Forms.ComboBox Suffix1ModClass;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.PictureBox Prefix1Smiley;
         private System.Windows.Forms.TextBox BaseEnergyShield;
@@ -1963,5 +1927,17 @@
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.TextBox ElementalDPS;
         private System.Windows.Forms.TextBox PhysicalDPS;
+        private System.Windows.Forms.TextBox Prefix1ModClass;
+        private System.Windows.Forms.TextBox Suffix3ModClass;
+        private System.Windows.Forms.TextBox Suffix2ModClass;
+        private System.Windows.Forms.TextBox Suffix1ModClass;
+        private System.Windows.Forms.TextBox Prefix3ModClass;
+        private System.Windows.Forms.TextBox Prefix2ModClass;
+        private System.Windows.Forms.TextBox Suffix3Mod;
+        private System.Windows.Forms.TextBox Suffix2Mod;
+        private System.Windows.Forms.TextBox Suffix1Mod;
+        private System.Windows.Forms.TextBox Prefix3Mod;
+        private System.Windows.Forms.TextBox Prefix2Mod;
+        private System.Windows.Forms.TextBox Prefix1Mod;
     }
 }

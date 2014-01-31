@@ -5,6 +5,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 using ExileClipboardListener.Properties;
+using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
+using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
 
 namespace ExileClipboardListener.WinForms
 {
@@ -22,76 +24,38 @@ namespace ExileClipboardListener.WinForms
 
         private void FilterResults_Load(object sender, EventArgs e)
         {
-            LoadModClasses();
-            LoadMods();
             RefreshForm();
 
             //Set the default tab on the analysis section
             tabControl1.SelectedIndex = Properties.Settings.Default.DefaultTabId;
         }
 
-        private void LoadModClasses()
-        {
-            //Load the mod classes
-            for (int affix = 0; affix < 6; affix++)
-            {
-                string affixType = affix < 3 ? "Prefix" : "Suffix";
-                string affixName = affix < 3 ? "Prefix" + (affix + 1) : "Suffix" + (affix - 2);
-                string sql = "SELECT '(Any)' UNION ALL SELECT '' UNION ALL SELECT DISTINCT ModClass FROM Mod m INNER JOIN " + affixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL";
-                sql += " ORDER BY 1;";
-
-                //Push this into the combo
-                var affixModClass = (ComboBox)tabControl1.Controls.Find(affixName + "ModClass", true)[0];
-                GlobalMethods.StuffCombo(sql, affixModClass);
-                if (affixModClass.Items.Count > 0)
-                    affixModClass.SelectedIndex = 0;
-            }
-        }
-
-        private void LoadMods()
-        {
-            //Load the mods
-            for (int affix = 0; affix < 6; affix++)
-            {
-                string affixType = affix < 3 ? "Prefix" : "Suffix";
-                string affixName = affix < 3 ? "Prefix" + (affix + 1) : "Suffix" + (affix - 2);
-                string sql = "SELECT '(Any)' UNION ALL SELECT '' UNION ALL SELECT DISTINCT m.ModName FROM Mod m INNER JOIN " + affixType + " a ON a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId WHERE ModClass IS NOT NULL"; 
-                sql += " ORDER BY 1;";
-
-                //Push this into the combo
-                var affixMod = (ComboBox)tabControl1.Controls.Find(affixName + "Mod", true)[0];
-                GlobalMethods.StuffCombo(sql, affixMod);
-                if (affixMod.Items.Count > 0)
-                    affixMod.SelectedIndex = 0;
-            }
-        }
-
         private void RefreshForm()
         {
             //Load up the current stash item onto the form
-            Rarity.Text = GlobalMethods.GetScalarString("SELECT RarityName FROM Rarity WHERE RarityId = " + GlobalMethods.StashItem.RarityId + ";");
-            ItemName.Text = GlobalMethods.StashItem.ItemName;
-            BaseItemName.Text = GlobalMethods.BaseItem.ItemName; //GlobalMethods.GetScalarString("SELECT ItemName FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";");
-            Quality.Text = GlobalMethods.StashItem.Quality.ToString();
-            ItemType.Text = GlobalMethods.StashItem.ItemTypeName;
-            ItemSubType.Text = GlobalMethods.StashItem.ItemSubTypeName;
+            Rarity.Text = GlobalMethods.GetScalarString("SELECT RarityName FROM Rarity WHERE RarityId = " + si.RarityId + ";");
+            ItemName.Text = si.ItemName;
+            BaseItemName.Text = bi.ItemName; 
+            Quality.Text = si.Quality.ToString();
+            ItemType.Text = si.ItemTypeName;
+            ItemSubType.Text = si.ItemSubTypeName;
 
             //Defense
-            BaseArmour.Text = GlobalMethods.BaseItem.Armour.ToString(); // GlobalMethods.GetScalarInt("SELECT Armour FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            BaseEvasion.Text = GlobalMethods.BaseItem.Evasion.ToString(); // GlobalMethods.GetScalarInt("SELECT Evasion FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            BaseEnergyShield.Text = GlobalMethods.BaseItem.EnergyShield.ToString(); // GlobalMethods.GetScalarInt("SELECT EnergyShield FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            Armour.Text = GlobalMethods.StashItem.Armour.ToString();
-            Evasion.Text = GlobalMethods.StashItem.Evasion.ToString();
-            EnergyShield.Text = GlobalMethods.StashItem.EnergyShield.ToString();
+            BaseArmour.Text = bi.Armour.ToString();
+            BaseEvasion.Text = bi.Evasion.ToString();
+            BaseEnergyShield.Text = bi.EnergyShield.ToString();
+            Armour.Text = si.Armour.ToString();
+            Evasion.Text = si.Evasion.ToString();
+            EnergyShield.Text = si.EnergyShield.ToString();
 
             //Weapons
-            PhysicalDamageFrom.Text = GlobalMethods.StashItem.PhysicalDamageMin.ToString();
-            PhysicalDamageTo.Text = GlobalMethods.StashItem.PhysicalDamageMax.ToString();
-            ElementalDamageFrom.Text = GlobalMethods.StashItem.ElementalDamageMin.ToString();
-            ElementalDamageTo.Text = GlobalMethods.StashItem.ElementalDamageMax.ToString();
-            BaseAttackSpeed.Text = GlobalMethods.StashItem.BaseAttacksPerSecond.ToString();
-            AttackSpeed.Text = GlobalMethods.StashItem.AttacksPerSecond.ToString();
-            BaseDPS.Text = GlobalMethods.StashItem.DamagePerSecond.ToString();
+            PhysicalDamageFrom.Text = si.PhysicalDamageMin.ToString();
+            PhysicalDamageTo.Text = si.PhysicalDamageMax.ToString();
+            ElementalDamageFrom.Text = si.ElementalDamageMin.ToString();
+            ElementalDamageTo.Text = si.ElementalDamageMax.ToString();
+            BaseAttackSpeed.Text = si.BaseAttacksPerSecond.ToString();
+            AttackSpeed.Text = si.AttacksPerSecond.ToString();
+            BaseDPS.Text = si.DamagePerSecond.ToString();
 
             //Work out the pDPS and eDPS
             decimal attackSpeed;
@@ -100,30 +64,30 @@ namespace ExileClipboardListener.WinForms
                 int damMin;
                 int damMax;
                 if (int.TryParse(PhysicalDamageFrom.Text, out damMin) && int.TryParse(PhysicalDamageTo.Text, out damMax))
-                    PhysicalDPS.Text = (((damMax + damMin) / 2) * attackSpeed).ToString("#0.00");
+                    PhysicalDPS.Text = ((Convert.ToDecimal((damMax + damMin) / 2.0)) * attackSpeed).ToString("#0.00");
                 if (int.TryParse(ElementalDamageFrom.Text, out damMin) && int.TryParse(ElementalDamageTo.Text, out damMax))
-                    ElementalDPS.Text = (((damMax + damMin) / 2) * attackSpeed).ToString("#0.00");
+                    ElementalDPS.Text = ((Convert.ToDecimal((damMax + damMin) / 2.0)) * attackSpeed).ToString("#0.00");
             }
 
             //Requirements
-            ItemLevel.Text = GlobalMethods.StashItem.ItemLevel.ToString();
-            ReqLevel.Text = GlobalMethods.StashItem.ReqLevel.ToString();
-            ReqLevelBase.Text = GlobalMethods.StashItem.ReqLevelBase.ToString();
-            ReqStr.Text = GlobalMethods.BaseItem.ReqStr.ToString(); // GlobalMethods.GetScalarInt("SELECT ReqStr FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            ReqDex.Text = GlobalMethods.BaseItem.ReqDex.ToString(); // GlobalMethods.GetScalarInt("SELECT ReqDex FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
-            ReqInt.Text = GlobalMethods.BaseItem.ReqInt.ToString(); // GlobalMethods.GetScalarInt("SELECT ReqInt FROM BaseItem WHERE BaseItemId = " + GlobalMethods.StashItem.BaseItemId + ";").ToString();
+            ItemLevel.Text = si.ItemLevel.ToString();
+            ReqLevel.Text = si.ReqLevel.ToString();
+            ReqLevelBase.Text = si.ReqLevelBase.ToString();
+            ReqStr.Text = bi.ReqStr.ToString(); 
+            ReqDex.Text = bi.ReqDex.ToString(); 
+            ReqInt.Text = bi.ReqInt.ToString(); 
 
             //Sockets
-            Sockets.Text = GlobalMethods.StashItem.Sockets;
+            Sockets.Text = si.Sockets;
 
             //Show all mods
-            foreach (GlobalMethods.Mod m in GlobalMethods.StashItem.Mod)
+            foreach (GlobalMethods.Mod m in si.Mod)
             {
                 if (m.Id != 0)
                 {
                     var row = new object[5];
                     row[ModIdColumn.Index] = m.Id;
-                    row[ModNameColumn.Index] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                    row[ModNameColumn.Index] = GlobalMethods.LookUpMod(m.Id).Name;// GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
                     row[ModValueMinColumn.Index] = m.ValueMin;
                     row[ModValueMaxColumn.Index] = m.ValueMax;
                     row[ModItemValueColumn.Index] = m.Value;
@@ -136,8 +100,8 @@ namespace ExileClipboardListener.WinForms
             for (int i = 0; i < 7; i++)
             {
                 var row = new object[11];
-                int affixId = GlobalMethods.StashItem.Affix[i].AffixId;
-                if (GlobalMethods.StashItem.Affix[i].Mod1.Value != 0)
+                int affixId = si.Affix[i].AffixId;
+                if (si.Affix[i].Mod1.Value != 0)
                 {
                     string affixName = i == 0 ? "Implicit" : (i < 4 ? "Prefix" : "Suffix");
                     row[AffixIdColumn.Index] = affixId;
@@ -150,14 +114,14 @@ namespace ExileClipboardListener.WinForms
                     }
                     else
                     {
-                        row[AffixLevelColumn.Index] = GlobalMethods.StashItem.Affix[i].Level;
+                        row[AffixLevelColumn.Index] = si.Affix[i].Level;
                         row[AffixCategoryColumn.Index] = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory mc INNER JOIN " + affixName + " a ON a.ModCategoryId = mc.ModCategoryId WHERE a." + affixName + "Id = " + affixId + ";");
                         row[AffixNameColumn.Index] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixName + " WHERE " + affixName + "Id = " + affixId + ";");
                     }
-                    row[AffixPrimaryModNameColumn.Index] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + GlobalMethods.StashItem.Affix[i].Mod1.Id + ";");
-                    row[AffixPrimaryModRangeColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod1.ValueMin + "-" + GlobalMethods.StashItem.Affix[i].Mod1.ValueMax;
-                    row[AffixPrimaryModValueColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod1.Value;
-                    if (GlobalMethods.StashItem.Affix[i].Mod2.Value == 0)
+                    row[AffixPrimaryModNameColumn.Index] = GlobalMethods.LookUpMod(si.Affix[i].Mod1.Id).Name;
+                    row[AffixPrimaryModRangeColumn.Index] = si.Affix[i].Mod1.ValueMin + "-" + si.Affix[i].Mod1.ValueMax;
+                    row[AffixPrimaryModValueColumn.Index] = si.Affix[i].Mod1.Value;
+                    if (si.Affix[i].Mod2.Value == 0)
                     {
                         row[AffixSecondaryModNameColumn.Index] = "";
                         row[AffixSecondaryModRangeColumn.Index] = "";
@@ -166,9 +130,9 @@ namespace ExileClipboardListener.WinForms
                     else
                     {
                         seenSecondary = true;
-                        row[AffixSecondaryModNameColumn.Index] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + GlobalMethods.StashItem.Affix[i].Mod2.Id + ";");
-                        row[AffixSecondaryModRangeColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod2.ValueMin + "-" + GlobalMethods.StashItem.Affix[i].Mod2.ValueMax;
-                        row[AffixSecondaryModValueColumn.Index] = GlobalMethods.StashItem.Affix[i].Mod2.Value;
+                        row[AffixSecondaryModNameColumn.Index] = GlobalMethods.LookUpMod(si.Affix[i].Mod2.Id).Name;
+                        row[AffixSecondaryModRangeColumn.Index] = si.Affix[i].Mod2.ValueMin + "-" + si.Affix[i].Mod2.ValueMax;
+                        row[AffixSecondaryModValueColumn.Index] = si.Affix[i].Mod2.Value;
                     }
                     AffixGrid.Rows.Add(row);
                 }
@@ -189,8 +153,8 @@ namespace ExileClipboardListener.WinForms
         {
             //Show the filters that match the current item and score them
             FilterResultsGrid.Rows.Clear();
-            _itemTypeId = GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + GlobalMethods.StashItem.ItemTypeName + "';");
-            _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemSubTypeName = '" + GlobalMethods.StashItem.ItemSubTypeName + "';");
+            _itemTypeId = GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + si.ItemTypeName + "';");
+            _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemSubTypeName = '" + si.ItemSubTypeName + "';");
 
             //Make a list of matching filters
             GlobalMethods.StuffIntList("SELECT FilterId FROM FilterHeader WHERE (ItemTypeId = 0 OR ItemTypeId = " + _itemTypeId + ") AND (ItemSubTypeId = 0 OR ItemSubTypeId = " + _itemSubTypeId + ");", _filters);
@@ -251,33 +215,33 @@ namespace ExileClipboardListener.WinForms
                     string sql = "SELECT m.ModId FROM Mod m WHERE m.ModClass = '" + modClass + "'";
 
                     //We filter by the current item type
-                    if (GlobalMethods.StashItem.ItemTypeName == "Weapons")
+                    if (si.ItemTypeName == "Weapons")
                         sql += " AND IFNULL(m.Weapons, 1) = 1";
-                    else if (GlobalMethods.StashItem.ItemTypeName == "Armour")
+                    else if (si.ItemTypeName == "Armour")
                         sql += " AND IFNULL(m.Armour, 1) = 1";
-                    else if (GlobalMethods.StashItem.ItemTypeName == "Jewellery")
+                    else if (si.ItemTypeName == "Jewellery")
                         sql += " AND IFNULL(m.Jewellery, 1) = 1";
 
                     //For Defense we also need to make the base type of the body armour matches the mod, e.g. we wouldn't get evasion on an AR armour
                     if (modClass == "Defense")
                     {
-                        if (GlobalMethods.StashItem.Armour != 0)
+                        if (si.Armour != 0)
                         {
-                            if (GlobalMethods.StashItem.Evasion != 0)
+                            if (si.Evasion != 0)
                                 sql += " AND (m.ModRealName = 'increased Armour and Evasion' OR m.ModRealName = 'to Armour' OR m.ModRealName = 'to Evasion Rating')";
-                            else if (GlobalMethods.StashItem.EnergyShield != 0)
+                            else if (si.EnergyShield != 0)
                                 sql += " AND (m.ModRealName = 'increased Armour and Energy Shield' OR m.ModRealName = 'to Armour' OR m.ModRealName = 'to Energy Shield')";
                             else
                                 sql += " AND (m.ModRealName = 'increased Armour' OR m.ModRealName = 'to Armour')";
                         }
-                        else if (GlobalMethods.StashItem.Evasion != 0)
+                        else if (si.Evasion != 0)
                         {
-                            if (GlobalMethods.StashItem.EnergyShield != 0)
+                            if (si.EnergyShield != 0)
                                 sql += " AND (m.ModRealName = 'increased Evasion and Energy Shield' OR m.ModRealName = 'to Evasion Rating' OR m.ModRealName = 'to Energy Shield')";
                             else
                                 sql += " AND  (m.ModRealName = 'increased Evasion' OR m.ModRealName = 'to Evasion Rating')";
                         }
-                        else if (GlobalMethods.StashItem.EnergyShield != 0)
+                        else if (si.EnergyShield != 0)
                             sql += " AND (m.ModRealName = 'increased Energy Shield' OR m.ModRealName = 'to Energy Shield')";
                     }
                     sql += " AND IFNULL(m.ModPair, 2) = 2";
@@ -311,7 +275,7 @@ namespace ExileClipboardListener.WinForms
                         row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         row[1] = "Primary";
                         row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
                         row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         GlobalMethods.BISResults.Add(row);
@@ -322,15 +286,15 @@ namespace ExileClipboardListener.WinForms
                         row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         row[1] = "Secondary";
                         row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
                         row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         GlobalMethods.BISResults.Add(row);
                     }
 
                     //Next we do the same but use item level as well
-                    maxPrimary = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level <= " + GlobalMethods.StashItem.ItemLevel + ";");
-                    maxSecondary = GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Level <= " + GlobalMethods.StashItem.ItemLevel + ";");
+                    maxPrimary = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level <= " + si.ItemLevel + ";");
+                    maxSecondary = GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Level <= " + si.ItemLevel + ";");
                     int maxILevel = maxPrimary == 0 ? maxSecondary : maxPrimary;
 
                     //Now backfill the item level data
@@ -340,7 +304,7 @@ namespace ExileClipboardListener.WinForms
                         row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         row[1] = "Primary";
                         row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
                         row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         GlobalMethods.ILevelResults.Add(row);
@@ -351,7 +315,7 @@ namespace ExileClipboardListener.WinForms
                         row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         row[1] = "Secondary";
                         row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
                         row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         GlobalMethods.ILevelResults.Add(row);
@@ -369,7 +333,7 @@ namespace ExileClipboardListener.WinForms
                         row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         row[1] = "Primary";
                         row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
                         row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
                         GlobalMethods.CLevelResults.Add(row);
@@ -380,7 +344,7 @@ namespace ExileClipboardListener.WinForms
                         row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         row[1] = "Secondary";
                         row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
+                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
                         row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
                         GlobalMethods.CLevelResults.Add(row);
@@ -390,32 +354,32 @@ namespace ExileClipboardListener.WinForms
                     int itemModScore = 0;
                     for (int mod = 0; mod < 10; mod++)
                     {
-                        if (GlobalMethods.StashItem.Mod[mod].Id == m.Id)
+                        if (si.Mod[mod].Id == m.Id)
                         {
-                            itemModScore = GlobalMethods.StashItem.Mod[mod].Value;
+                            itemModScore = si.Mod[mod].Value;
                             string position = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + ";") == "" ? "Secondary" : "Primary";
                             if (position == "Primary")
                             {
                                 var row = new object[7];
-                                row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
+                                row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
                                 row[1] = "Primary";
-                                row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
-                                row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
-                                row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
-                                row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod1ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
-                                row[6] = GlobalMethods.StashItem.Mod[mod].Value;
+                                row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[3] = GlobalMethods.LookUpMod(m.Id).Name;
+                                row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
                             }
                             if (position == "Secondary")
                             {
                                 var row = new object[7];
-                                row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
+                                row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
                                 row[1] = "Secondary";
-                                row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
-                                row[3] = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
-                                row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
-                                row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + GlobalMethods.StashItem.Mod[mod].Value + " AND Mod2ValueMax >= " + GlobalMethods.StashItem.Mod[mod].Value + ";");
-                                row[6] = GlobalMethods.StashItem.Mod[mod].Value;
+                                row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[3] = GlobalMethods.LookUpMod(m.Id).Name;
+                                row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
                             }
                         }
@@ -484,13 +448,13 @@ namespace ExileClipboardListener.WinForms
                     Controls.Find(affixName + "Details", true)[0].Enabled = false;
                 }
                 else
-                    ((ComboBox)Controls.Find(affixName + "ModClass", true)[0]).SelectedIndex = 1;
+                    Controls.Find(affixName + "ModClass", true)[0].Text = "(Any)";
                 if (modId != 0)
                     Controls.Find(affixName + "Mod", true)[0].Text = GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + modId + ";");
                 else if (modClass == "")
                     Controls.Find(affixName + "Mod", true)[0].Text = "";
                 else
-                    ((ComboBox)Controls.Find(affixName + "Mod", true)[0]).SelectedIndex = 1;
+                    Controls.Find(affixName + "Mod", true)[0].Text = "(Any)";
             }
 
             //Show a breakdown of the score
@@ -519,7 +483,7 @@ namespace ExileClipboardListener.WinForms
                 return;
             int affixId = Convert.ToInt32(AffixGrid.CurrentRow.Cells[AffixIdColumn.Index].Value);
             string affixType = AffixGrid.CurrentRow.Cells[AffixTypeColumn.Index].Value.ToString();
-            int mod1Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value + "';");
+            int mod1Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName).Id;// GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value + "';");
             int mod2Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value + "';");
             new AffixDetails { AffixId = affixId, AffixType = affixType, Mod1Id = mod1Id, Mod2Id = mod2Id }.ShowDialog();
         }

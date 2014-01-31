@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
+using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 
 namespace ExileClipboardListener.WinForms
 {
@@ -18,8 +19,8 @@ namespace ExileClipboardListener.WinForms
         {
             RefreshAffixGrid();
             GlobalMethods.LoadMod(ModId);
-            ModName.Text = GlobalMethods.CurrentMod.ModName;// GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + ModId + ";");
-            ModClass.Text = GlobalMethods.CurrentMod.ModClass; // GlobalMethods.GetScalarString("SELECT ModClass FROM Mod WHERE ModId = " + ModId + ";");
+            ModName.Text = GlobalMethods.CurrentMod.Name;// GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + ModId + ";");
+            ModClass.Text = GlobalMethods.CurrentMod.Class; // GlobalMethods.GetScalarString("SELECT ModClass FROM Mod WHERE ModId = " + ModId + ";");
             Weapons.Checked = GlobalMethods.CurrentMod.Weapons == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Weapons, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
             Armour.Checked = GlobalMethods.CurrentMod.Armour == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Armour, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
             Jewellery.Checked = GlobalMethods.CurrentMod.Jewellery == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Jewellery, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
@@ -38,7 +39,7 @@ namespace ExileClipboardListener.WinForms
             for (int row = 0; row < AffixGrid.Rows.Count; row++)
             {
                 int level = Convert.ToInt32(AffixGrid.Rows[row].Cells[AffixLevelColumn.Index].Value);
-                if (level <= GlobalMethods.StashItem.ItemLevel)
+                if (level <= si.ItemLevel)
                     AffixGrid.Rows[row].DefaultCellStyle.BackColor = Color.LightGreen;
             }
         }
