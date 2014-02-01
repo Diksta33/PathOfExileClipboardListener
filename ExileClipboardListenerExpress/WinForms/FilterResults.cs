@@ -54,9 +54,9 @@ namespace ExileClipboardListener.WinForms
             PhysicalDamageTo.Text = si.PhysicalDamageMax.ToString();
             ElementalDamageFrom.Text = si.ElementalDamageMin.ToString();
             ElementalDamageTo.Text = si.ElementalDamageMax.ToString();
-            BaseAttackSpeed.Text = si.BaseAttacksPerSecond.ToString();
-            AttackSpeed.Text = si.AttacksPerSecond.ToString();
-            BaseDPS.Text = si.DamagePerSecond.ToString();
+            BaseAttackSpeed.Text = si.BaseAttacksPerSecond.ToString("#0.00");
+            AttackSpeed.Text = si.AttacksPerSecond.ToString("#0.00");
+            BaseDPS.Text = si.DamagePerSecond.ToString("#0.00");
 
             //Work out the pDPS and eDPS
             decimal attackSpeed;
@@ -156,6 +156,7 @@ namespace ExileClipboardListener.WinForms
             _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemSubTypeName = '" + si.ItemSubTypeName + "';");
 
             //Make a list of matching filters
+            _filters.Clear();
             GlobalMethods.StuffIntList("SELECT FilterId FROM FilterHeader WHERE (ItemTypeId = 0 OR ItemTypeId = " + _itemTypeId + ") AND (ItemSubTypeId = 0 OR ItemSubTypeId = " + _itemSubTypeId + ");", _filters);
 
             //Now score each filter and add it to the results
@@ -251,7 +252,6 @@ namespace ExileClipboardListener.WinForms
                 }
 
                 //Now we have a list it's simply a matter of tallying up the scores for each mod
-                int score = 0;
                 int modsHit = 0;
                 int runningTotalILevel = 0;
                 int runningTotalCLevel = 0;
@@ -262,14 +262,15 @@ namespace ExileClipboardListener.WinForms
                 GlobalMethods.ItemResults.Clear();
                 foreach (GlobalMethods.Mod m in mods)
                 {
-                    //First the BIS roll
-                    var maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id ? next : agg);
-                    var maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id ? next : agg);
-                    int maxSlot = maxPrimary.Mod1.ValueMin == 0 ? maxSecondary.Mod2.ValueMax : maxPrimary.Mod1.ValueMax;
+                    //Before we continue we need a subset of the AffixCache where the mod we are looking for is either the primary or secondary mod
+                    var AffixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == m.Id);
+                    var AffixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == m.Id);
 
-                    //Now backfill the best in slot data
-                    if (maxPrimary.Mod1.ValueMin != 0)
+                    //First the BIS roll
+                    int maxSlot = 0;
+                    if (AffixPrimarySearch.Count() != 0)
                     {
+                        var maxPrimary = AffixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id ? next : agg);
                         var row = new object[6];
                         row[0] = maxPrimary.Name;
                         row[1] = "Primary";
@@ -278,9 +279,11 @@ namespace ExileClipboardListener.WinForms
                         row[4] = maxPrimary.Mod1.ValueMin;
                         row[5] = maxPrimary.Mod1.ValueMax;
                         GlobalMethods.BISResults.Add(row);
+                        maxSlot = maxPrimary.Mod1.ValueMax;
                     }
-                    if (maxSecondary.Mod2.ValueMin != 0)
+                    if (AffixSecondarySearch.Count() != 0)
                     {
+                        var maxSecondary = AffixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id ? next : agg);
                         var row = new object[6];
                         row[0] = maxSecondary.Name;
                         row[1] = "Secondary";
@@ -289,16 +292,16 @@ namespace ExileClipboardListener.WinForms
                         row[4] = maxSecondary.Mod2.ValueMin;
                         row[5] = maxSecondary.Mod2.ValueMax; 
                         GlobalMethods.BISResults.Add(row);
+                        maxSlot = maxSecondary.Mod2.ValueMax > maxSlot ? maxSecondary.Mod2.ValueMax : maxSlot;
                     }
 
                     //Next we do the same but use item level as well
-                    maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id && next.Level <= si.ItemLevel ? next : agg);
-                    maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id && next.Level <= si.ItemLevel ? next : agg);
-                    int maxILevel = maxPrimary.Mod1.ValueMin == 0 ? maxSecondary.Mod2.ValueMax : maxPrimary.Mod1.ValueMax;
-                    
-                    ////Now backfill the item level data
-                    if (maxPrimary.Mod1.ValueMin != 0)
+                    AffixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == m.Id && a.Level <= si.ItemLevel);
+                    AffixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == m.Id && a.Level <= si.ItemLevel);
+                    int maxILevel = 0;
+                    if (AffixPrimarySearch.Count() != 0)
                     {
+                        var maxPrimary = AffixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id ? next : agg);
                         var row = new object[6];
                         row[0] = maxPrimary.Name;
                         row[1] = "Primary";
@@ -307,9 +310,11 @@ namespace ExileClipboardListener.WinForms
                         row[4] = maxPrimary.Mod1.ValueMin;
                         row[5] = maxPrimary.Mod1.ValueMax;
                         GlobalMethods.ILevelResults.Add(row);
+                        maxILevel = maxPrimary.Mod1.ValueMax;
                     }
-                    if (maxSecondary.Mod2.ValueMin != 0)
+                    if (AffixSecondarySearch.Count() != 0)
                     {
+                        var maxSecondary = AffixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id ? next : agg);
                         var row = new object[6];
                         row[0] = maxSecondary.Name;
                         row[1] = "Secondary";
@@ -318,16 +323,16 @@ namespace ExileClipboardListener.WinForms
                         row[4] = maxSecondary.Mod2.ValueMin;
                         row[5] = maxSecondary.Mod2.ValueMax;
                         GlobalMethods.ILevelResults.Add(row);
+                        maxILevel = maxSecondary.Mod2.ValueMax > maxILevel ? maxSecondary.Mod2.ValueMax : maxILevel;
                     }
                     
                     //Next we do the same but use character level instead
-                    maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id && next.Level <= CharacterLevel.Value ? next : agg);
-                    maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id && next.Level <= CharacterLevel.Value ? next : agg);
-                    int maxCLevel = maxPrimary.Mod1.ValueMin == 0 ? maxSecondary.Mod2.ValueMax : maxPrimary.Mod1.ValueMax;
-
-                    ////Now backfill the character level data
-                    if (maxPrimary.Mod1.ValueMin != 0)
+                    AffixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == m.Id && a.Level <= CharacterLevel.Value);
+                    AffixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == m.Id && a.Level <= CharacterLevel.Value);
+                    int maxCLevel = 0;
+                    if (AffixPrimarySearch.Count() != 0)
                     {
+                        var maxPrimary = AffixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id ? next : agg);
                         var row = new object[6];
                         row[0] = maxPrimary.Name;
                         row[1] = "Primary";
@@ -336,9 +341,11 @@ namespace ExileClipboardListener.WinForms
                         row[4] = maxPrimary.Mod1.ValueMin;
                         row[5] = maxPrimary.Mod1.ValueMax;
                         GlobalMethods.CLevelResults.Add(row);
+                        maxCLevel = maxPrimary.Mod1.ValueMax;
                     }
-                    if (maxSecondary.Mod2.ValueMin != 0)
+                    if (AffixSecondarySearch.Count() != 0)
                     {
+                        var maxSecondary = AffixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id ? next : agg);
                         var row = new object[6];
                         row[0] = maxSecondary.Name;
                         row[1] = "Secondary";
@@ -347,6 +354,7 @@ namespace ExileClipboardListener.WinForms
                         row[4] = maxSecondary.Mod2.ValueMin;
                         row[5] = maxSecondary.Mod2.ValueMax;
                         GlobalMethods.CLevelResults.Add(row);
+                        maxCLevel = maxSecondary.Mod2.ValueMax > maxCLevel ? maxSecondary.Mod2.ValueMax : maxCLevel;
                     }
 
                     //Finally we need to do this all one last time for the item rolls
@@ -356,11 +364,11 @@ namespace ExileClipboardListener.WinForms
                         if (si.Mod[mod].Id == m.Id)
                         {
                             itemModScore = si.Mod[mod].Value;
-
-                            maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id && next.Mod1.ValueMin <= si.Mod[mod].Value && next.Mod1.ValueMax >= si.Mod[mod].Value && next.Level <= si.ItemLevel ? next : agg);
-                            maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id && next.Mod2.ValueMin <= si.Mod[mod].Value && next.Mod2.ValueMax >= si.Mod[mod].Value && next.Level <= si.ItemLevel ? next : agg);
-                            if (maxPrimary.Mod1.ValueMin != 0)
+                            AffixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == m.Id && a.Level <= si.ItemLevel && a.Mod1.ValueMin <= si.Mod[mod].Value && a.Mod1.ValueMax >= si.Mod[mod].Value);
+                            AffixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == m.Id && a.Level <= si.ItemLevel && a.Mod2.ValueMin <= si.Mod[mod].Value && a.Mod2.ValueMax >= si.Mod[mod].Value);
+                            if (AffixPrimarySearch.Count() != 0)
                             {
+                                var maxPrimary = AffixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id ? next : agg);
                                 var row = new object[7];
                                 row[0] = maxPrimary.Name;
                                 row[1] = "Primary";
@@ -370,9 +378,11 @@ namespace ExileClipboardListener.WinForms
                                 row[5] = maxPrimary.Mod1.ValueMax;
                                 row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
+                                itemModScore = maxPrimary.Mod1.ValueMax;
                             }
-                            if (maxSecondary.Mod2.ValueMin != 0)
+                            if (AffixSecondarySearch.Count() != 0)
                             {
+                                var maxSecondary = AffixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id ? next : agg);
                                 var row = new object[7];
                                 row[0] = maxSecondary.Name;
                                 row[1] = "Secondary";
@@ -382,6 +392,7 @@ namespace ExileClipboardListener.WinForms
                                 row[5] = maxSecondary.Mod2.ValueMax;
                                 row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
+                                itemModScore = maxSecondary.Mod2.ValueMax > itemModScore ? maxSecondary.Mod2.ValueMax : itemModScore;
                             }
                         }
                     }
@@ -390,18 +401,15 @@ namespace ExileClipboardListener.WinForms
                     int scoreILevel = maxILevel == 0 ? 0 : itemModScore * 100 / maxILevel;
                     int scoreCLevel = maxCLevel == 0 ? 0 : itemModScore * 100 / maxCLevel;
                     int scoreSlot = maxSlot == 0 ? 0 : itemModScore * 100 / maxSlot;
-                    if (itemModScore != 0)
-                    {
-                        score = Properties.Settings.Default.RatingMode == 0 ? scoreSlot : scoreILevel;
-                    }
 
                     //Tally the scores
                     runningTotalILevel += scoreILevel;
                     runningTotalCLevel += scoreCLevel;
                     runningTotalSlot += scoreSlot;
-                    runningTotalActual += score;
                     modsHit++;
                 }
+                if (modsHit > 0)
+                    runningTotalActual += (Properties.Settings.Default.RatingMode == 0 ? runningTotalSlot : runningTotalILevel) / modsHit;
 
                 //Dump the results out to the form if this option is on
                 if (showDetail)
@@ -410,9 +418,10 @@ namespace ExileClipboardListener.WinForms
                     tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel/ modsHit) + "%";
                     tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / modsHit) + "%";
                     Image smiley;
-                    if (score <= Properties.Settings.Default.TolerancePoorTo)
+                    int score = Properties.Settings.Default.RatingMode == 0 ? (runningTotalSlot == 0 ? 0 : runningTotalSlot / modsHit) : (runningTotalILevel == 0 ? 0 : runningTotalILevel / modsHit);
+                    if (score / modsHit <= Properties.Settings.Default.TolerancePoorTo)
                         smiley = Resources.PoorSmall;
-                    else if (score <= Properties.Settings.Default.ToleranceAverageTo)
+                    else if (score / modsHit <= Properties.Settings.Default.ToleranceAverageTo)
                         smiley = Resources.AverageSmall;
                     else
                         smiley = Resources.GoodSmall;
@@ -480,8 +489,8 @@ namespace ExileClipboardListener.WinForms
                 return;
             int affixId = Convert.ToInt32(AffixGrid.CurrentRow.Cells[AffixIdColumn.Index].Value);
             string affixType = AffixGrid.CurrentRow.Cells[AffixTypeColumn.Index].Value.ToString();
-            int mod1Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName).Id;
-            int mod2Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName).Id; 
+            int mod1Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName, si.ItemSubTypeName).Id;
+            int mod2Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName, si.ItemSubTypeName).Id; 
             new AffixDetails { AffixId = affixId, AffixType = affixType, Mod1Id = mod1Id, Mod2Id = mod2Id }.ShowDialog();
         }
 

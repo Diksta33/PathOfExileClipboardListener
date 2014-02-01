@@ -162,7 +162,7 @@ namespace ExileClipboardListener.Classes
                         com.CommandTimeout = CommandTimeout;
 
                         //Prefixes first
-                        com.CommandText = "SELECT p.*, mc.ModCategoryName, m1.ModName AS Mod1Name, m2.ModName AS Mod2Name FROM Prefix p INNER JOIN ModCategory mc ON mc.ModCategoryId = p.ModCategoryId LEFT JOIN [Mod] m1 ON m1.ModId = p.Mod1Id LEFT JOIN [Mod] m2 ON m2.ModId = p.Mod2Id;";
+                        com.CommandText = "SELECT p.*, mc.ModCategoryName, m1.ModName AS Mod1Name, m1.ModRealName AS Mod1RealName, m1.ModClass AS Mod1Class, m2.ModName AS Mod2Name, m2.ModRealName AS Mod2RealName, m2.ModClass AS Mod2Class FROM Prefix p INNER JOIN ModCategory mc ON mc.ModCategoryId = p.ModCategoryId LEFT JOIN [Mod] m1 ON m1.ModId = p.Mod1Id LEFT JOIN [Mod] m2 ON m2.ModId = p.Mod2Id;";
                         using (var dr = com.ExecuteReader())
                         {
                             while (dr.Read())
@@ -176,18 +176,22 @@ namespace ExileClipboardListener.Classes
                                 affix.ModCategoryName = dr["ModCategoryName"].ToString();
                                 affix.Mod1.Id = dr["Mod1Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1Id"]);
                                 affix.Mod1.Name = dr["Mod1Name"].ToString();
+                                affix.Mod1.RealName = dr["Mod1RealName"].ToString();
                                 affix.Mod1.ValueMin = dr["Mod1ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMin"]);
                                 affix.Mod1.ValueMax = dr["Mod1ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMax"]);
+                                affix.Mod1.Class = dr["Mod1Class"].ToString();
                                 affix.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
                                 affix.Mod2.Name = dr["Mod2Name"].ToString();
+                                affix.Mod2.RealName = dr["Mod2RealName"].ToString();
                                 affix.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
                                 affix.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                affix.Mod2.Class = dr["Mod2Class"].ToString();
                                 AffixCache.Add(affix);
                             }
                         }
 
                         //Suffixes next
-                        com.CommandText = "SELECT s.*, mc.ModCategoryName, m1.ModName AS Mod1Name, m2.ModName AS Mod2Name FROM Suffix s INNER JOIN ModCategory mc ON mc.ModCategoryId = s.ModCategoryId LEFT JOIN [Mod] m1 ON m1.ModId = s.Mod1Id LEFT JOIN [Mod] m2 ON m2.ModId = s.Mod2Id;";
+                        com.CommandText = "SELECT s.*, mc.ModCategoryName, m1.ModName AS Mod1Name, m1.ModRealName AS Mod1RealName, m1.ModClass AS Mod1Class, m2.ModName AS Mod2Name, m2.ModRealName AS Mod2RealName, m2.ModClass AS Mod2Class FROM Suffix s INNER JOIN ModCategory mc ON mc.ModCategoryId = s.ModCategoryId LEFT JOIN [Mod] m1 ON m1.ModId = s.Mod1Id LEFT JOIN [Mod] m2 ON m2.ModId = s.Mod2Id;";
                         using (var dr = com.ExecuteReader())
                         {
                             while (dr.Read())
@@ -201,12 +205,16 @@ namespace ExileClipboardListener.Classes
                                 affix.ModCategoryName = dr["ModCategoryName"].ToString();
                                 affix.Mod1.Id = dr["Mod1Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1Id"]);
                                 affix.Mod1.Name = dr["Mod1Name"].ToString();
+                                affix.Mod1.RealName = dr["Mod1RealName"].ToString();
                                 affix.Mod1.ValueMin = dr["Mod1ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMin"]);
                                 affix.Mod1.ValueMax = dr["Mod1ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod1ValueMax"]);
+                                affix.Mod1.Class = dr["Mod1Class"].ToString();
                                 affix.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
                                 affix.Mod2.Name = dr["Mod2Name"].ToString();
+                                affix.Mod2.RealName = dr["Mod2RealName"].ToString();
                                 affix.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
                                 affix.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                affix.Mod2.Class = dr["Mod2Class"].ToString();
                                 AffixCache.Add(affix);
                             }
                         }
@@ -290,7 +298,7 @@ namespace ExileClipboardListener.Classes
             return;
         }
 
-        public static Mod FindMod(string modName, int modPair, string itemTypeName)
+        public static Mod FindMod(string modName, int modPair, string itemTypeName, string itemSubTypeName)
         {
             var mod = new Mod();
             if (modName == "")

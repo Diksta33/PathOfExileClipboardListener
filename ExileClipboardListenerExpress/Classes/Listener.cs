@@ -214,28 +214,29 @@ namespace ExileClipboardListener.Classes
                 bool seenImplicit = false;
 
                 //Primary
-                si.Affix[0].Mod1.Id = bi.Mod1.Id; 
-                if (si.Affix[0].Mod1.Id != 0)
+                if (bi.Mod1.Id != 0)
                 {
-                    var implicitMod = GlobalMethods.LookUpMod(si.Affix[0].Mod1.Id);
+                    var implicitMod = GlobalMethods.LookUpMod(bi.Mod1.Id);
 
                     //For primary implicit mods there might be a roll in the item script
-                    si.Affix[0].Mod1.Value = FindMod(entity, implicitMod.Name);
-                    if (si.Affix[0].Mod1.Value == 0)
-                        si.Affix[0].Mod1.Value = bi.Mod1.ValueMin;
-                    seenImplicit = true;
+                    implicitMod.Value = FindMod(entity, implicitMod.RealName);
+                    if (implicitMod.Value == 0)
+                        implicitMod.Value = bi.Mod1.ValueMin;
+                    else
+                        seenImplicit = true;
 
                     //We also want the minimum and maximum values from the base item
-                    si.Affix[0].Mod1.ValueMin = bi.Mod1.ValueMin;
-                    si.Affix[0].Mod1.ValueMax = bi.Mod1.ValueMax;
+                    implicitMod.ValueMin = bi.Mod1.ValueMin;
+                    implicitMod.ValueMax = bi.Mod1.ValueMax;
+                    si.Affix[0].Mod1 = implicitMod;
                 }
 
                 //Secondary
                 //If there is a secondary implicit mod then it's just a case of looking up the values and storing them (as there is no roll - yet!)
-                si.Affix[0].Mod2.Id = bi.Mod2.Id; 
-                if (si.Affix[0].Mod2.Id != 0)
+                if (bi.Mod2.Id != 0)
                 {
                     //It won't always be this easy
+                    si.Affix[0].Mod2.Id = bi.Mod2.Id;
                     si.Affix[0].Mod2.Value = bi.Mod2.ValueMin;
 
                     //We also want the minimum and maximum values from the base item
@@ -256,10 +257,10 @@ namespace ExileClipboardListener.Classes
                         string modValue = s.Split(' ')[0];
                         string modName = s.Substring(modValue.Length + 1, s.Length - modValue.Length - 1).Trim();
 
-                        //We need to be a little careful, this is the first mod so only pick mods that are 1st in a sequence, e.g. phyiscal damage min/ max
+                        //We need to be a little careful, this is the first mod so only pick mods that are 1st in a sequence, e.g. physical damage min/ max
                         //We also need to check if the mod is allowed on this item type
                         //We sometimes have implict mods that have the same name as affix mods so we try to pick the correct one
-                        var match = GlobalMethods.FindMod(modName, 1, itemTypeName);
+                        var match = GlobalMethods.FindMod(modName, 1, itemTypeName, itemSubTypeName);
                         if (match.Id == 0)
                         {
                             MessageBox.Show("Failed to find a mod with a name of " + modName + "!");
@@ -280,7 +281,7 @@ namespace ExileClipboardListener.Classes
 
                             //Check to see if this is a mod pair, if it is then match the secondary mod
                             //Mod Pairs always have range values, e.g. 1-5, the minimum value is recorded against the first mod and the maximum value is recorded against the second mod
-                            match = GlobalMethods.FindMod(modName, 2, itemTypeName);
+                            match = GlobalMethods.FindMod(modName, 2, itemTypeName, itemSubTypeName);
                             if (match.Id != 0)
                             {
                                 match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[1]) : 0;
@@ -296,7 +297,7 @@ namespace ExileClipboardListener.Classes
                     si.Mod[i] = mods[i];
                 }
 
-                //Because some prefixes/ suffixes have two mods we need to find these first and then scoop up whatever is left as single mod "-ixes"
+                //Because some prefixes/ suffixes have two mods we need to find these first and then scoop up whatever is left as single mod affixes
                 //We also have the situation of double mods, e.g. Item Quantity is a prefix and a suffix, in these cases we are limited to how much we can determine
                 //For Item Quantity there are three ranges, 8-12, 13-18 and 19-24.  As an example, if an item has an Item Quantity roll of 21 then this could be:
                 // - Prefix = 8, Suffix = 13 (prefix is rank #3, suffix is rank #2)
@@ -327,6 +328,14 @@ namespace ExileClipboardListener.Classes
                     }
                     if (matched == 2)
                     {
+                        //We also need to check that the affix is legal for the item
+                        if (itemSubTypeName.Contains("One") && f.ModCategoryName.Contains("Two"))
+                            matched = 0;
+                        if ((itemSubTypeName.Contains("Two") || itemSubTypeName.Contains("Staff")) && f.ModCategoryName.Contains("One"))
+                            matched = 0;
+                    }
+                    if (matched == 2)
+                    {
                         //We got a hit
                         var affix = f;
                         affix.Mod1 = mpMod1;
@@ -345,6 +354,7 @@ namespace ExileClipboardListener.Classes
                 }
 
                 //Find affixes with one mod
+                //TODO: Refactor this into a method
                 foreach (var f in GlobalMethods.AffixCache)
                 {
                     int matched = 0;
@@ -357,6 +367,14 @@ namespace ExileClipboardListener.Classes
                             mpMod = mp;
                             matched++;
                         }
+                    }
+                    if (matched == 1)
+                    {
+                        //We also need to check that the affix is legal for the item
+                        if (itemSubTypeName.Contains("One") && f.ModCategoryName.Contains("Two"))
+                            matched = 0;
+                        if ((itemSubTypeName.Contains("Two") || itemSubTypeName.Contains("Staff")) && f.ModCategoryName.Contains("One"))
+                            matched = 0;
                     }
                     if (matched == 1)
                     {
@@ -403,7 +421,36 @@ namespace ExileClipboardListener.Classes
                             //The basic way this works is to pick a mod that wasn't assigned, see if it appears as both a double-mod affix and a single-mod affx
                             //Then see if we have the "other half" of the double-mod affix
                             //Then see if we can "fit" the mods to the affixes in any way that is legal, picking arbitary values for this
-                            var affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
+                            //This is futher complicated by armour/ hybrid defenses (such a mare)
+                            //We need to exclude any armour affixes that are of the wrong type, thankfully these are always singleton affixes
+                            //List<GlobalMethods.Affix> affixFilter;
+                            GlobalMethods.Affix affix;
+                            if (itemTypeName == "Armour")
+                            {
+                                //Armour only
+                                if (si.Armour != 0 && si.Evasion == 0 && si.EnergyShield == 0)
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                //Evasion only
+                                else if (si.Armour == 0 && si.Evasion != 0 && si.EnergyShield == 0)
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                //Energy Shield only
+                                else if (si.Armour == 0 && si.Evasion == 0 && si.EnergyShield != 0)
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Energy Shield") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                //Armour/ Evasion only
+                                else if (si.Armour != 0 && si.Evasion != 0 && si.EnergyShield == 0)
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Evasion"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                //Armour/ Energy Shield only
+                                else if (si.Armour != 0 && si.Evasion == 0 && si.EnergyShield != 0)
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Energy Shield"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                //Evasion/ Energy Shield only
+                                else if (si.Armour == 0 && si.Evasion != 0 && si.EnergyShield != 0)
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion and Energy Shield"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                else
+                                    affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
+                            }
+                            else
+                                affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
+                            //var affix = affixFilter.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
                             GlobalMethods.Mod modPartner;
                             modPartner.Id = 0;
                             modPartner.Value = 0;
