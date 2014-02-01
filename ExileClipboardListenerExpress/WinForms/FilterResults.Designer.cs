@@ -30,14 +30,12 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FilterResultsGrid = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AverageScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -95,11 +93,6 @@
             this.ModDetails = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
             this.ModGrid = new System.Windows.Forms.DataGridView();
-            this.ModIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModValueMinColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModValueMaxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModItemValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabAffixes = new System.Windows.Forms.TabPage();
             this.AffixDetails = new System.Windows.Forms.Button();
             this.HideSecondary = new System.Windows.Forms.CheckBox();
@@ -117,6 +110,18 @@
             this.AffixSecondaryModRangeColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AffixSecondaryModValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabFilterResults = new System.Windows.Forms.TabPage();
+            this.Suffix3Mod = new System.Windows.Forms.TextBox();
+            this.Suffix2Mod = new System.Windows.Forms.TextBox();
+            this.Suffix1Mod = new System.Windows.Forms.TextBox();
+            this.Prefix3Mod = new System.Windows.Forms.TextBox();
+            this.Prefix2Mod = new System.Windows.Forms.TextBox();
+            this.Prefix1Mod = new System.Windows.Forms.TextBox();
+            this.Suffix3ModClass = new System.Windows.Forms.TextBox();
+            this.Suffix2ModClass = new System.Windows.Forms.TextBox();
+            this.Suffix1ModClass = new System.Windows.Forms.TextBox();
+            this.Prefix3ModClass = new System.Windows.Forms.TextBox();
+            this.Prefix2ModClass = new System.Windows.Forms.TextBox();
+            this.Prefix1ModClass = new System.Windows.Forms.TextBox();
             this.Suffix3Details = new System.Windows.Forms.Button();
             this.Suffix2Details = new System.Windows.Forms.Button();
             this.Suffix1Details = new System.Windows.Forms.Button();
@@ -177,18 +182,9 @@
             this.label28 = new System.Windows.Forms.Label();
             this.AddStash = new System.Windows.Forms.Button();
             this.Exit = new System.Windows.Forms.Button();
-            this.Prefix1ModClass = new System.Windows.Forms.TextBox();
-            this.Prefix2ModClass = new System.Windows.Forms.TextBox();
-            this.Prefix3ModClass = new System.Windows.Forms.TextBox();
-            this.Suffix1ModClass = new System.Windows.Forms.TextBox();
-            this.Suffix2ModClass = new System.Windows.Forms.TextBox();
-            this.Suffix3ModClass = new System.Windows.Forms.TextBox();
-            this.Prefix1Mod = new System.Windows.Forms.TextBox();
-            this.Prefix2Mod = new System.Windows.Forms.TextBox();
-            this.Prefix3Mod = new System.Windows.Forms.TextBox();
-            this.Suffix1Mod = new System.Windows.Forms.TextBox();
-            this.Suffix2Mod = new System.Windows.Forms.TextBox();
-            this.Suffix3Mod = new System.Windows.Forms.TextBox();
+            this.ModIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ModItemValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -780,8 +776,6 @@
             this.ModGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ModIdColumn,
             this.ModNameColumn,
-            this.ModValueMinColumn,
-            this.ModValueMaxColumn,
             this.ModItemValueColumn});
             this.ModGrid.Location = new System.Drawing.Point(6, 26);
             this.ModGrid.Name = "ModGrid";
@@ -790,54 +784,6 @@
             this.ModGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ModGrid.Size = new System.Drawing.Size(952, 184);
             this.ModGrid.TabIndex = 22;
-            // 
-            // ModIdColumn
-            // 
-            this.ModIdColumn.HeaderText = "ModId";
-            this.ModIdColumn.Name = "ModIdColumn";
-            this.ModIdColumn.ReadOnly = true;
-            this.ModIdColumn.Visible = false;
-            // 
-            // ModNameColumn
-            // 
-            this.ModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ModNameColumn.HeaderText = "Mod Name";
-            this.ModNameColumn.Name = "ModNameColumn";
-            this.ModNameColumn.ReadOnly = true;
-            this.ModNameColumn.Width = 84;
-            // 
-            // ModValueMinColumn
-            // 
-            this.ModValueMinColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N0";
-            this.ModValueMinColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.ModValueMinColumn.HeaderText = "Value Min";
-            this.ModValueMinColumn.Name = "ModValueMinColumn";
-            this.ModValueMinColumn.ReadOnly = true;
-            this.ModValueMinColumn.Visible = false;
-            // 
-            // ModValueMaxColumn
-            // 
-            this.ModValueMaxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            this.ModValueMaxColumn.DefaultCellStyle = dataGridViewCellStyle4;
-            this.ModValueMaxColumn.HeaderText = "Value Max";
-            this.ModValueMaxColumn.Name = "ModValueMaxColumn";
-            this.ModValueMaxColumn.ReadOnly = true;
-            this.ModValueMaxColumn.Visible = false;
-            // 
-            // ModItemValueColumn
-            // 
-            this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle5.Format = "N0";
-            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle5;
-            this.ModItemValueColumn.HeaderText = "Item Value";
-            this.ModItemValueColumn.Name = "ModItemValueColumn";
-            this.ModItemValueColumn.ReadOnly = true;
-            this.ModItemValueColumn.Width = 82;
             // 
             // tabAffixes
             // 
@@ -927,9 +873,9 @@
             // AffixLevelColumn
             // 
             this.AffixLevelColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle6.Format = "N0";
-            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.AffixLevelColumn.HeaderText = "Level";
             this.AffixLevelColumn.Name = "AffixLevelColumn";
             this.AffixLevelColumn.ReadOnly = true;
@@ -962,8 +908,8 @@
             // AffixPrimaryModRangeColumn
             // 
             this.AffixPrimaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle5;
             this.AffixPrimaryModRangeColumn.HeaderText = "Range";
             this.AffixPrimaryModRangeColumn.Name = "AffixPrimaryModRangeColumn";
             this.AffixPrimaryModRangeColumn.ReadOnly = true;
@@ -972,9 +918,9 @@
             // AffixPrimaryModValueColumn
             // 
             this.AffixPrimaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle8.Format = "N0";
-            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.AffixPrimaryModValueColumn.HeaderText = "Value";
             this.AffixPrimaryModValueColumn.Name = "AffixPrimaryModValueColumn";
             this.AffixPrimaryModValueColumn.ReadOnly = true;
@@ -991,8 +937,8 @@
             // AffixSecondaryModRangeColumn
             // 
             this.AffixSecondaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.AffixSecondaryModRangeColumn.HeaderText = "Range";
             this.AffixSecondaryModRangeColumn.Name = "AffixSecondaryModRangeColumn";
             this.AffixSecondaryModRangeColumn.ReadOnly = true;
@@ -1001,9 +947,9 @@
             // AffixSecondaryModValueColumn
             // 
             this.AffixSecondaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.Format = "N0";
-            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle8;
             this.AffixSecondaryModValueColumn.HeaderText = "Value";
             this.AffixSecondaryModValueColumn.Name = "AffixSecondaryModValueColumn";
             this.AffixSecondaryModValueColumn.ReadOnly = true;
@@ -1077,6 +1023,102 @@
             this.tabFilterResults.TabIndex = 2;
             this.tabFilterResults.Text = "Filter Results";
             this.tabFilterResults.UseVisualStyleBackColor = true;
+            // 
+            // Suffix3Mod
+            // 
+            this.Suffix3Mod.Enabled = false;
+            this.Suffix3Mod.Location = new System.Drawing.Point(490, 192);
+            this.Suffix3Mod.Name = "Suffix3Mod";
+            this.Suffix3Mod.Size = new System.Drawing.Size(264, 20);
+            this.Suffix3Mod.TabIndex = 93;
+            // 
+            // Suffix2Mod
+            // 
+            this.Suffix2Mod.Enabled = false;
+            this.Suffix2Mod.Location = new System.Drawing.Point(490, 165);
+            this.Suffix2Mod.Name = "Suffix2Mod";
+            this.Suffix2Mod.Size = new System.Drawing.Size(264, 20);
+            this.Suffix2Mod.TabIndex = 92;
+            // 
+            // Suffix1Mod
+            // 
+            this.Suffix1Mod.Enabled = false;
+            this.Suffix1Mod.Location = new System.Drawing.Point(490, 137);
+            this.Suffix1Mod.Name = "Suffix1Mod";
+            this.Suffix1Mod.Size = new System.Drawing.Size(264, 20);
+            this.Suffix1Mod.TabIndex = 91;
+            // 
+            // Prefix3Mod
+            // 
+            this.Prefix3Mod.Enabled = false;
+            this.Prefix3Mod.Location = new System.Drawing.Point(490, 111);
+            this.Prefix3Mod.Name = "Prefix3Mod";
+            this.Prefix3Mod.Size = new System.Drawing.Size(264, 20);
+            this.Prefix3Mod.TabIndex = 90;
+            // 
+            // Prefix2Mod
+            // 
+            this.Prefix2Mod.Enabled = false;
+            this.Prefix2Mod.Location = new System.Drawing.Point(490, 84);
+            this.Prefix2Mod.Name = "Prefix2Mod";
+            this.Prefix2Mod.Size = new System.Drawing.Size(264, 20);
+            this.Prefix2Mod.TabIndex = 89;
+            // 
+            // Prefix1Mod
+            // 
+            this.Prefix1Mod.Enabled = false;
+            this.Prefix1Mod.Location = new System.Drawing.Point(490, 57);
+            this.Prefix1Mod.Name = "Prefix1Mod";
+            this.Prefix1Mod.Size = new System.Drawing.Size(264, 20);
+            this.Prefix1Mod.TabIndex = 88;
+            // 
+            // Suffix3ModClass
+            // 
+            this.Suffix3ModClass.Enabled = false;
+            this.Suffix3ModClass.Location = new System.Drawing.Point(373, 192);
+            this.Suffix3ModClass.Name = "Suffix3ModClass";
+            this.Suffix3ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Suffix3ModClass.TabIndex = 87;
+            // 
+            // Suffix2ModClass
+            // 
+            this.Suffix2ModClass.Enabled = false;
+            this.Suffix2ModClass.Location = new System.Drawing.Point(373, 165);
+            this.Suffix2ModClass.Name = "Suffix2ModClass";
+            this.Suffix2ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Suffix2ModClass.TabIndex = 86;
+            // 
+            // Suffix1ModClass
+            // 
+            this.Suffix1ModClass.Enabled = false;
+            this.Suffix1ModClass.Location = new System.Drawing.Point(373, 137);
+            this.Suffix1ModClass.Name = "Suffix1ModClass";
+            this.Suffix1ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Suffix1ModClass.TabIndex = 85;
+            // 
+            // Prefix3ModClass
+            // 
+            this.Prefix3ModClass.Enabled = false;
+            this.Prefix3ModClass.Location = new System.Drawing.Point(373, 111);
+            this.Prefix3ModClass.Name = "Prefix3ModClass";
+            this.Prefix3ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Prefix3ModClass.TabIndex = 84;
+            // 
+            // Prefix2ModClass
+            // 
+            this.Prefix2ModClass.Enabled = false;
+            this.Prefix2ModClass.Location = new System.Drawing.Point(373, 84);
+            this.Prefix2ModClass.Name = "Prefix2ModClass";
+            this.Prefix2ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Prefix2ModClass.TabIndex = 83;
+            // 
+            // Prefix1ModClass
+            // 
+            this.Prefix1ModClass.Enabled = false;
+            this.Prefix1ModClass.Location = new System.Drawing.Point(373, 57);
+            this.Prefix1ModClass.Name = "Prefix1ModClass";
+            this.Prefix1ModClass.Size = new System.Drawing.Size(111, 20);
+            this.Prefix1ModClass.TabIndex = 82;
             // 
             // Suffix3Details
             // 
@@ -1642,101 +1684,31 @@
             this.Exit.Text = "Dismiss";
             this.Exit.UseVisualStyleBackColor = true;
             // 
-            // Prefix1ModClass
+            // ModIdColumn
             // 
-            this.Prefix1ModClass.Enabled = false;
-            this.Prefix1ModClass.Location = new System.Drawing.Point(373, 57);
-            this.Prefix1ModClass.Name = "Prefix1ModClass";
-            this.Prefix1ModClass.Size = new System.Drawing.Size(111, 20);
-            this.Prefix1ModClass.TabIndex = 82;
+            this.ModIdColumn.HeaderText = "ModId";
+            this.ModIdColumn.Name = "ModIdColumn";
+            this.ModIdColumn.ReadOnly = true;
+            this.ModIdColumn.Visible = false;
             // 
-            // Prefix2ModClass
+            // ModNameColumn
             // 
-            this.Prefix2ModClass.Enabled = false;
-            this.Prefix2ModClass.Location = new System.Drawing.Point(373, 84);
-            this.Prefix2ModClass.Name = "Prefix2ModClass";
-            this.Prefix2ModClass.Size = new System.Drawing.Size(111, 20);
-            this.Prefix2ModClass.TabIndex = 83;
+            this.ModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.ModNameColumn.HeaderText = "Mod Name";
+            this.ModNameColumn.Name = "ModNameColumn";
+            this.ModNameColumn.ReadOnly = true;
+            this.ModNameColumn.Width = 84;
             // 
-            // Prefix3ModClass
+            // ModItemValueColumn
             // 
-            this.Prefix3ModClass.Enabled = false;
-            this.Prefix3ModClass.Location = new System.Drawing.Point(373, 111);
-            this.Prefix3ModClass.Name = "Prefix3ModClass";
-            this.Prefix3ModClass.Size = new System.Drawing.Size(111, 20);
-            this.Prefix3ModClass.TabIndex = 84;
-            // 
-            // Suffix1ModClass
-            // 
-            this.Suffix1ModClass.Enabled = false;
-            this.Suffix1ModClass.Location = new System.Drawing.Point(373, 137);
-            this.Suffix1ModClass.Name = "Suffix1ModClass";
-            this.Suffix1ModClass.Size = new System.Drawing.Size(111, 20);
-            this.Suffix1ModClass.TabIndex = 85;
-            // 
-            // Suffix2ModClass
-            // 
-            this.Suffix2ModClass.Enabled = false;
-            this.Suffix2ModClass.Location = new System.Drawing.Point(373, 165);
-            this.Suffix2ModClass.Name = "Suffix2ModClass";
-            this.Suffix2ModClass.Size = new System.Drawing.Size(111, 20);
-            this.Suffix2ModClass.TabIndex = 86;
-            // 
-            // Suffix3ModClass
-            // 
-            this.Suffix3ModClass.Enabled = false;
-            this.Suffix3ModClass.Location = new System.Drawing.Point(373, 192);
-            this.Suffix3ModClass.Name = "Suffix3ModClass";
-            this.Suffix3ModClass.Size = new System.Drawing.Size(111, 20);
-            this.Suffix3ModClass.TabIndex = 87;
-            // 
-            // Prefix1Mod
-            // 
-            this.Prefix1Mod.Enabled = false;
-            this.Prefix1Mod.Location = new System.Drawing.Point(490, 57);
-            this.Prefix1Mod.Name = "Prefix1Mod";
-            this.Prefix1Mod.Size = new System.Drawing.Size(264, 20);
-            this.Prefix1Mod.TabIndex = 88;
-            // 
-            // Prefix2Mod
-            // 
-            this.Prefix2Mod.Enabled = false;
-            this.Prefix2Mod.Location = new System.Drawing.Point(490, 84);
-            this.Prefix2Mod.Name = "Prefix2Mod";
-            this.Prefix2Mod.Size = new System.Drawing.Size(264, 20);
-            this.Prefix2Mod.TabIndex = 89;
-            // 
-            // Prefix3Mod
-            // 
-            this.Prefix3Mod.Enabled = false;
-            this.Prefix3Mod.Location = new System.Drawing.Point(490, 111);
-            this.Prefix3Mod.Name = "Prefix3Mod";
-            this.Prefix3Mod.Size = new System.Drawing.Size(264, 20);
-            this.Prefix3Mod.TabIndex = 90;
-            // 
-            // Suffix1Mod
-            // 
-            this.Suffix1Mod.Enabled = false;
-            this.Suffix1Mod.Location = new System.Drawing.Point(490, 137);
-            this.Suffix1Mod.Name = "Suffix1Mod";
-            this.Suffix1Mod.Size = new System.Drawing.Size(264, 20);
-            this.Suffix1Mod.TabIndex = 91;
-            // 
-            // Suffix2Mod
-            // 
-            this.Suffix2Mod.Enabled = false;
-            this.Suffix2Mod.Location = new System.Drawing.Point(490, 165);
-            this.Suffix2Mod.Name = "Suffix2Mod";
-            this.Suffix2Mod.Size = new System.Drawing.Size(264, 20);
-            this.Suffix2Mod.TabIndex = 92;
-            // 
-            // Suffix3Mod
-            // 
-            this.Suffix3Mod.Enabled = false;
-            this.Suffix3Mod.Location = new System.Drawing.Point(490, 192);
-            this.Suffix3Mod.Name = "Suffix3Mod";
-            this.Suffix3Mod.Size = new System.Drawing.Size(264, 20);
-            this.Suffix3Mod.TabIndex = 93;
+            this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N0";
+            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle3;
+            this.ModItemValueColumn.HeaderText = "Item Value";
+            this.ModItemValueColumn.Name = "ModItemValueColumn";
+            this.ModItemValueColumn.ReadOnly = true;
+            this.ModItemValueColumn.Width = 82;
             // 
             // FilterResults
             // 
@@ -1898,11 +1870,6 @@
         private System.Windows.Forms.Button Prefix2Details;
         private System.Windows.Forms.Button Prefix1Details;
         private System.Windows.Forms.Button ModDetails;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModIdColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModValueMinColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModValueMaxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixIdColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixTypeColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixLevelColumn;
@@ -1939,5 +1906,8 @@
         private System.Windows.Forms.TextBox Prefix3Mod;
         private System.Windows.Forms.TextBox Prefix2Mod;
         private System.Windows.Forms.TextBox Prefix1Mod;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModIdColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
     }
 }

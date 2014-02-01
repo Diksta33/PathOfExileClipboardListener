@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 using ExileClipboardListener.Properties;
+using System.Linq;
 using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
 
@@ -87,9 +88,7 @@ namespace ExileClipboardListener.WinForms
                 {
                     var row = new object[5];
                     row[ModIdColumn.Index] = m.Id;
-                    row[ModNameColumn.Index] = GlobalMethods.LookUpMod(m.Id).Name;// GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + m.Id + ";");
-                    row[ModValueMinColumn.Index] = m.ValueMin;
-                    row[ModValueMaxColumn.Index] = m.ValueMax;
+                    row[ModNameColumn.Index] = GlobalMethods.LookUpMod(m.Id).Name;
                     row[ModItemValueColumn.Index] = m.Value;
                     ModGrid.Rows.Add(row);
                 }
@@ -115,10 +114,10 @@ namespace ExileClipboardListener.WinForms
                     else
                     {
                         row[AffixLevelColumn.Index] = si.Affix[i].Level;
-                        row[AffixCategoryColumn.Index] = GlobalMethods.GetScalarString("SELECT ModCategoryName FROM ModCategory mc INNER JOIN " + affixName + " a ON a.ModCategoryId = mc.ModCategoryId WHERE a." + affixName + "Id = " + affixId + ";");
-                        row[AffixNameColumn.Index] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixName + " WHERE " + affixName + "Id = " + affixId + ";");
+                        row[AffixCategoryColumn.Index] = si.Affix[i].ModCategoryName;
+                        row[AffixNameColumn.Index] = si.Affix[i].Name;
                     }
-                    row[AffixPrimaryModNameColumn.Index] = GlobalMethods.LookUpMod(si.Affix[i].Mod1.Id).Name;
+                    row[AffixPrimaryModNameColumn.Index] = si.Affix[i].Mod1.Name;
                     row[AffixPrimaryModRangeColumn.Index] = si.Affix[i].Mod1.ValueMin + "-" + si.Affix[i].Mod1.ValueMax;
                     row[AffixPrimaryModValueColumn.Index] = si.Affix[i].Mod1.Value;
                     if (si.Affix[i].Mod2.Value == 0)
@@ -130,7 +129,7 @@ namespace ExileClipboardListener.WinForms
                     else
                     {
                         seenSecondary = true;
-                        row[AffixSecondaryModNameColumn.Index] = GlobalMethods.LookUpMod(si.Affix[i].Mod2.Id).Name;
+                        row[AffixSecondaryModNameColumn.Index] = si.Affix[i].Mod2.Name;
                         row[AffixSecondaryModRangeColumn.Index] = si.Affix[i].Mod2.ValueMin + "-" + si.Affix[i].Mod2.ValueMax;
                         row[AffixSecondaryModValueColumn.Index] = si.Affix[i].Mod2.Value;
                     }
@@ -264,89 +263,89 @@ namespace ExileClipboardListener.WinForms
                 foreach (GlobalMethods.Mod m in mods)
                 {
                     //First the BIS roll
-                    int maxPrimary = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + ";");
-                    int maxSecondary = GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + ";");
-                    int maxSlot = maxPrimary == 0 ? maxSecondary : maxPrimary;
+                    var maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id ? next : agg);
+                    var maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id ? next : agg);
+                    int maxSlot = maxPrimary.Mod1.ValueMin == 0 ? maxSecondary.Mod2.ValueMax : maxPrimary.Mod1.ValueMax;
 
                     //Now backfill the best in slot data
-                    if (maxPrimary != 0)
+                    if (maxPrimary.Mod1.ValueMin != 0)
                     {
                         var row = new object[6];
-                        row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
+                        row[0] = maxPrimary.Name;
                         row[1] = "Primary";
-                        row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                        row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
+                        row[2] = maxPrimary.Level;
+                        row[3] = maxPrimary.Mod1.Name;
+                        row[4] = maxPrimary.Mod1.ValueMin;
+                        row[5] = maxPrimary.Mod1.ValueMax;
                         GlobalMethods.BISResults.Add(row);
                     }
-                    if (maxSecondary != 0)
+                    if (maxSecondary.Mod2.ValueMin != 0)
                     {
                         var row = new object[6];
-                        row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
+                        row[0] = maxSecondary.Name;
                         row[1] = "Secondary";
-                        row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                        row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
+                        row[2] = maxSecondary.Level;
+                        row[3] = maxSecondary.Mod2.Name;
+                        row[4] = maxSecondary.Mod2.ValueMin;
+                        row[5] = maxSecondary.Mod2.ValueMax; 
                         GlobalMethods.BISResults.Add(row);
                     }
 
                     //Next we do the same but use item level as well
-                    maxPrimary = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level <= " + si.ItemLevel + ";");
-                    maxSecondary = GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Level <= " + si.ItemLevel + ";");
-                    int maxILevel = maxPrimary == 0 ? maxSecondary : maxPrimary;
-
-                    //Now backfill the item level data
-                    if (maxPrimary != 0)
+                    maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id && next.Level <= si.ItemLevel ? next : agg);
+                    maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id && next.Level <= si.ItemLevel ? next : agg);
+                    int maxILevel = maxPrimary.Mod1.ValueMin == 0 ? maxSecondary.Mod2.ValueMax : maxPrimary.Mod1.ValueMax;
+                    
+                    ////Now backfill the item level data
+                    if (maxPrimary.Mod1.ValueMin != 0)
                     {
                         var row = new object[6];
-                        row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
+                        row[0] = maxPrimary.Name;
                         row[1] = "Primary";
-                        row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                        row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
+                        row[2] = maxPrimary.Level;
+                        row[3] = maxPrimary.Mod1.Name;
+                        row[4] = maxPrimary.Mod1.ValueMin;
+                        row[5] = maxPrimary.Mod1.ValueMax;
                         GlobalMethods.ILevelResults.Add(row);
                     }
-                    if (maxSecondary != 0)
+                    if (maxSecondary.Mod2.ValueMin != 0)
                     {
                         var row = new object[6];
-                        row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
+                        row[0] = maxSecondary.Name;
                         row[1] = "Secondary";
-                        row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                        row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
+                        row[2] = maxSecondary.Level;
+                        row[3] = maxSecondary.Mod2.Name;
+                        row[4] = maxSecondary.Mod2.ValueMin;
+                        row[5] = maxSecondary.Mod2.ValueMax;
                         GlobalMethods.ILevelResults.Add(row);
                     }
+                    
+                    //Next we do the same but use character level instead
+                    maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id && next.Level <= CharacterLevel.Value ? next : agg);
+                    maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id && next.Level <= CharacterLevel.Value ? next : agg);
+                    int maxCLevel = maxPrimary.Mod1.ValueMin == 0 ? maxSecondary.Mod2.ValueMax : maxPrimary.Mod1.ValueMax;
 
-                    //Next we do the same but use item level as well
-                    maxPrimary = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Level <= " + CharacterLevel.Value + ";");
-                    maxSecondary = GlobalMethods.GetScalarInt("SELECT MAX(Mod2ValueMax) FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Level <= " + CharacterLevel.Value + ";");
-                    int maxCLevel = maxPrimary == 0 ? maxSecondary : maxPrimary;
-
-                    //Now backfill the item level data
-                    if (maxPrimary != 0)
+                    ////Now backfill the character level data
+                    if (maxPrimary.Mod1.ValueMin != 0)
                     {
                         var row = new object[6];
-                        row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
+                        row[0] = maxPrimary.Name;
                         row[1] = "Primary";
-                        row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                        row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
-                        row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMax = " + maxPrimary + ";");
+                        row[2] = maxPrimary.Level;
+                        row[3] = maxPrimary.Mod1.Name;
+                        row[4] = maxPrimary.Mod1.ValueMin;
+                        row[5] = maxPrimary.Mod1.ValueMax;
                         GlobalMethods.CLevelResults.Add(row);
                     }
-                    if (maxSecondary != 0)
+                    if (maxSecondary.Mod2.ValueMin != 0)
                     {
                         var row = new object[6];
-                        row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
+                        row[0] = maxSecondary.Name;
                         row[1] = "Secondary";
-                        row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                        row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
-                        row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMax = " + maxSecondary + ";");
+                        row[2] = maxSecondary.Level;
+                        row[3] = maxSecondary.Mod2.Name;
+                        row[4] = maxSecondary.Mod2.ValueMin;
+                        row[5] = maxSecondary.Mod2.ValueMax;
                         GlobalMethods.CLevelResults.Add(row);
                     }
 
@@ -357,28 +356,30 @@ namespace ExileClipboardListener.WinForms
                         if (si.Mod[mod].Id == m.Id)
                         {
                             itemModScore = si.Mod[mod].Value;
-                            string position = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + ";") == "" ? "Secondary" : "Primary";
-                            if (position == "Primary")
+
+                            maxPrimary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == m.Id && next.Mod1.ValueMin <= si.Mod[mod].Value && next.Mod1.ValueMax >= si.Mod[mod].Value && next.Level <= si.ItemLevel ? next : agg);
+                            maxSecondary = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == m.Id && next.Mod2.ValueMin <= si.Mod[mod].Value && next.Mod2.ValueMax >= si.Mod[mod].Value && next.Level <= si.ItemLevel ? next : agg);
+                            if (maxPrimary.Mod1.ValueMin != 0)
                             {
                                 var row = new object[7];
-                                row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[0] = maxPrimary.Name;
                                 row[1] = "Primary";
-                                row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
-                                row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                                row[4] = GlobalMethods.GetScalarString("SELECT Mod1ValueMin FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
-                                row[5] = GlobalMethods.GetScalarString("SELECT Mod1ValueMax FROM " + affixType + " WHERE Mod1Id = " + m.Id + " AND Mod1ValueMin <= " + si.Mod[mod].Value + " AND Mod1ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[2] = maxPrimary.Level;
+                                row[3] = maxPrimary.Mod1.Name;
+                                row[4] = maxPrimary.Mod1.ValueMin;
+                                row[5] = maxPrimary.Mod1.ValueMax;
                                 row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
                             }
-                            if (position == "Secondary")
+                            if (maxSecondary.Mod2.ValueMin != 0)
                             {
                                 var row = new object[7];
-                                row[0] = GlobalMethods.GetScalarString("SELECT Name FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[0] = maxSecondary.Name;
                                 row[1] = "Secondary";
-                                row[2] = GlobalMethods.GetScalarString("SELECT Level FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
-                                row[3] = GlobalMethods.LookUpMod(m.Id).Name;
-                                row[4] = GlobalMethods.GetScalarString("SELECT Mod2ValueMin FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
-                                row[5] = GlobalMethods.GetScalarString("SELECT Mod2ValueMax FROM " + affixType + " WHERE Mod2Id = " + m.Id + " AND Mod2ValueMin <= " + si.Mod[mod].Value + " AND Mod2ValueMax >= " + si.Mod[mod].Value + ";");
+                                row[2] = maxSecondary.Level;
+                                row[3] = maxSecondary.Mod2.Name;
+                                row[4] = maxSecondary.Mod2.ValueMin;
+                                row[5] = maxSecondary.Mod2.ValueMax;
                                 row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
                             }
@@ -468,10 +469,6 @@ namespace ExileClipboardListener.WinForms
 
         private void HideSecondary_CheckedChanged(object sender, EventArgs e)
         {
-            //bool seenSecondary = false;
-            //for (int i = 0; i < AffixGrid.Rows.Count; i++)
-            //    if (AffixGrid.Rows[i].Cells[7].Value.ToString() != "")
-            //        seenSecondary = true;
             AffixGrid.Columns[AffixSecondaryModNameColumn.Index].Visible = !HideSecondary.Checked;
             AffixGrid.Columns[AffixSecondaryModRangeColumn.Index].Visible = !HideSecondary.Checked;
             AffixGrid.Columns[AffixSecondaryModValueColumn.Index].Visible = !HideSecondary.Checked;
@@ -483,8 +480,8 @@ namespace ExileClipboardListener.WinForms
                 return;
             int affixId = Convert.ToInt32(AffixGrid.CurrentRow.Cells[AffixIdColumn.Index].Value);
             string affixType = AffixGrid.CurrentRow.Cells[AffixTypeColumn.Index].Value.ToString();
-            int mod1Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName).Id;// GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value + "';");
-            int mod2Id = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value + "';");
+            int mod1Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixPrimaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName).Id;
+            int mod2Id = GlobalMethods.FindMod(AffixGrid.CurrentRow.Cells[AffixSecondaryModNameColumn.Index].Value.ToString(), 1, si.ItemTypeName).Id; 
             new AffixDetails { AffixId = affixId, AffixType = affixType, Mod1Id = mod1Id, Mod2Id = mod2Id }.ShowDialog();
         }
 

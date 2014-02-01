@@ -19,11 +19,11 @@ namespace ExileClipboardListener.WinForms
         {
             RefreshAffixGrid();
             GlobalMethods.LoadMod(ModId);
-            ModName.Text = GlobalMethods.CurrentMod.Name;// GlobalMethods.GetScalarString("SELECT ModName FROM Mod WHERE ModId = " + ModId + ";");
-            ModClass.Text = GlobalMethods.CurrentMod.Class; // GlobalMethods.GetScalarString("SELECT ModClass FROM Mod WHERE ModId = " + ModId + ";");
-            Weapons.Checked = GlobalMethods.CurrentMod.Weapons == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Weapons, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
-            Armour.Checked = GlobalMethods.CurrentMod.Armour == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Armour, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
-            Jewellery.Checked = GlobalMethods.CurrentMod.Jewellery == 1; // GlobalMethods.GetScalarInt("SELECT IFNULL(Jewellery, 1) FROM Mod WHERE ModId = " + ModId + ";") == 1;
+            ModName.Text = GlobalMethods.CurrentMod.Name;
+            ModClass.Text = GlobalMethods.CurrentMod.Class;
+            Weapons.Checked = GlobalMethods.CurrentMod.Weapons == 1;
+            Armour.Checked = GlobalMethods.CurrentMod.Armour == 1;
+            Jewellery.Checked = GlobalMethods.CurrentMod.Jewellery == 1;
         }
 
         private void RefreshAffixGrid()
