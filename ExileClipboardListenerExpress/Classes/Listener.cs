@@ -196,7 +196,10 @@ namespace ExileClipboardListener.Classes
                 //var reqDex = Math.Max(FindAnyValue<int>(entity, "Dex"), FindValue(entity, "Dex (gem)"));
                 si.ReqLevel = FindAnyValue<int>(entity, "Level");
                 si.ReqLevelBase = bi.ReqLevel;
-                RemoveSection(ref entity);
+                
+                //Some items have no requirements so be careful
+                if (si.ReqLevel != 0)
+                    RemoveSection(ref entity);
 
                 //Sockets
                 //For now just store them
@@ -411,7 +414,8 @@ namespace ExileClipboardListener.Classes
                 //For example, we could have the affix for +Accuracy combined with the affix for +Accuracy/ +Evasion
                 if (!allAssigned)
                 {
-                    while (mods.Count > 0)
+                    int maxTries = mods.Count * 2 + 1;
+                    for (int tries = 0; mods.Count > 0 && tries < maxTries; tries++)
                     {
                         var mod = mods[0];
                         if (mod.Implicit)
@@ -429,28 +433,27 @@ namespace ExileClipboardListener.Classes
                             {
                                 //Armour only
                                 if (si.Armour != 0 && si.Evasion == 0 && si.EnergyShield == 0)
-                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 //Evasion only
                                 else if (si.Armour == 0 && si.Evasion != 0 && si.EnergyShield == 0)
-                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 //Energy Shield only
                                 else if (si.Armour == 0 && si.Evasion == 0 && si.EnergyShield != 0)
-                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Energy Shield") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Energy Shield") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 //Armour/ Evasion only
                                 else if (si.Armour != 0 && si.Evasion != 0 && si.EnergyShield == 0)
-                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Evasion"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Evasion"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 //Armour/ Energy Shield only
                                 else if (si.Armour != 0 && si.Evasion == 0 && si.EnergyShield != 0)
-                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Energy Shield"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Energy Shield"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 //Evasion/ Energy Shield only
                                 else if (si.Armour == 0 && si.Evasion != 0 && si.EnergyShield != 0)
-                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion and Energy Shield"))).FirstOrDefault(a => a.Mod2.Id == mod.Id);
+                                    affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion and Energy Shield"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 else
                                     affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
                             }
                             else
                                 affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
-                            //var affix = affixFilter.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
                             GlobalMethods.Mod modPartner;
                             modPartner.Id = 0;
                             modPartner.Value = 0;
@@ -460,15 +463,15 @@ namespace ExileClipboardListener.Classes
                                 modPartner = affix.Mod2;
                                 position = "Primary";
                             }
-                            if (affix.Mod2.Id == mod.Id)
+                            else if (affix.Mod2.Id == mod.Id)
                             {
                                 modPartner = affix.Mod1;
                                 position = "Secondary";
                             }
-                            if (modPartner.Id == 0 || position == "")
+                            else
                             {
-                                MessageBox.Show("Retrofit process went badly wrong!");
-                                break;
+                                MessageBox.Show("Retrofit process went wrong!");
+                                continue;
                             }
 
                             //Do we have the mod partner on this item?
@@ -496,22 +499,32 @@ namespace ExileClipboardListener.Classes
                             int rangeHigh = 0;
                             if (position == "Primary")
                             {
-                                affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == mod.Id && next.Mod1.ValueMin <= mod.Value && next.Mod1.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
+                                affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == mod.Id && next.Mod2.Id == modPartner.Id && next.Mod1.ValueMin <= mod.Value && next.Mod1.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
                                 affixMatch.Mod1.Value = mod.Value;
                                 rangeLow = affixMatch.Mod2.ValueMin;
                                 rangeHigh = affixMatch.Mod2.ValueMax;
                             }
                             else
                             {
-                                affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == mod.Id && next.Mod2.ValueMin <= mod.Value && next.Mod2.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
+                                affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == mod.Id && next.Mod1.Id == modPartner.Id  && next.Mod2.ValueMin <= mod.Value && next.Mod2.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
                                 affixMatch.Mod2.Value = mod.Value;
                                 rangeLow = affixMatch.Mod1.ValueMin;
                                 rangeHigh = affixMatch.Mod1.ValueMax;
                             }
 
                             //Now we have a matching affix we need to see if we can slot it in
-                            if (modPartner.Value < rangeLow)
+                            if (rangeLow == 0 || rangeHigh == 0)
                             {
+                                //If we can't and we have more than oe mod then we swap the mods around and try again
+                                if (mods.Count > 1)
+                                {
+                                    var modSwap = mods[0];
+                                    mods[0] = mods[1];
+                                    mods[1] = modSwap;
+                                    continue;
+                                }
+
+                                //Otherwise this is a failure
                                 MessageBox.Show("Retrofit process went badly wrong!");
                                 break;
                             }
@@ -561,7 +574,6 @@ namespace ExileClipboardListener.Classes
                                     assigned = true;
                                     //Reasses this prefix
                                     singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == modPartner.Id && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRoll & a.Mod1.ValueMax >= newRoll && a.Level <= si.ItemLevel);
-                                    //singleton = p;
                                     prefixes.Remove(p);
                                     singleton.Mod1.Value = newRoll;
                                     prefixes.Add(singleton);
@@ -578,7 +590,6 @@ namespace ExileClipboardListener.Classes
                                         assigned = true;
                                         //Reasses this suffix
                                         singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == modPartner.Id && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRoll & a.Mod1.ValueMax >= newRoll && a.Level <= si.ItemLevel);
-                                        //singleton = s;
                                         suffixes.Remove(s);
                                         singleton.Mod1.Value = newRoll;
                                         suffixes.Add(singleton);
@@ -593,18 +604,21 @@ namespace ExileClipboardListener.Classes
                             {
                                 foreach (var f in GlobalMethods.AffixCache)
                                 {
-
-                                    if (mod.Id == f.Mod1.Id && newRoll >= f.Mod1.ValueMin && newRoll <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                                    if (f.Mod1.Id == modPartner.Id && newRoll >= f.Mod1.ValueMin && newRoll <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
                                     {
                                         var affixFit = f;
-                                        affixFit.Mod1 = mod;
-                                        affixFit.Mod1.ValueMin = f.Mod1.ValueMin;
-                                        affixFit.Mod1.ValueMax = f.Mod1.ValueMax;
+                                        affixFit.Mod1.Value = newRoll;
                                         if (f.AffixType == "Prefix")
                                             prefixes.Add(affixFit);
                                         else
                                             suffixes.Add(affixFit);
                                         mods.Remove(mod);
+                                        for (int i = 0; i < mods.Count; i++)
+                                        {
+                                            if (mods[i].Id == modPartner.Id)
+                                                mods.RemoveAt(i);
+                                        }
+                                        break;
                                     }
                                 }
                             }
