@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -114,11 +114,11 @@
     <Compile Include="WinForms\Character.Designer.cs">
       <DependentUpon>Character.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\FilterResults.cs">
+    <Compile Include="WinForms\ItemInformation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms\FilterResults.Designer.cs">
-      <DependentUpon>FilterResults.cs</DependentUpon>
+    <Compile Include="WinForms\ItemInformation.Designer.cs">
+      <DependentUpon>ItemInformation.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\Filters.cs">
       <SubType>Form</SubType>
@@ -163,11 +163,11 @@
     <Compile Include="WinForms\Settings.designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="WinForms\Stash.cs">
+    <Compile Include="WinForms\StashViewer.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinForms\Stash.designer.cs">
-      <DependentUpon>Stash.cs</DependentUpon>
+    <Compile Include="WinForms\StashViewer.designer.cs">
+      <DependentUpon>StashViewer.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="WinForms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
@@ -179,8 +179,9 @@
     <EmbeddedResource Include="WinForms\Character.resx">
       <DependentUpon>Character.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\FilterResults.resx">
-      <DependentUpon>FilterResults.cs</DependentUpon>
+    <EmbeddedResource Include="WinForms\ItemInformation.resx">
+      <DependentUpon>ItemInformation.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\Filters.resx">
       <DependentUpon>Filters.cs</DependentUpon>
@@ -214,8 +215,8 @@
     <EmbeddedResource Include="WinForms\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WinForms\Stash.resx">
-      <DependentUpon>Stash.cs</DependentUpon>
+    <EmbeddedResource Include="WinForms\StashViewer.resx">
+      <DependentUpon>StashViewer.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="ExileClipboardListenerExpress_TemporaryKey.pfx" />

@@ -116,7 +116,7 @@ namespace ExileClipboardListener.Classes
             if (!_stashLoaded)
             {
                 _stashLoaded = true;
-                new Stash().ShowDialog();
+                new StashViewer().ShowDialog();
                 _stashLoaded = false;
             }
         }

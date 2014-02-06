@@ -654,7 +654,7 @@ namespace ExileClipboardListener.Classes
                 DialogResult dr = DialogResult.None;
                 if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
                     //dr = new ItemValue().ShowDialog();
-                    dr = new FilterResults().ShowDialog();
+                    dr = new ItemInformation().ShowDialog();
 
                 //Stash the item if we are in stash mode or said to stash it from the pop up
                 if (GlobalMethods.Mode == GlobalMethods.STASH_MODE || dr == DialogResult.OK)
@@ -673,16 +673,13 @@ namespace ExileClipboardListener.Classes
         private static void SaveStash()
         {
             //Save this item to the database
-            string sql = "INSERT INTO Stash(ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
-            sql += " Armour, Evasion, EnergyShield, DamagePhysicalMin, DamagePhysicalMax, DamageElementalMin, DamageElementalMax,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value,";
-            sql += " Prefix1Id, Prefix1Mod1Id, Prefix1Mod1Value, Prefix1Mod2Id, Prefix1Mod2Value,";
-            sql += " Prefix2Id, Prefix2Mod1Id, Prefix2Mod1Value, Prefix2Mod2Id, Prefix2Mod2Value,";
-            sql += " Prefix3Id, Prefix3Mod1Id, Prefix3Mod1Value, Prefix3Mod2Id, Prefix3Mod2Value,";
-            sql += " Suffix1Id, Suffix1Mod1Id, Suffix1Mod1Value, Suffix1Mod2Id, Suffix1Mod2Value,";
-            sql += " Suffix2Id, Suffix2Mod1Id, Suffix2Mod1Value, Suffix2Mod2Id, Suffix2Mod2Value,";
-            sql += " Suffix3Id, Suffix3Mod1Id, Suffix3Mod1Value, Suffix3Mod2Id, Suffix3Mod2Value, OriginalText)";
+            string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
+            sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, DamageElementalMin, DamageElementalMax,";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, OriginalText)";
             sql += " VALUES(";
+
+            //League
+            sql += GlobalMethods.LeagueId + ",";
 
             //Basic Details
             sql += "'" + si.ItemName + "',";
@@ -698,23 +695,54 @@ namespace ExileClipboardListener.Classes
             sql += si.EnergyShield + ",";
 
             //Weapons
-            sql += "NULL, NULL, NULL, NULL,";
+            sql += si.AttacksPerSecond + ",";
+            sql += si.PhysicalDamageMin + ",";
+            sql += si.PhysicalDamageMax + ",";
+            sql += si.ElementalDamageMin + ",";
+            sql += si.ElementalDamageMin + ",";
 
-            //Affixes
-            for (int key = 0; key < 7; key++)
-            {
-                //Implict Mods don't have an affix
-                if (key != 0)
-                    sql += (si.Affix[key].AffixId == 0 ? "NULL" : si.Affix[key].AffixId.ToString()) + ",";
-                sql += (si.Affix[key].Mod1.Id == 0 ? "NULL" : si.Affix[key].Mod1.Id.ToString()) + ",";
-                sql += (si.Affix[key].Mod1.Value == 0 ? "NULL" : si.Affix[key].Mod1.Value.ToString()) + ",";
-                sql += (si.Affix[key].Mod2.Id == 0 ? "NULL" : si.Affix[key].Mod2.Id.ToString()) + ",";
-                sql += (si.Affix[key].Mod2.Value == 0 ? "NULL" : si.Affix[key].Mod2.Value.ToString()) + ",";
-            }
+            //Implict Affix
+            sql += (si.Affix[0].Mod1.Id == 0 ? "NULL" : si.Affix[0].Mod1.Id.ToString()) + ",";
+            sql += (si.Affix[0].Mod1.Value == 0 ? "NULL" : si.Affix[0].Mod1.Value.ToString()) + ",";
+            sql += (si.Affix[0].Mod2.Id == 0 ? "NULL" : si.Affix[0].Mod2.Id.ToString()) + ",";
+            sql += (si.Affix[0].Mod2.Value == 0 ? "NULL" : si.Affix[0].Mod2.Value.ToString()) + ",";
+            
+            //Original Text
             sql += "'" + si.OriginalText.Replace("'", "''") + "')";
 
             //Stash this item
             GlobalMethods.RunQuery(sql);
+
+            //This is particularly nasty, but I don't know how else to get the StashId for the item we just stashed
+            int stashId = GlobalMethods.GetScalarInt("SELECT MAX(StashId) FROM Stash;");
+
+            //Now stash the affixes
+            //Turned off for now as we don't strictly need them
+            //for (int key = 1; key < 7; key++)
+            //{
+            //    sql = "INSERT INTO StashAffix(StashId, AffixType, AffixId, Mod1Id, Mod1Value, Mod2Id, Mod2Value) VALUES (";
+            //    sql += stashId + ",";
+            //    sql += (key < 4 ? "'Prefix'" : "'Suffix'") + ",";
+            //    sql += (si.Affix[key].AffixId == 0 ? "NULL" : si.Affix[key].AffixId.ToString()) + ",";
+            //    sql += (si.Affix[key].Mod1.Id == 0 ? "NULL" : si.Affix[key].Mod1.Id.ToString()) + ",";
+            //    sql += (si.Affix[key].Mod1.Value == 0 ? "NULL" : si.Affix[key].Mod1.Value.ToString()) + ",";
+            //    sql += (si.Affix[key].Mod2.Id == 0 ? "NULL" : si.Affix[key].Mod2.Id.ToString()) + ",";
+            //    sql += (si.Affix[key].Mod2.Value == 0 ? "NULL" : si.Affix[key].Mod2.Value.ToString()) + ")";
+            //    GlobalMethods.RunQuery(sql);
+            //}
+
+            //Finally stash the mods
+            for (int mod = 0; mod < 20; mod++)
+            {
+                if (si.Mod[mod].Id == 0)
+                    break;
+                sql = "INSERT INTO StashMod(StashId, StashModId, ModId, ModValue) VALUES (";
+                sql += stashId + ",";
+                sql += (mod + 1) + ",";
+                sql += si.Mod[mod].Id.ToString() + ",";
+                sql += si.Mod[mod].Value.ToString() + ")";
+                GlobalMethods.RunQuery(sql);
+            }        
         }
 
         private static void RemoveSection(ref string[] entity)

@@ -1,0 +1,190 @@
+﻿using System;
+using System.Windows.Forms;
+using System.Linq;
+using System.Text;
+using System.IO;
+using ExileClipboardListener.Classes;
+
+namespace ExileClipboardListener.WinForms
+{
+    public partial class StashViewer : Form
+    {
+        private int _itemTypeId;
+        private int _itemSubTypeId;
+        private int _leagueId;
+        private int _modId;
+        private bool _refresh;
+
+        public StashViewer()
+        {
+            InitializeComponent();
+        }
+
+        private void Stash_Load(object sender, EventArgs e)
+        {
+            _refresh = false;
+            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT LeagueName FROM League ORDER BY 1;", League);
+            League.SelectedIndex = 0;
+            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemTypeName FROM ItemType ORDER BY 1;", ItemType);
+            ItemType.SelectedIndex = 0;
+            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ModName FROM [Mod] ORDER BY 1;", Mod);
+            Mod.SelectedIndex = 0;
+            _refresh = true;
+            RefreshGrid();
+        }
+
+        private void RefreshGrid()
+        {
+            if (!_refresh)
+                return;
+            string sql = @"
+                SELECT 
+	                MAX(i.ItemTypeName) AS [Item Type],
+	                MAX(i2.ItemSubTypeName) AS [Item Sub Type],
+	                s.ItemName AS [Item Name], 
+	                MAX(b.ItemName) AS [Base Item], 
+	                MAX(r.RarityName) AS [Rarity], 
+	                MAX(s.Quality) AS [Quality], 
+	                MAX(s.ItemLevel) AS [Item Level], 
+	                MAX(b.ReqLevel) AS [Req Level], 
+	                MAX(b.ReqStr) AS [Req Str], 
+	                MAX(b.ReqDex) AS [Req Dex], 
+	                MAX(b.ReqInt) AS [Req Int],
+	                MAX(b.Armour) AS [Base Armour],
+	                MAX(b.Evasion) AS [Base Evasion],
+	                MAX(b.EnergyShield) AS [Base Energy Shield],
+	                MAX(s.Armour) AS [Armour], 
+	                MAX(s.Evasion) AS [Evasion], 
+	                MAX(s.EnergyShield) AS [Energy Shield],
+	                MAX(b.DamagePhysicalMin) AS [Base Damage Physical Min],
+	                MAX(b.DamagePhysicalMax) AS [Base Damage Physical Max],
+	                MAX(mi1.ModName) AS [Implict Mod 1],
+	                MAX(s.ImplicitMod1Value) AS [Implict Mod 1 Value],
+	                MAX(mi2.ModName) AS [Implicit Mod 2],
+	                MAX(s.ImplicitMod2Value) AS [Implict Mod 2 Value],
+                    MAX(m01.ModName) AS [Mod 1 Name],
+                    MAX(CASE WHEN sm.StashModId = 1 THEN sm.ModValue ELSE NULL END) AS [Mod 1 Value],
+                    MAX(m02.ModName) AS [Mod 2 Name],
+                    MAX(CASE WHEN sm.StashModId = 2 THEN sm.ModValue ELSE NULL END) AS [Mod 2 Value],
+                    MAX(m03.ModName) AS [Mod 3 Name],
+                    MAX(CASE WHEN sm.StashModId = 3 THEN sm.ModValue ELSE NULL END) AS [Mod 3 Value],
+                    MAX(m04.ModName) AS [Mod 4 Name],
+                    MAX(CASE WHEN sm.StashModId = 4 THEN sm.ModValue ELSE NULL END) AS [Mod 4 Value],
+                    MAX(m05.ModName) AS [Mod 5 Name],
+                    MAX(CASE WHEN sm.StashModId = 5 THEN sm.ModValue ELSE NULL END) AS [Mod 5 Value],
+                    MAX(m06.ModName) AS [Mod 6 Name],
+                    MAX(CASE WHEN sm.StashModId = 6 THEN sm.ModValue ELSE NULL END) AS [Mod 6 Value],
+                    MAX(m07.ModName) AS [Mod 7 Name],
+                    MAX(CASE WHEN sm.StashModId = 7 THEN sm.ModValue ELSE NULL END) AS [Mod 7 Value],
+                    MAX(m08.ModName) AS [Mod 8 Name],
+                    MAX(CASE WHEN sm.StashModId = 8 THEN sm.ModValue ELSE NULL END) AS [Mod 8 Value],
+                    MAX(m09.ModName) AS [Mod 9 Name],
+                    MAX(CASE WHEN sm.StashModId = 9 THEN sm.ModValue ELSE NULL END) AS [Mod 9 Value],
+                    MAX(m10.ModName) AS [Mod 10 Name],
+                    MAX(CASE WHEN sm.StashModId = 10 THEN sm.ModValue ELSE NULL END) AS [Mod 10 Value],
+                    MAX(m11.ModName) AS [Mod 11 Name],
+                    MAX(CASE WHEN sm.StashModId = 11 THEN sm.ModValue ELSE NULL END) AS [Mod 11 Value],
+                    MAX(m12.ModName) AS [Mod 12 Name],
+                    MAX(CASE WHEN sm.StashModId = 12 THEN sm.ModValue ELSE NULL END) AS [Mod 12 Value]
+                FROM 
+	                Stash s 
+	                INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId 
+                    INNER JOIN ItemType i ON i.ItemTypeId = b.ItemTypeId 
+	                INNER JOIN ItemSubType i2 ON i2.ItemTypeId = b.ItemTypeId AND i2.ItemSubTypeId = b.ItemSubTypeId 
+	                INNER JOIN Rarity r ON r.RarityId = s.RarityId
+                    LEFT JOIN StashMod sm ON sm.StashId = s.StashId
+                    LEFT JOIN [Mod] mi1 ON mi1.ModId = b.Mod1Id 
+	                LEFT JOIN [Mod] mi2 ON mi2.ModId = b.Mod2Id
+                    LEFT JOIN [Mod] m01 ON m02.ModId = sm.ModId AND sm.StashModId = 1
+                    LEFT JOIN [Mod] m02 ON m01.ModId = sm.ModId AND sm.StashModId = 2
+                    LEFT JOIN [Mod] m03 ON m03.ModId = sm.ModId AND sm.StashModId = 3
+                    LEFT JOIN [Mod] m04 ON m04.ModId = sm.ModId AND sm.StashModId = 4
+                    LEFT JOIN [Mod] m05 ON m05.ModId = sm.ModId AND sm.StashModId = 5
+                    LEFT JOIN [Mod] m06 ON m06.ModId = sm.ModId AND sm.StashModId = 6
+                    LEFT JOIN [Mod] m07 ON m07.ModId = sm.ModId AND sm.StashModId = 7
+                    LEFT JOIN [Mod] m08 ON m08.ModId = sm.ModId AND sm.StashModId = 8
+                    LEFT JOIN [Mod] m09 ON m09.ModId = sm.ModId AND sm.StashModId = 9
+                    LEFT JOIN [Mod] m10 ON m10.ModId = sm.ModId AND sm.StashModId = 10
+                    LEFT JOIN [Mod] m11 ON m11.ModId = sm.ModId AND sm.StashModId = 11
+                    LEFT JOIN [Mod] m12 ON m12.ModId = sm.ModId AND sm.StashModId = 12";
+            
+            //Add filters
+            bool where = false;
+            if (_leagueId != 0)
+            {
+                sql += " WHERE s.LeagueId = '" + _leagueId + "' ";
+                where = true;
+            }
+            if (_itemTypeId != 0)
+            {
+                sql += (where ? " AND " : " WHERE ") + " i.ItemTypeId = " + _itemTypeId + " ";
+                where = true;
+            }
+            if (_itemSubTypeId != 0)
+            {
+                sql += (where ? " AND " : " WHERE ") + " i2.ItemSubTypeId = " + _itemSubTypeId + " ";
+                where = true;
+            }
+            if (_modId != 0)
+            {
+                sql += (where ? " AND " : " WHERE ") + " EXISTS (SELECT * FROM StashMod sm2 WHERE sm2.StashId = s.StashId AND sm2.ModId = " + _modId+ ")";
+            }
+            sql += " GROUP BY s.ItemName;";
+            GlobalMethods.StuffGrid(sql, StashGrid);
+        }
+
+        private void ItemType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Determine the ItemType
+            _itemTypeId = ItemType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text + "';");
+            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemSubTypeName FROM ItemSubType" + (_itemTypeId != 0 ? " WHERE ItemTypeId = " + _itemTypeId : "") + ";", ItemSubType);
+            ItemSubType.SelectedIndex = 0;
+        }
+
+        private void ItemSubType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Determine the ItemSubType
+            _itemSubTypeId = ItemSubType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemSubTypeName = '" + ItemSubType.Text + "';");
+            RefreshGrid();
+        }
+
+        private void Mod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Determine the ModId
+            _modId = Mod.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ModId FROM [Mod] WHERE ModName = '" + Mod.Text + "';");
+            RefreshGrid();
+        }
+
+        private void Export_Click(object sender, EventArgs e)
+        {
+            var sb = new StringBuilder();
+            DialogResult dr = saveFileDialog1.ShowDialog();
+            if (dr == DialogResult.Cancel)
+                return;
+            string path = saveFileDialog1.FileName;
+
+            //Get the headers
+            var headers = StashGrid.Columns.Cast<DataGridViewColumn>();
+            sb.AppendLine(string.Join(",", headers.Select(column => "\"" + column.HeaderText + "\"")));
+
+            //Get the rows
+            foreach (DataGridViewRow row in StashGrid.Rows)
+            {
+                var cells = row.Cells.Cast<DataGridViewCell>();
+                sb.AppendLine(string.Join(",", cells.Select(cell => "\"" + cell.Value + "\"")));
+            }
+
+            //Write the file
+            var file = new StreamWriter(path);
+            file.WriteLine(sb);
+            file.Close();
+        }
+
+        private void League_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Determine the LeagueId
+            _leagueId = League.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
+            RefreshGrid();
+        }
+    }
+}

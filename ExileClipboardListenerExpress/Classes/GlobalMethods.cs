@@ -17,8 +17,8 @@ namespace ExileClipboardListener.Classes
         public static int CommandTimeout = 600;
 
         //Current League and Character
-        public static int CurrentLeagueId = Properties.Settings.Default.DefaultLeagueId;
-        public static int CurrentCharacterId = Properties.Settings.Default.DefaultCharacterId;
+        public static int LeagueId = Properties.Settings.Default.DefaultLeagueId;
+        public static int CharacterId = Properties.Settings.Default.DefaultCharacterId;
 
         //Modification
         public struct Mod
@@ -102,7 +102,7 @@ namespace ExileClipboardListener.Classes
             public static decimal DamagePerSecond;
             public static decimal CriticalStrikeChance;
             public static string Sockets;
-            public static Mod[] Mod = new Mod[10];
+            public static Mod[] Mod = new Mod[20];
             public static Affix[] Affix = new Affix[7]; //0 = Implicit, 1-3 - Prefix, 4-6 = Suffix
         }
 
@@ -398,30 +398,30 @@ namespace ExileClipboardListener.Classes
             return value;
         }
 
-        public static Guid GetScalarGuid(string sql)
-        {
-            //This method just runs a SQL query that returns a single integer
-            Guid value;
-            try
-            {
-                using (var con = new SQLiteConnection(Connection))
-                {
-                    con.Open();
-                    using (var com = con.CreateCommand())
-                    {
-                        com.CommandTimeout = CommandTimeout;
-                        com.CommandText = sql;
-                        value = (com.ExecuteScalar() as Guid?) ?? Guid.Empty;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unhandled exception: " + ex.Message);
-                return Guid.Empty;
-            }
-            return value;
-        }
+        //public static Guid GetScalarGuid(string sql)
+        //{
+        //    //This method just runs a SQL query that returns a single integer
+        //    Guid value;
+        //    try
+        //    {
+        //        using (var con = new SQLiteConnection(Connection))
+        //        {
+        //            con.Open();
+        //            using (var com = con.CreateCommand())
+        //            {
+        //                com.CommandTimeout = CommandTimeout;
+        //                com.CommandText = sql;
+        //                value = (com.ExecuteScalar() as Guid?) ?? Guid.Empty;
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Unhandled exception: " + ex.Message);
+        //        return Guid.Empty;
+        //    }
+        //    return value;
+        //}
 
         public static Decimal GetScalarDecimal(string sql)
         {

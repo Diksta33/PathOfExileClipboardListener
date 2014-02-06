@@ -59,6 +59,7 @@
             this.LeagueGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.LeagueGrid.Size = new System.Drawing.Size(625, 186);
             this.LeagueGrid.TabIndex = 1;
+            this.LeagueGrid.SelectionChanged += new System.EventHandler(this.LeagueGrid_SelectionChanged);
             // 
             // LeagueDefault
             // 
@@ -68,6 +69,7 @@
             this.LeagueDefault.TabIndex = 2;
             this.LeagueDefault.Text = "Mark as Default";
             this.LeagueDefault.UseVisualStyleBackColor = true;
+            this.LeagueDefault.Click += new System.EventHandler(this.LeagueDefault_Click);
             // 
             // label1
             // 
@@ -102,6 +104,7 @@
             this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Start";
+            this.label3.Visible = false;
             // 
             // label4
             // 
@@ -111,6 +114,7 @@
             this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 9;
             this.label4.Text = "End";
+            this.label4.Visible = false;
             // 
             // EditLeague
             // 
@@ -120,6 +124,7 @@
             this.EditLeague.TabIndex = 11;
             this.EditLeague.Text = "Edit";
             this.EditLeague.UseVisualStyleBackColor = true;
+            this.EditLeague.Click += new System.EventHandler(this.EditLeague_Click);
             // 
             // CancelLeague
             // 
@@ -129,6 +134,7 @@
             this.CancelLeague.TabIndex = 12;
             this.CancelLeague.Text = "Cancel";
             this.CancelLeague.UseVisualStyleBackColor = true;
+            this.CancelLeague.Click += new System.EventHandler(this.CancelLeague_Click);
             // 
             // DeleteLeague
             // 
@@ -138,6 +144,7 @@
             this.DeleteLeague.TabIndex = 13;
             this.DeleteLeague.Text = "Delete";
             this.DeleteLeague.UseVisualStyleBackColor = true;
+            this.DeleteLeague.Click += new System.EventHandler(this.DeleteLeague_Click);
             // 
             // SaveLeague
             // 
@@ -147,6 +154,7 @@
             this.SaveLeague.TabIndex = 14;
             this.SaveLeague.Text = "Save";
             this.SaveLeague.UseVisualStyleBackColor = true;
+            this.SaveLeague.Click += new System.EventHandler(this.SaveLeague_Click);
             // 
             // NewLeague
             // 
@@ -156,6 +164,7 @@
             this.NewLeague.TabIndex = 15;
             this.NewLeague.Text = "New";
             this.NewLeague.UseVisualStyleBackColor = true;
+            this.NewLeague.Click += new System.EventHandler(this.NewLeague_Click);
             // 
             // ParentLeague
             // 
@@ -172,6 +181,7 @@
             this.LeagueStart.Name = "LeagueStart";
             this.LeagueStart.Size = new System.Drawing.Size(127, 20);
             this.LeagueStart.TabIndex = 17;
+            this.LeagueStart.Visible = false;
             // 
             // LeagueEnd
             // 
@@ -179,6 +189,7 @@
             this.LeagueEnd.Name = "LeagueEnd";
             this.LeagueEnd.Size = new System.Drawing.Size(127, 20);
             this.LeagueEnd.TabIndex = 18;
+            this.LeagueEnd.Visible = false;
             // 
             // League
             // 
