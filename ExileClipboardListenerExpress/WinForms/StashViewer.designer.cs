@@ -49,6 +49,7 @@
             this.Filter = new System.Windows.Forms.Button();
             this.MaxItemLevel = new System.Windows.Forms.NumericUpDown();
             this.HideZeroScores = new System.Windows.Forms.CheckBox();
+            this.DeleteItem = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).BeginInit();
@@ -278,11 +279,22 @@
             this.HideZeroScores.Text = "Hide Zero Scores";
             this.HideZeroScores.UseVisualStyleBackColor = true;
             // 
+            // DeleteItem
+            // 
+            this.DeleteItem.Location = new System.Drawing.Point(216, 601);
+            this.DeleteItem.Name = "DeleteItem";
+            this.DeleteItem.Size = new System.Drawing.Size(96, 23);
+            this.DeleteItem.TabIndex = 19;
+            this.DeleteItem.Text = "Delete Item";
+            this.DeleteItem.UseVisualStyleBackColor = true;
+            this.DeleteItem.Click += new System.EventHandler(this.DeleteItem_Click);
+            // 
             // StashViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1373, 636);
+            this.Controls.Add(this.DeleteItem);
             this.Controls.Add(this.HideZeroScores);
             this.Controls.Add(this.MaxItemLevel);
             this.Controls.Add(this.Filter);
@@ -339,5 +351,6 @@
         private System.Windows.Forms.Button Filter;
         private System.Windows.Forms.NumericUpDown MaxItemLevel;
         private System.Windows.Forms.CheckBox HideZeroScores;
+        private System.Windows.Forms.Button DeleteItem;
     }
 }

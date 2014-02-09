@@ -114,7 +114,7 @@ namespace ExileClipboardListener.WinForms
                 MessageBox.Show("You can't merge a league that doesn't have a parent to merge into");
                 return;
             }
-            if (MessageBox.Show("Are you sure?", "Confirm Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (MessageBox.Show("Are you sure?", "Confirm Merge", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
             GlobalMethods.RunQuery("UPDATE Stash SET LeagueId = " + parentId + " WHERE LeagueId = " + _leagueId + ";");
         }

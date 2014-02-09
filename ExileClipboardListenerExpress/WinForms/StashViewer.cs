@@ -275,5 +275,16 @@ namespace ExileClipboardListener.WinForms
             if (MinItemLevel.Value > MaxItemLevel.Value)
                 MaxItemLevel.Value = MinItemLevel.Value;
         }
+
+        private void DeleteItem_Click(object sender, EventArgs e)
+        {
+            if (StashGrid.CurrentRow == null)
+                return;
+            int stashId = Convert.ToInt32(StashGrid.CurrentRow.Cells[0].Value);
+            if (MessageBox.Show("Are you sure?", "Confirm Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+            GlobalMethods.RunQuery("DELETE FROM Stash WHERE StashId = " + stashId);
+            RefreshGrid();
+        }
     }
 }

@@ -436,8 +436,6 @@ namespace ExileClipboardListener.Classes
                             //Now we have two mods, one which was unassigned and one that was possibly assigned incorrectly to a higher level affix than was rolled or was left unassigned as it was just far too high
                             //The next step is to work out the level of the double-mod affix JUST by looking at the secondary mod
                             GlobalMethods.Affix affixMatch;
-                            int rangeLow = 0;
-                            int rangeHigh = 0;
                             int mod1Id;
                             int mod1Value = 0;
                             int mod2Id;
@@ -461,10 +459,35 @@ namespace ExileClipboardListener.Classes
                                 mod2Value = mod.Value;
                             }
 
+                            //Check that this is really a match
+                            bool swapped = false;
+                            if (affixMatch.Mod1.Id != mod1Id || affixMatch.Mod2.Id != mod2Id)
+                            {
+                                swapped = true;
+                                //Try again, but using the primary mod this time
+                                if (position == "Primary")
+                                {
+                                    affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod1.Id == mod.Id && next.Mod2.Id == modPartner.Id && next.Mod1.ValueMin <= mod.Value && next.Mod1.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
+                                    affixMatch.Mod1.Value = mod.Value;
+                                }
+                                else
+                                {
+                                    affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod1.Id == modPartner.Id && next.Mod2.Id == mod.Id && next.Mod1.ValueMin <= modPartner.Value && next.Mod1.ValueMax >= modPartner.Value && next.Level <= si.ItemLevel ? next : agg);
+                                    affixMatch.Mod2.Value = mod.Value;
+                                }
+                            }
+                            
+                            //if we still got no match then give up
+                            if (affixMatch.Mod1.Id != mod1Id || affixMatch.Mod2.Id != mod2Id)
+                            {
+                                MessageBox.Show("Urrghh!");
+                                break;
+                            }
+                            
                             //Now we have a matching affix we need to see if we can slot it in
-                            rangeLow = affixMatch.Mod1.ValueMin;
-                            rangeHigh = affixMatch.Mod1.ValueMax;
-                            if (rangeLow == 0 || rangeHigh == 0)
+                            int rangeMod1Low = affixMatch.Mod1.ValueMin;
+                            int rangeMod1High = affixMatch.Mod1.ValueMax;
+                            if (rangeMod1Low == 0 || rangeMod1High == 0)
                             {
                                 //If we can't and we have more than one unassigned mod then we swap the mods around and try again
                                 if (mods.Count > 1)
@@ -482,16 +505,18 @@ namespace ExileClipboardListener.Classes
 
                             //This can get a little tricky, we need to refit the mods
                             //We start with an average roll
-                            int fitMod1Roll = rangeLow;
-                            if (mod1Value >= rangeHigh)
-                                fitMod1Roll = (int)((rangeHigh - rangeLow) / 2 + rangeLow);
+                            int fitMod1Roll = rangeMod1Low;
+                            if (mod1Value > rangeMod1High)
+                                fitMod1Roll = rangeMod1High; //(int)((rangeMod1High - rangeMod1Low) / 2 + rangeMod1Low);
                             else
                                 fitMod1Roll = mod1Value;
-                            rangeLow = affixMatch.Mod2.ValueMin;
-                            rangeHigh = affixMatch.Mod2.ValueMax;
-                            int fitMod2Roll = rangeLow;
-                            if (mod2Value >= rangeHigh)
-                                fitMod2Roll = (int)((rangeHigh - rangeLow) / 2 + rangeLow);
+
+                            //Now the second mod
+                            int rangeMod2Low = affixMatch.Mod2.ValueMin;
+                            int rangeMod2High = affixMatch.Mod2.ValueMax;
+                            int fitMod2Roll = rangeMod2Low;
+                            if (mod2Value > rangeMod2High)
+                                fitMod2Roll = rangeMod2High; //(int)((rangeMod2High - rangeMod2Low) / 2 + rangeMod2Low);
                             else
                                 fitMod2Roll = mod2Value;
 
@@ -505,14 +530,52 @@ namespace ExileClipboardListener.Classes
                             else
                                 suffixes.Add(affixMatch);
 
+                            //If we swapped round the mods then we might have an affix we need to take off the list
+                            if (swapped)
+                            {
+                                bool removed = false;
+                                foreach (var p in prefixes)
+                                {
+                                    if (p.Mod1.Id == mod1Id && p.Mod2.Id == 0)
+                                    {
+                                        removed = true;
+                                        prefixes.Remove(p);
+                                        break;
+                                    }
+                                }
+                                if (!removed)
+                                {
+                                    foreach (var s in suffixes)
+                                    {
+                                        if (s.Mod1.Id == mod1Id && s.Mod2.Id == 0)
+                                        {
+                                            removed = true;
+                                            suffixes.Remove(s);
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!removed)
+                                {
+                                    //This means the mod probably wasn't placed as it was too high, so it will still be on our list
+                                    //MessageBox.Show("Might want to check this out!");
+                                }
+                            }
+
                             //The final step is to find where the other mod ended up and reduce it as we used some of it up now
                             int newModId = 0;
                             int newRoll = 0;
+                            int newValue = 0;
+                            int newRangeLow = 0;
+                            int newRangeHigh = 0;
                             if (fitMod1Roll != mod1Value)
                             {
                                 position = "Primary";
                                 newModId = mod1Id;
                                 newRoll = mod1Value - fitMod1Roll;
+                                newValue = mod1Value;
+                                newRangeLow = rangeMod1Low;
+                                newRangeHigh = rangeMod1High;
                             }
                             if (fitMod2Roll != mod2Value)
                             {
@@ -525,6 +588,9 @@ namespace ExileClipboardListener.Classes
                                 position = "Secondary";
                                 newModId = mod2Id;
                                 newRoll = mod2Value - fitMod2Roll;
+                                newValue = mod2Value;
+                                newRangeLow = rangeMod2Low;
+                                newRangeHigh = rangeMod2High;
                             }
 
                             //Check some end cases
@@ -549,9 +615,9 @@ namespace ExileClipboardListener.Classes
                                 {
                                     assigned = true;
                                     //Reasses this prefix
-                                    singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == newModId && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRoll & a.Mod1.ValueMax >= newRoll && a.Level <= si.ItemLevel);
+                                    singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == newModId && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRangeHigh & a.Mod1.ValueMax >= newRangeLow && a.Level <= si.ItemLevel);
                                     prefixes.Remove(p);
-                                    singleton.Mod1.Value = newRoll;
+                                    singleton.Mod1.Value = Math.Min(newRangeHigh, newValue);
                                     prefixes.Add(singleton);
                                     mods.Remove(mod);
                                     break;
@@ -565,9 +631,9 @@ namespace ExileClipboardListener.Classes
                                     {
                                         assigned = true;
                                         //Reasses this suffix
-                                        singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == newModId && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRoll & a.Mod1.ValueMax >= newRoll && a.Level <= si.ItemLevel);
+                                        singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == newModId && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRangeHigh & a.Mod1.ValueMax >= newRangeLow && a.Level <= si.ItemLevel);
                                         suffixes.Remove(s);
-                                        singleton.Mod1.Value = newRoll;
+                                        singleton.Mod1.Value = Math.Min(newRangeHigh, newValue);
                                         suffixes.Add(singleton);
                                         mods.Remove(mod);
                                         break;
