@@ -46,7 +46,7 @@ namespace ExileClipboardListener.WinForms
                 int stashId = 0;
                 while (stashId != -1)
                 {
-                    string sqlFilter = "SELECT MIN(s.StashId) FROM Stash s INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId INNER JOIN ItemType i ON i.ItemTypeId = b.ItemTypeId WHERE s.StashId > " + stashId;
+                    string sqlFilter = "SELECT MIN(s.StashId) FROM Stash s INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId WHERE s.StashId > " + stashId;
 
                     //Don't score things that are hidden as that's a wasted effort
                     if (_leagueId != 0)
@@ -55,11 +55,11 @@ namespace ExileClipboardListener.WinForms
                     }
                     if (_itemTypeId != 0)
                     {
-                        sqlFilter += " AND i.ItemTypeId = " + _itemTypeId + " ";
+                        sqlFilter += " AND b.ItemTypeId = " + _itemTypeId + " ";
                     }
                     if (_itemSubTypeId != 0)
                     {
-                        sqlFilter += " AND i.ItemSubTypeId = " + _itemSubTypeId + " ";
+                        sqlFilter += " AND b.ItemSubTypeId = " + _itemSubTypeId + " ";
                     }
                     if (_modId != 0)
                     {

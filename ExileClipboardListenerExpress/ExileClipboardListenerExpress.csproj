@@ -242,9 +242,6 @@
     <None Include="Resources\PathOfExile.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\chest.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\Average.png" />
   </ItemGroup>
   <ItemGroup>
