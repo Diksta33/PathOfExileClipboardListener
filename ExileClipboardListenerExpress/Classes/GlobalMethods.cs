@@ -154,6 +154,12 @@ namespace ExileClipboardListener.Classes
             //Loads data from the system into memory to reduce unnecessary database access
             try
             {
+                //Load a null affix
+                var affixDummy = new Affix();
+                affixDummy.AffixId = 0;
+                AffixCache.Add(affixDummy);
+
+                //Now the real ones
                 using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();

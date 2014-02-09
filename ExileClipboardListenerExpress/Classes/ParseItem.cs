@@ -353,6 +353,7 @@ namespace ExileClipboardListener.Classes
                 //This next piece is a total mess (thanks GGG) - priority to refactor this, or to at least relocate it
                 //If we have any unassigned mods then the chances are that we have a double-mod affix combined with a single-mod affix
                 //For example, we could have the affix for +Accuracy combined with the affix for +Accuracy/ +Evasion
+                //We need to guess the "shared" amount for the mod that is common to both
                 if (!allAssigned)
                 {
                     int maxTries = mods.Count * 2 + 1;
@@ -368,7 +369,6 @@ namespace ExileClipboardListener.Classes
                             //Then see if we can "fit" the mods to the affixes in any way that is legal, picking arbitary values for this
                             //This is futher complicated by armour/ hybrid defenses (such a mare)
                             //We need to exclude any armour affixes that are of the wrong type, thankfully these are always singleton affixes
-                            //List<GlobalMethods.Affix> affixFilter;
                             GlobalMethods.Affix affix;
                             if (itemTypeName == "Armour")
                             {
@@ -395,6 +395,8 @@ namespace ExileClipboardListener.Classes
                             }
                             else
                                 affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
+
+                            //Now work out the "other" mod that appears on the affix
                             GlobalMethods.Mod modPartner;
                             modPartner.Id = 0;
                             modPartner.Value = 0;
@@ -423,6 +425,7 @@ namespace ExileClipboardListener.Classes
                                 {
                                     modIndex = i;
                                     modPartner.Value = si.Mod[i].Value;
+                                    break;
                                 }
                             }
 
@@ -433,236 +436,141 @@ namespace ExileClipboardListener.Classes
                                 break;
                             }
 
-                            //Now we have two mods, one which was unassigned and one that was possibly assigned incorrectly to a higher level affix than was rolled or was left unassigned as it was just far too high
-                            //The next step is to work out the level of the double-mod affix JUST by looking at the secondary mod
-                            GlobalMethods.Affix affixMatch;
-                            int mod1Id;
-                            int mod1Value = 0;
-                            int mod2Id;
-                            int mod2Value = 0;
+                            //Now we have two mods, one which was unassigned and one that was possibly assigned incorrectly to a higher level affix than was rolled or was left unassigned
+                            //as it was just far too high for any level the item could generate
+                            //At this point we take stock and get the two mods in the right order, make sure they are both popped off the list of affixes and then retrofit them
+                            GlobalMethods.Mod primaryMod;
+                            GlobalMethods.Mod secondaryMod;
                             if (position == "Primary")
                             {
-                                affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod1.Id == mod.Id && next.Mod2.Id == modPartner.Id && next.Mod2.ValueMin <= modPartner.Value && next.Mod2.ValueMax >= modPartner.Value && next.Level <= si.ItemLevel ? next : agg);
-                                affixMatch.Mod1.Value = mod.Value;
-                                mod1Id = mod.Id;
-                                mod2Id = modPartner.Id;
-                                mod1Value = mod.Value;
-                                mod2Value = modPartner.Value;
+                                primaryMod = mod;
+                                secondaryMod = modPartner;
                             }
                             else
                             {
-                                affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == mod.Id && next.Mod1.Id == modPartner.Id && next.Mod2.ValueMin <= mod.Value && next.Mod2.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
-                                affixMatch.Mod2.Value = mod.Value;
-                                mod1Id = modPartner.Id;
-                                mod2Id = mod.Id;
-                                mod1Value = modPartner.Value;
-                                mod2Value = mod.Value;
+                                primaryMod = modPartner;
+                                secondaryMod = mod;
                             }
 
-                            //Check that this is really a match
-                            bool swapped = false;
-                            if (affixMatch.Mod1.Id != mod1Id || affixMatch.Mod2.Id != mod2Id)
+                            //The next step is to work out the double-mod affix
+                            //We look for either mod value to fit and we will adjust the one that doesn't
+                            var affixDoubleMod = new GlobalMethods.Affix();
+                            var affixSingleMod = new GlobalMethods.Affix();
+                            affixDoubleMod.AffixId = 0;
+                            affixSingleMod.AffixId = 0;
+
+                            //There are multiple levels for each affix, we start with the highest possible for the item and work out way back down until we match or run out of options
+                            for (int level = si.ItemLevel; level > 0; level--)
                             {
-                                swapped = true;
-                                //Try again, but using the primary mod this time
-                                if (position == "Primary")
+                                affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= level ? next : agg);
+
+                                //if we got no match then give up
+                                if (affixDoubleMod.AffixId == 0)
                                 {
-                                    affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod1.Id == mod.Id && next.Mod2.Id == modPartner.Id && next.Mod1.ValueMin <= mod.Value && next.Mod1.ValueMax >= mod.Value && next.Level <= si.ItemLevel ? next : agg);
-                                    affixMatch.Mod1.Value = mod.Value;
+                                    MessageBox.Show("Urrghh!");
+                                    break;
+                                }
+
+                                //This will leave a bit left over to map to a single-mod affix
+                                GlobalMethods.Mod singleMod;
+                                int singleModValueMin;
+                                int singleModValueMax;
+                                if (affixDoubleMod.Mod1.ValueMax < primaryMod.Value)
+                                {
+                                    singleMod = primaryMod;
+                                    singleModValueMin = primaryMod.Value - affixDoubleMod.Mod1.ValueMax;
+                                    singleModValueMax = primaryMod.Value - affixDoubleMod.Mod1.ValueMin;
+                                    affixDoubleMod.Mod2.Value = secondaryMod.Value;
                                 }
                                 else
                                 {
-                                    affixMatch = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod1.Id == modPartner.Id && next.Mod2.Id == mod.Id && next.Mod1.ValueMin <= modPartner.Value && next.Mod1.ValueMax >= modPartner.Value && next.Level <= si.ItemLevel ? next : agg);
-                                    affixMatch.Mod2.Value = mod.Value;
-                                }
-                            }
-                            
-                            //if we still got no match then give up
-                            if (affixMatch.Mod1.Id != mod1Id || affixMatch.Mod2.Id != mod2Id)
-                            {
-                                MessageBox.Show("Urrghh!");
-                                break;
-                            }
-                            
-                            //Now we have a matching affix we need to see if we can slot it in
-                            int rangeMod1Low = affixMatch.Mod1.ValueMin;
-                            int rangeMod1High = affixMatch.Mod1.ValueMax;
-                            if (rangeMod1Low == 0 || rangeMod1High == 0)
-                            {
-                                //If we can't and we have more than one unassigned mod then we swap the mods around and try again
-                                if (mods.Count > 1)
-                                {
-                                    var modSwap = mods[0];
-                                    mods[0] = mods[1];
-                                    mods[1] = modSwap;
-                                    continue;
+                                    singleMod = secondaryMod;
+                                    singleModValueMin = secondaryMod.Value - affixDoubleMod.Mod2.ValueMax;
+                                    singleModValueMax = secondaryMod.Value - affixDoubleMod.Mod2.ValueMin;
+                                    affixDoubleMod.Mod1.Value = primaryMod.Value;
                                 }
 
-                                //Otherwise this is a failure
-                                MessageBox.Show("Retrofit process went badly wrong!");
-                                break;
-                            }
-
-                            //This can get a little tricky, we need to refit the mods
-                            //We start with an average roll
-                            int fitMod1Roll = rangeMod1Low;
-                            if (mod1Value > rangeMod1High)
-                                fitMod1Roll = rangeMod1High; //(int)((rangeMod1High - rangeMod1Low) / 2 + rangeMod1Low);
-                            else
-                                fitMod1Roll = mod1Value;
-
-                            //Now the second mod
-                            int rangeMod2Low = affixMatch.Mod2.ValueMin;
-                            int rangeMod2High = affixMatch.Mod2.ValueMax;
-                            int fitMod2Roll = rangeMod2Low;
-                            if (mod2Value > rangeMod2High)
-                                fitMod2Roll = rangeMod2High; //(int)((rangeMod2High - rangeMod2Low) / 2 + rangeMod2Low);
-                            else
-                                fitMod2Roll = mod2Value;
-
-                            //Assign part of the roll to this affix
-                            affixMatch.Mod1.Value = fitMod1Roll;
-                            affixMatch.Mod2.Value = fitMod2Roll;
-
-                            //Add it to the list
-                            if (affixMatch.AffixType == "Prefix")
-                                prefixes.Add(affixMatch);
-                            else
-                                suffixes.Add(affixMatch);
-
-                            //If we swapped round the mods then we might have an affix we need to take off the list
-                            if (swapped)
-                            {
-                                bool removed = false;
-                                foreach (var p in prefixes)
-                                {
-                                    if (p.Mod1.Id == mod1Id && p.Mod2.Id == 0)
-                                    {
-                                        removed = true;
-                                        prefixes.Remove(p);
-                                        break;
-                                    }
-                                }
-                                if (!removed)
-                                {
-                                    foreach (var s in suffixes)
-                                    {
-                                        if (s.Mod1.Id == mod1Id && s.Mod2.Id == 0)
-                                        {
-                                            removed = true;
-                                            suffixes.Remove(s);
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (!removed)
-                                {
-                                    //This means the mod probably wasn't placed as it was too high, so it will still be on our list
-                                    //MessageBox.Show("Might want to check this out!");
-                                }
-                            }
-
-                            //The final step is to find where the other mod ended up and reduce it as we used some of it up now
-                            int newModId = 0;
-                            int newRoll = 0;
-                            int newValue = 0;
-                            int newRangeLow = 0;
-                            int newRangeHigh = 0;
-                            if (fitMod1Roll != mod1Value)
-                            {
-                                position = "Primary";
-                                newModId = mod1Id;
-                                newRoll = mod1Value - fitMod1Roll;
-                                newValue = mod1Value;
-                                newRangeLow = rangeMod1Low;
-                                newRangeHigh = rangeMod1High;
-                            }
-                            if (fitMod2Roll != mod2Value)
-                            {
-                                //We should never need to fix two mods at the same time (I hope)
-                                if (newRoll != 0)
-                                {
-                                    MessageBox.Show("Retrofit process went badly wrong!");
-                                    break;
-                                }
-                                position = "Secondary";
-                                newModId = mod2Id;
-                                newRoll = mod2Value - fitMod2Roll;
-                                newValue = mod2Value;
-                                newRangeLow = rangeMod2Low;
-                                newRangeHigh = rangeMod2High;
-                            }
-
-                            //Check some end cases
-                            if (newRoll == 0)
-                            {
-                                //We are done but this should never happen
-                                MessageBox.Show("Everything just suddenly seemed to work in a totally unexpected way!");
-                                mods.Remove(mod);
-                            }
-                            if (newRoll < 0)
-                            {
-                                MessageBox.Show("Retrofit process went badly wrong!");
-                                break;
-                            }
-
-                            //See if we assigned the mod to a singleton affix
-                            bool assigned = false;
-                            GlobalMethods.Affix singleton;
-                            foreach (var p in prefixes)
-                            {
-                                if (p.Mod1.Id == newModId && p.Mod2.Id == 0)
-                                {
-                                    assigned = true;
-                                    //Reasses this prefix
-                                    singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == newModId && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRangeHigh & a.Mod1.ValueMax >= newRangeLow && a.Level <= si.ItemLevel);
-                                    prefixes.Remove(p);
-                                    singleton.Mod1.Value = Math.Min(newRangeHigh, newValue);
-                                    prefixes.Add(singleton);
-                                    mods.Remove(mod);
-                                    break;
-                                }
-                            }
-                            if (!assigned)
-                            {
-                                foreach (var s in suffixes)
-                                {
-                                    if (s.Mod1.Id == newModId && s.Mod2.Id == 0)
-                                    {
-                                        assigned = true;
-                                        //Reasses this suffix
-                                        singleton = GlobalMethods.AffixCache.FirstOrDefault(a => a.Mod1.Id == newModId && a.Mod2.Id == 0 && a.Mod1.ValueMin <= newRangeHigh & a.Mod1.ValueMax >= newRangeLow && a.Level <= si.ItemLevel);
-                                        suffixes.Remove(s);
-                                        singleton.Mod1.Value = Math.Min(newRangeHigh, newValue);
-                                        suffixes.Add(singleton);
-                                        mods.Remove(mod);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            //If we didn't assign the mod already reduce the value and try again
-                            if (!assigned)
-                            {
+                                //Find the secondary affix
                                 foreach (var f in GlobalMethods.AffixCache)
                                 {
-                                    if (f.Mod1.Id == newModId && newRoll >= f.Mod1.ValueMin && newRoll <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                                    if (f.Mod1.Id == singleMod.Id && f.Mod2.Id == 0 && f.Mod1.ValueMin <= singleModValueMax && f.Mod1.ValueMax >= singleModValueMin && f.Level <= si.ItemLevel)
                                     {
-                                        var affixFit = f;
-                                        affixFit.Mod1.Value = newRoll;
-                                        if (f.AffixType == "Prefix")
-                                            prefixes.Add(affixFit);
-                                        else
-                                            suffixes.Add(affixFit);
-                                        mods.Remove(mod);
-                                        for (int i = 0; i < mods.Count; i++)
-                                        {
-                                            if (mods[i].Id == newModId)
-                                                mods.RemoveAt(i);
-                                        }
+                                        affixSingleMod = f;
                                         break;
                                     }
                                 }
+
+                                //If we got a hit then we can exit the loop
+                                if (affixSingleMod.AffixId != 0)
+                                    break;
+                            }
+                            
+                            //We should get two affixes out of this
+                            if (affixDoubleMod.AffixId == 0 || affixSingleMod.AffixId == 0)
+                            {
+                                MessageBox.Show("Retrofit process went badly wrong!");
+                                break;
+                            }
+
+                            //Now we have both mods we need to remove any affix that we already collected that reference them
+                            for (int i = prefixes.Count - 1; i >= 0; i--)
+                            {
+                                if (prefixes[i].Mod1.Id == primaryMod.Id || prefixes[i].Mod2.Id == secondaryMod.Id)
+                                    prefixes.Remove(prefixes[i]);
+                            }
+                            for (int i = suffixes.Count - 1; i >= 0; i--)
+                            {
+                                if (suffixes[i].Mod1.Id == primaryMod.Id || suffixes[i].Mod2.Id == secondaryMod.Id)
+                                    suffixes.Remove(suffixes[i]);
+                            }
+
+                            //Finally we just need to set the values for the two affixes and add them onto the list
+                            if (affixDoubleMod.Mod1.ValueMax < primaryMod.Value)
+                            {
+                                for (int newRoll = affixDoubleMod.Mod1.ValueMin; newRoll <= affixDoubleMod.Mod1.ValueMax; newRoll++)
+                                {
+                                    int newShare = primaryMod.Value - newRoll;
+                                    if (newShare >= affixSingleMod.Mod1.ValueMin && newShare <= affixSingleMod.Mod1.ValueMax)
+                                    {
+                                        //Got a match
+                                        affixDoubleMod.Mod1.Value = newRoll;
+                                        affixSingleMod.Mod1.Value = newShare;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int newRoll = affixDoubleMod.Mod2.ValueMin; newRoll <= affixDoubleMod.Mod2.ValueMax; newRoll++)
+                                {
+                                    int newShare = secondaryMod.Value - newRoll;
+                                    if (newShare >= affixSingleMod.Mod1.ValueMin && newShare <= affixSingleMod.Mod1.ValueMax)
+                                    {
+                                        //Got a match
+                                        affixDoubleMod.Mod2.Value = newRoll;
+                                        affixSingleMod.Mod1.Value = newShare;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            //Save the double-mod
+                            if (affixDoubleMod.AffixType == "Prefix")
+                                prefixes.Add(affixDoubleMod);
+                            else
+                                suffixes.Add(affixDoubleMod);
+
+                            //Save the single mod
+                            if (affixSingleMod.AffixType == "Prefix")
+                                prefixes.Add(affixSingleMod);
+                            else
+                                suffixes.Add(affixSingleMod);
+
+                            //Now remove any mods we touched from our list
+                            for (int i = mods.Count -1 ; i >= 0; i--)
+                            {
+                                if (mods[i].Id == primaryMod.Id || mods[i].Id == secondaryMod.Id)
+                                    mods.RemoveAt(i);
                             }
                         }
                     }
