@@ -23,7 +23,7 @@ namespace ExileClipboardListener.WinForms
 
         private void RefreshLeagueGrid()
         {
-            GlobalMethods.StuffGrid("SELECT l.LeagueName AS [League Name], pl.LeagueName AS [Parent League Name] FROM League l LEFT JOIN League pl ON pl.LeagueId = l.LeagueParentId;", LeagueGrid);
+            GlobalMethods.StuffGrid("SELECT l.LeagueName AS [League Name], pl.LeagueName AS [Parent League Name], COUNT(s.StashId) AS [Stashed Items] FROM League l LEFT JOIN League pl ON pl.LeagueId = l.LeagueParentId LEFT JOIN Stash s ON s.LeagueId = l.LeagueId GROUP BY l.LeagueName, pl.LeagueName;", LeagueGrid);
             RefreshButtons();
         }
 
@@ -38,6 +38,8 @@ namespace ExileClipboardListener.WinForms
             DeleteLeague.Enabled = !_adding && !_editing && LeagueGrid.Rows.Count > 0; 
             SaveLeague.Enabled = _adding || _editing;
             LeagueDefault.Enabled = !_adding && !_editing && LeagueGrid.Rows.Count > 0;
+            MergeStash.Enabled = !_adding && !_editing && LeagueGrid.Rows.Count > 0 && ParentLeague.Text != ""; //Must have a parent
+            ClearStash.Enabled = !_adding && !_editing && LeagueGrid.Rows.Count > 0;
         }
 
         private void EditLeague_Click(object sender, EventArgs e)
@@ -55,6 +57,7 @@ namespace ExileClipboardListener.WinForms
             LeagueName.Text = LeagueGrid.CurrentRow.Cells[0].Value.ToString();
             ParentLeague.Text = LeagueGrid.CurrentRow.Cells[1].Value.ToString();
             _leagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueName.Text + "';");
+            RefreshButtons();
         }
 
         private void NewLeague_Click(object sender, EventArgs e)
@@ -94,6 +97,26 @@ namespace ExileClipboardListener.WinForms
         {
             Properties.Settings.Default.DefaultLeagueId = _leagueId;
             MessageBox.Show("Success!");
+        }
+
+        private void ClearStash_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure?", "Confirm Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+            GlobalMethods.RunQuery("DELETE FROM Stash WHERE LeagueId = " + _leagueId + ";");
+        }
+
+        private void MergeStash_Click(object sender, EventArgs e)
+        {
+            int parentId = ParentLeague.Text == "" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + ParentLeague.Text + "';");
+            if (parentId == 0)
+            {
+                MessageBox.Show("You can't merge a league that doesn't have a parent to merge into");
+                return;
+            }
+            if (MessageBox.Show("Are you sure?", "Confirm Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+            GlobalMethods.RunQuery("UPDATE Stash SET LeagueId = " + parentId + " WHERE LeagueId = " + _leagueId + ";");
         }
     }
 }

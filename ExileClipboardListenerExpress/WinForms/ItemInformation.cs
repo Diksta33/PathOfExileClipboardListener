@@ -13,6 +13,7 @@ namespace ExileClipboardListener.WinForms
 {
     public partial class ItemInformation : Form
     {
+        public bool AllowStash = true;
         private int _filterId;
         private int _itemTypeId;
         private int _itemSubTypeId;
@@ -44,6 +45,19 @@ namespace ExileClipboardListener.WinForms
             {
                 MessageBox.Show("You have no leagues, better add some before trying to stash items!");
                 Hide();
+            }
+            AddStash.Enabled = AllowStash;
+
+            //Set the default button (the one that is "clicked" by hitting enter)
+            if (AllowStash)
+            {
+                AcceptButton = AddStash;
+                AddStash.Focus();
+            }
+            else
+            {
+                AcceptButton = Exit;
+                Exit.Focus();
             }
         }
 
@@ -190,7 +204,7 @@ namespace ExileClipboardListener.WinForms
             FilterResultsGrid.Sort(FilterResultsGrid.Columns[1], ListSortDirection.Descending);
         }
 
-        private int ScoreFilter(int filterId, bool showDetail = false, int filterAffixSlot = 0)
+        public int ScoreFilter(int filterId, bool showDetail = false, int filterAffixSlot = 0)
         {
             //This is where the fun begins, we pull out the various mods we were looking for and mark the item against them
             //We return a score but we also load the specified filter and the results into a static class in case we need to do more work with them
@@ -379,7 +393,7 @@ namespace ExileClipboardListener.WinForms
                     {
                         if (si.Mod[mod].Id == m.Id)
                         {
-                            itemModScore = si.Mod[mod].Value;
+                            itemModScore += si.Mod[mod].Value;
                             AffixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == m.Id && a.Level <= si.ItemLevel && a.Mod1.ValueMin <= si.Mod[mod].Value && a.Mod1.ValueMax >= si.Mod[mod].Value);
                             AffixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == m.Id && a.Level <= si.ItemLevel && a.Mod2.ValueMin <= si.Mod[mod].Value && a.Mod2.ValueMax >= si.Mod[mod].Value);
                             if (AffixPrimarySearch.Count() != 0)
@@ -394,7 +408,6 @@ namespace ExileClipboardListener.WinForms
                                 row[5] = maxPrimary.Mod1.ValueMax;
                                 row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
-                                itemModScore = maxPrimary.Mod1.ValueMax;
                             }
                             if (AffixSecondarySearch.Count() != 0)
                             {
@@ -408,7 +421,6 @@ namespace ExileClipboardListener.WinForms
                                 row[5] = maxSecondary.Mod2.ValueMax;
                                 row[6] = si.Mod[mod].Value;
                                 GlobalMethods.ItemResults.Add(row);
-                                itemModScore = maxSecondary.Mod2.ValueMax > itemModScore ? maxSecondary.Mod2.ValueMax : itemModScore;
                             }
                         }
                     }
@@ -564,6 +576,12 @@ namespace ExileClipboardListener.WinForms
             GlobalMethods.LeagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
             Properties.Settings.Default.DefaultLeagueId = GlobalMethods.LeagueId;
             Properties.Settings.Default.Save();
+        }
+
+        private void ItemInformation_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                Hide();
         }
     }
 }

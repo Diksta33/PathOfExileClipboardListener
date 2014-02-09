@@ -40,7 +40,18 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.label4 = new System.Windows.Forms.Label();
             this.League = new System.Windows.Forms.ComboBox();
+            this.FilterList = new System.Windows.Forms.ComboBox();
+            this.ItemCount = new System.Windows.Forms.Label();
+            this.MinItemLevel = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.ViewItem = new System.Windows.Forms.Button();
+            this.Filter = new System.Windows.Forms.Button();
+            this.MaxItemLevel = new System.Windows.Forms.NumericUpDown();
+            this.HideZeroScores = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // StashGrid
@@ -164,11 +175,123 @@
             this.League.TabIndex = 0;
             this.League.SelectedIndexChanged += new System.EventHandler(this.League_SelectedIndexChanged);
             // 
+            // FilterList
+            // 
+            this.FilterList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FilterList.FormattingEnabled = true;
+            this.FilterList.Location = new System.Drawing.Point(843, 25);
+            this.FilterList.Name = "FilterList";
+            this.FilterList.Size = new System.Drawing.Size(287, 21);
+            this.FilterList.TabIndex = 10;
+            this.FilterList.SelectedIndexChanged += new System.EventHandler(this.FilterList_SelectedIndexChanged);
+            // 
+            // ItemCount
+            // 
+            this.ItemCount.AutoSize = true;
+            this.ItemCount.Location = new System.Drawing.Point(1256, 606);
+            this.ItemCount.Name = "ItemCount";
+            this.ItemCount.Size = new System.Drawing.Size(32, 13);
+            this.ItemCount.TabIndex = 12;
+            this.ItemCount.Text = "Items";
+            // 
+            // MinItemLevel
+            // 
+            this.MinItemLevel.Location = new System.Drawing.Point(1128, 614);
+            this.MinItemLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MinItemLevel.Name = "MinItemLevel";
+            this.MinItemLevel.Size = new System.Drawing.Size(47, 20);
+            this.MinItemLevel.TabIndex = 13;
+            this.MinItemLevel.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MinItemLevel.ValueChanged += new System.EventHandler(this.MinItemLevel_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(840, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(29, 13);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Filter";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(1125, 598);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(105, 13);
+            this.label6.TabIndex = 14;
+            this.label6.Text = "Min  Item Level  Max";
+            // 
+            // ViewItem
+            // 
+            this.ViewItem.Location = new System.Drawing.Point(114, 601);
+            this.ViewItem.Name = "ViewItem";
+            this.ViewItem.Size = new System.Drawing.Size(96, 23);
+            this.ViewItem.TabIndex = 15;
+            this.ViewItem.Text = "View Item";
+            this.ViewItem.UseVisualStyleBackColor = true;
+            this.ViewItem.Click += new System.EventHandler(this.ViewItem_Click);
+            // 
+            // Filter
+            // 
+            this.Filter.Location = new System.Drawing.Point(1286, 22);
+            this.Filter.Name = "Filter";
+            this.Filter.Size = new System.Drawing.Size(75, 23);
+            this.Filter.TabIndex = 16;
+            this.Filter.Text = "Filter";
+            this.Filter.UseVisualStyleBackColor = true;
+            this.Filter.Click += new System.EventHandler(this.Filter_Click);
+            // 
+            // MaxItemLevel
+            // 
+            this.MaxItemLevel.Location = new System.Drawing.Point(1181, 614);
+            this.MaxItemLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MaxItemLevel.Name = "MaxItemLevel";
+            this.MaxItemLevel.Size = new System.Drawing.Size(47, 20);
+            this.MaxItemLevel.TabIndex = 17;
+            this.MaxItemLevel.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.MaxItemLevel.ValueChanged += new System.EventHandler(this.MaxItemLevel_ValueChanged);
+            // 
+            // HideZeroScores
+            // 
+            this.HideZeroScores.AutoSize = true;
+            this.HideZeroScores.Location = new System.Drawing.Point(1136, 28);
+            this.HideZeroScores.Name = "HideZeroScores";
+            this.HideZeroScores.Size = new System.Drawing.Size(109, 17);
+            this.HideZeroScores.TabIndex = 18;
+            this.HideZeroScores.Text = "Hide Zero Scores";
+            this.HideZeroScores.UseVisualStyleBackColor = true;
+            // 
             // StashViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1373, 636);
+            this.Controls.Add(this.HideZeroScores);
+            this.Controls.Add(this.MaxItemLevel);
+            this.Controls.Add(this.Filter);
+            this.Controls.Add(this.ViewItem);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.MinItemLevel);
+            this.Controls.Add(this.ItemCount);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.FilterList);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.League);
             this.Controls.Add(this.Export);
@@ -187,6 +310,8 @@
             this.Text = "Stash Viewer";
             this.Load += new System.EventHandler(this.Stash_Load);
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -205,5 +330,14 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox League;
+        private System.Windows.Forms.ComboBox FilterList;
+        private System.Windows.Forms.Label ItemCount;
+        private System.Windows.Forms.NumericUpDown MinItemLevel;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Button ViewItem;
+        private System.Windows.Forms.Button Filter;
+        private System.Windows.Forms.NumericUpDown MaxItemLevel;
+        private System.Windows.Forms.CheckBox HideZeroScores;
     }
 }

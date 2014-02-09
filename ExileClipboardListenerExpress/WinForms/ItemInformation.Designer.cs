@@ -38,7 +38,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FilterResultsGrid = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FilterNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AverageScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.Rarity = new System.Windows.Forms.TextBox();
@@ -186,9 +186,6 @@
             this.label28 = new System.Windows.Forms.Label();
             this.AddStash = new System.Windows.Forms.Button();
             this.Exit = new System.Windows.Forms.Button();
-            this.ModIdColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ModItemValueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label46 = new System.Windows.Forms.Label();
             this.League = new System.Windows.Forms.ComboBox();
@@ -219,7 +216,7 @@
             this.FilterResultsGrid.AllowUserToResizeRows = false;
             this.FilterResultsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.FilterResultsGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
+            this.FilterNameColumn,
             this.AverageScoreColumn});
             this.FilterResultsGrid.Location = new System.Drawing.Point(6, 26);
             this.FilterResultsGrid.Name = "FilterResultsGrid";
@@ -230,15 +227,15 @@
             this.FilterResultsGrid.TabIndex = 3;
             this.FilterResultsGrid.SelectionChanged += new System.EventHandler(this.FilterResultsGrid_SelectionChanged);
             // 
-            // Column1
+            // FilterNameColumn
             // 
-            this.Column1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.FilterNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             dataGridViewCellStyle1.NullValue = null;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
-            this.Column1.HeaderText = "Filter Name";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 85;
+            this.FilterNameColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.FilterNameColumn.HeaderText = "Filter Name";
+            this.FilterNameColumn.Name = "FilterNameColumn";
+            this.FilterNameColumn.ReadOnly = true;
+            this.FilterNameColumn.Width = 85;
             // 
             // AverageScoreColumn
             // 
@@ -1717,33 +1714,6 @@
             this.Exit.Text = "Dismiss";
             this.Exit.UseVisualStyleBackColor = true;
             // 
-            // ModIdColumn
-            // 
-            this.ModIdColumn.HeaderText = "ModId";
-            this.ModIdColumn.Name = "ModIdColumn";
-            this.ModIdColumn.ReadOnly = true;
-            this.ModIdColumn.Visible = false;
-            // 
-            // ModNameColumn
-            // 
-            this.ModNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.ModNameColumn.HeaderText = "Mod Name";
-            this.ModNameColumn.Name = "ModNameColumn";
-            this.ModNameColumn.ReadOnly = true;
-            this.ModNameColumn.Width = 84;
-            // 
-            // ModItemValueColumn
-            // 
-            this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle3.Format = "N0";
-            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle3;
-            this.ModItemValueColumn.HeaderText = "Item Value";
-            this.ModItemValueColumn.Name = "ModItemValueColumn";
-            this.ModItemValueColumn.ReadOnly = true;
-            this.ModItemValueColumn.Width = 82;
-            // 
-            // FilterResults
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
@@ -1782,12 +1752,14 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ItemInformation";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Item Information";
             this.Load += new System.EventHandler(this.FilterResults_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ItemInformation_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -1943,8 +1915,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn AffixSecondaryModValueColumn;
         private System.Windows.Forms.Button AddStash;
         private System.Windows.Forms.Button Exit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn AverageScoreColumn;
         private System.Windows.Forms.TextBox ReqLevelBase;
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.TextBox AttackSpeed;
@@ -1966,11 +1936,13 @@
         private System.Windows.Forms.TextBox Prefix3Mod;
         private System.Windows.Forms.TextBox Prefix2Mod;
         private System.Windows.Forms.TextBox Prefix1Mod;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModIdColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.ComboBox League;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FilterNameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AverageScoreColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModIdColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
     }
 }

@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>13</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -91,6 +91,7 @@
     <Compile Include="Classes\NewProgressBar.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\ParseItem.cs" />
     <Compile Include="WinForms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>

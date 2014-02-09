@@ -43,6 +43,8 @@
             this.ParentLeague = new System.Windows.Forms.ComboBox();
             this.LeagueStart = new System.Windows.Forms.DateTimePicker();
             this.LeagueEnd = new System.Windows.Forms.DateTimePicker();
+            this.ClearStash = new System.Windows.Forms.Button();
+            this.MergeStash = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.LeagueGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,7 +59,7 @@
             this.LeagueGrid.ReadOnly = true;
             this.LeagueGrid.RowHeadersVisible = false;
             this.LeagueGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LeagueGrid.Size = new System.Drawing.Size(625, 186);
+            this.LeagueGrid.Size = new System.Drawing.Size(657, 186);
             this.LeagueGrid.TabIndex = 1;
             this.LeagueGrid.SelectionChanged += new System.EventHandler(this.LeagueGrid_SelectionChanged);
             // 
@@ -65,9 +67,9 @@
             // 
             this.LeagueDefault.Location = new System.Drawing.Point(12, 204);
             this.LeagueDefault.Name = "LeagueDefault";
-            this.LeagueDefault.Size = new System.Drawing.Size(100, 23);
+            this.LeagueDefault.Size = new System.Drawing.Size(90, 23);
             this.LeagueDefault.TabIndex = 2;
-            this.LeagueDefault.Text = "Mark as Default";
+            this.LeagueDefault.Text = "Mark Default";
             this.LeagueDefault.UseVisualStyleBackColor = true;
             this.LeagueDefault.Click += new System.EventHandler(this.LeagueDefault_Click);
             // 
@@ -118,7 +120,7 @@
             // 
             // EditLeague
             // 
-            this.EditLeague.Location = new System.Drawing.Point(319, 204);
+            this.EditLeague.Location = new System.Drawing.Point(189, 204);
             this.EditLeague.Name = "EditLeague";
             this.EditLeague.Size = new System.Drawing.Size(75, 23);
             this.EditLeague.TabIndex = 11;
@@ -128,7 +130,7 @@
             // 
             // CancelLeague
             // 
-            this.CancelLeague.Location = new System.Drawing.Point(400, 204);
+            this.CancelLeague.Location = new System.Drawing.Point(270, 204);
             this.CancelLeague.Name = "CancelLeague";
             this.CancelLeague.Size = new System.Drawing.Size(75, 23);
             this.CancelLeague.TabIndex = 12;
@@ -138,7 +140,7 @@
             // 
             // DeleteLeague
             // 
-            this.DeleteLeague.Location = new System.Drawing.Point(481, 204);
+            this.DeleteLeague.Location = new System.Drawing.Point(351, 204);
             this.DeleteLeague.Name = "DeleteLeague";
             this.DeleteLeague.Size = new System.Drawing.Size(75, 23);
             this.DeleteLeague.TabIndex = 13;
@@ -148,7 +150,7 @@
             // 
             // SaveLeague
             // 
-            this.SaveLeague.Location = new System.Drawing.Point(562, 204);
+            this.SaveLeague.Location = new System.Drawing.Point(594, 204);
             this.SaveLeague.Name = "SaveLeague";
             this.SaveLeague.Size = new System.Drawing.Size(75, 23);
             this.SaveLeague.TabIndex = 14;
@@ -158,7 +160,7 @@
             // 
             // NewLeague
             // 
-            this.NewLeague.Location = new System.Drawing.Point(238, 204);
+            this.NewLeague.Location = new System.Drawing.Point(108, 204);
             this.NewLeague.Name = "NewLeague";
             this.NewLeague.Size = new System.Drawing.Size(75, 23);
             this.NewLeague.TabIndex = 15;
@@ -191,11 +193,33 @@
             this.LeagueEnd.TabIndex = 18;
             this.LeagueEnd.Visible = false;
             // 
+            // ClearStash
+            // 
+            this.ClearStash.Location = new System.Drawing.Point(513, 204);
+            this.ClearStash.Name = "ClearStash";
+            this.ClearStash.Size = new System.Drawing.Size(75, 23);
+            this.ClearStash.TabIndex = 19;
+            this.ClearStash.Text = "Clear Stash";
+            this.ClearStash.UseVisualStyleBackColor = true;
+            this.ClearStash.Click += new System.EventHandler(this.ClearStash_Click);
+            // 
+            // MergeStash
+            // 
+            this.MergeStash.Location = new System.Drawing.Point(432, 204);
+            this.MergeStash.Name = "MergeStash";
+            this.MergeStash.Size = new System.Drawing.Size(75, 23);
+            this.MergeStash.TabIndex = 20;
+            this.MergeStash.Text = "Merge Stash";
+            this.MergeStash.UseVisualStyleBackColor = true;
+            this.MergeStash.Click += new System.EventHandler(this.MergeStash_Click);
+            // 
             // League
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(649, 286);
+            this.ClientSize = new System.Drawing.Size(680, 286);
+            this.Controls.Add(this.MergeStash);
+            this.Controls.Add(this.ClearStash);
             this.Controls.Add(this.LeagueEnd);
             this.Controls.Add(this.LeagueStart);
             this.Controls.Add(this.ParentLeague);
@@ -240,5 +264,7 @@
         private System.Windows.Forms.ComboBox ParentLeague;
         private System.Windows.Forms.DateTimePicker LeagueStart;
         private System.Windows.Forms.DateTimePicker LeagueEnd;
+        private System.Windows.Forms.Button ClearStash;
+        private System.Windows.Forms.Button MergeStash;
     }
 }

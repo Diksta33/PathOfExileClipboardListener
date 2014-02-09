@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using ExileClipboardListener.Classes;
+using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 
 namespace ExileClipboardListener.WinForms
 {
@@ -13,7 +14,7 @@ namespace ExileClipboardListener.WinForms
         private int _itemSubTypeId;
         private int _leagueId;
         private int _modId;
-        private bool _refresh;
+        private int _filterId;
 
         public StashViewer()
         {
@@ -22,26 +23,67 @@ namespace ExileClipboardListener.WinForms
 
         private void Stash_Load(object sender, EventArgs e)
         {
-            _refresh = false;
             GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT LeagueName FROM League ORDER BY 1;", League);
             League.SelectedIndex = 0;
             GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemTypeName FROM ItemType ORDER BY 1;", ItemType);
             ItemType.SelectedIndex = 0;
             GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ModName FROM [Mod] ORDER BY 1;", Mod);
             Mod.SelectedIndex = 0;
-            _refresh = true;
+            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT FilterName FROM FilterHeader ORDER BY 1;", FilterList);
+            FilterList.SelectedIndex = 0;
             RefreshGrid();
         }
 
         private void RefreshGrid()
         {
-            if (!_refresh)
-                return;
-            string sql = @"
-                SELECT 
+            //See if we need to include scores
+            bool scored = false;
+            Cursor.Current = Cursors.WaitCursor;
+            if (FilterList.SelectedIndex != 0)
+            {
+                //Load each item into the current stash one at a time
+                GlobalMethods.RunQuery("DELETE FROM StashScore;");
+                int stashId = 0;
+                while (stashId != -1)
+                {
+                    string sqlFilter = "SELECT MIN(s.StashId) FROM Stash s INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId INNER JOIN ItemType i ON i.ItemTypeId = b.ItemTypeId WHERE s.StashId > " + stashId;
+
+                    //Don't score things that are hidden as that's a wasted effort
+                    if (_leagueId != 0)
+                    {
+                        sqlFilter += " AND s.LeagueId = '" + _leagueId + "' ";
+                    }
+                    if (_itemTypeId != 0)
+                    {
+                        sqlFilter += " AND i.ItemTypeId = " + _itemTypeId + " ";
+                    }
+                    if (_itemSubTypeId != 0)
+                    {
+                        sqlFilter += " AND i.ItemSubTypeId = " + _itemSubTypeId + " ";
+                    }
+                    if (_modId != 0)
+                    {
+                        sqlFilter += " AND EXISTS (SELECT * FROM StashMod sm2 WHERE sm2.StashId = s.StashId AND sm2.ModId = " + _modId + ")";
+                    }
+                    stashId = GlobalMethods.GetScalarInt(sqlFilter);
+                    if (stashId == 0)
+                        break;
+                    string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM [Stash] WHERE StashId = " + stashId + ";");
+                    ParseItem.ParseStash(item);
+                    int score = new ItemInformation().ScoreFilter(_filterId);
+                    GlobalMethods.RunQuery("INSERT INTO StashScore VALUES(" + stashId + "," + score + ");");
+                }
+                scored = true;
+            }
+
+            //Get a list of items based on the current filters
+            string sql = "SELECT s.StashId AS [Stash Id],";
+            if (scored)
+                sql += "MAX(ss.Score) AS [Filter Score],";
+            sql += @"
 	                MAX(i.ItemTypeName) AS [Item Type],
 	                MAX(i2.ItemSubTypeName) AS [Item Sub Type],
-	                s.ItemName AS [Item Name], 
+	                s.ItemName AS [Item Name],
 	                MAX(b.ItemName) AS [Base Item], 
 	                MAX(r.RarityName) AS [Rarity], 
 	                MAX(s.Quality) AS [Quality], 
@@ -107,7 +149,9 @@ namespace ExileClipboardListener.WinForms
                     LEFT JOIN [Mod] m10 ON m10.ModId = sm.ModId AND sm.StashModId = 10
                     LEFT JOIN [Mod] m11 ON m11.ModId = sm.ModId AND sm.StashModId = 11
                     LEFT JOIN [Mod] m12 ON m12.ModId = sm.ModId AND sm.StashModId = 12";
-            
+            if (scored)
+                sql += " LEFT JOIN StashScore ss ON ss.StashId = s.StashId";
+
             //Add filters
             bool where = false;
             if (_leagueId != 0)
@@ -128,9 +172,25 @@ namespace ExileClipboardListener.WinForms
             if (_modId != 0)
             {
                 sql += (where ? " AND " : " WHERE ") + " EXISTS (SELECT * FROM StashMod sm2 WHERE sm2.StashId = s.StashId AND sm2.ModId = " + _modId+ ")";
+                where = true;
+            }
+            if (MinItemLevel.Value > 1)
+            {
+                sql += (where ? " AND " : " WHERE ") + " s.ItemLevel >= " + MinItemLevel.Value + " ";
+                where = true;
+            }
+            if (MaxItemLevel.Value > 1)
+            {
+                sql += (where ? " AND " : " WHERE ") + " s.ItemLevel <= " + MaxItemLevel.Value + " ";
+                where = true;
+            }
+            if (scored && HideZeroScores.Checked)
+            {
+                sql += (where ? " AND " : " WHERE ") + " IFNULL(ss.Score, 0) > 0";
             }
             sql += " GROUP BY s.ItemName;";
-            GlobalMethods.StuffGrid(sql, StashGrid);
+            ItemCount.Text = GlobalMethods.StuffGrid(sql, StashGrid).ToString("#,##0") + " items";
+            Cursor.Current = Cursors.Default;
         }
 
         private void ItemType_SelectedIndexChanged(object sender, EventArgs e)
@@ -145,14 +205,12 @@ namespace ExileClipboardListener.WinForms
         {
             //Determine the ItemSubType
             _itemSubTypeId = ItemSubType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemSubTypeName = '" + ItemSubType.Text + "';");
-            RefreshGrid();
         }
 
         private void Mod_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Determine the ModId
             _modId = Mod.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ModId FROM [Mod] WHERE ModName = '" + Mod.Text + "';");
-            RefreshGrid();
         }
 
         private void Export_Click(object sender, EventArgs e)
@@ -184,7 +242,38 @@ namespace ExileClipboardListener.WinForms
         {
             //Determine the LeagueId
             _leagueId = League.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
+        }
+
+        private void FilterList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //Determine the filter
+            _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterList.Text + "';");
+        }
+
+        private void Filter_Click(object sender, EventArgs e)
+        {
             RefreshGrid();
+        }
+
+        private void ViewItem_Click(object sender, EventArgs e)
+        {
+            if (StashGrid.CurrentRow == null)
+                return;
+            string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM [Stash] WHERE StashId = " + StashGrid.CurrentRow.Cells[0].Value + ";");
+            ParseItem.ParseStash(item);
+            new ItemInformation() { AllowStash = false }.ShowDialog();
+        }
+
+        private void MaxItemLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (MinItemLevel.Value > MaxItemLevel.Value)
+                MinItemLevel.Value = MaxItemLevel.Value;
+        }
+
+        private void MinItemLevel_ValueChanged(object sender, EventArgs e)
+        {
+            if (MinItemLevel.Value > MaxItemLevel.Value)
+                MaxItemLevel.Value = MinItemLevel.Value;
         }
     }
 }

@@ -509,8 +509,18 @@ namespace ExileClipboardListener.Classes
                                 for (int i = 0; i < columnCount; i++)
                                 {
                                     var col = new DataGridViewTextBoxColumn { HeaderText = dr.GetName(i) };
-                                    if (dr.GetName(i).Contains("Date"))
+                                    if (dr.GetDataTypeName(i).ToUpper().Contains("DATE"))
                                         col.DefaultCellStyle.Format = "d";
+                                    else if (dr.GetDataTypeName(i).ToUpper().Contains("INT"))
+                                    {
+                                        col.DefaultCellStyle.Format = "N0";
+                                        col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                                    }
+                                    else if (dr.GetDataTypeName(i).ToUpper().Contains("NUMERIC"))
+                                    {
+                                        col.DefaultCellStyle.Format = "N";
+                                        col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                                    }
                                     gridTarget.Columns.Add(col);
                                 }
                             }
