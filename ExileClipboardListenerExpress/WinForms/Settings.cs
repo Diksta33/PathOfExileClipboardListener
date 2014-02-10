@@ -69,30 +69,26 @@ namespace ExileClipboardListener.WinForms
 
         private void TolerancePoorTo_ValueChanged(object sender, EventArgs e)
         {
-            if (ToleranceAverageFrom.Value != TolerancePoorTo.Value + 1)
-                ToleranceAverageFrom.Value = TolerancePoorTo.Value + 1;
+            ToleranceAverageFrom.Value = TolerancePoorTo.Value + 1;
         }
 
         private void ToleranceAverageFrom_ValueChanged(object sender, EventArgs e)
         {
-            if (TolerancePoorTo.Value != ToleranceAverageFrom.Value - 1)
-                TolerancePoorTo.Value = ToleranceAverageFrom.Value - 1;
+            TolerancePoorTo.Value = ToleranceAverageFrom.Value - 1;
             if (ToleranceAverageFrom.Value > ToleranceAverageTo.Value)
                 ToleranceAverageTo.Value = ToleranceAverageFrom.Value;
         }
 
         private void ToleranceAverageTo_ValueChanged(object sender, EventArgs e)
         {
-            if (ToleranceGoodFrom.Value != ToleranceAverageTo.Value + 1)
-                ToleranceGoodFrom.Value = ToleranceAverageTo.Value + 1;
+            ToleranceGoodFrom.Value = ToleranceAverageTo.Value + 1;
             if (ToleranceAverageTo.Value < ToleranceAverageFrom.Value)
                 ToleranceAverageFrom.Value = ToleranceAverageTo.Value;
         }
 
         private void ToleranceGoodFrom_ValueChanged(object sender, EventArgs e)
         {
-            if (ToleranceAverageTo.Value != ToleranceGoodFrom.Value - 1)
-                ToleranceAverageTo.Value = ToleranceGoodFrom.Value - 1;
+            ToleranceAverageTo.Value = ToleranceGoodFrom.Value - 1;
         }
     }
 }

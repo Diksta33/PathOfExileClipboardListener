@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using ExileClipboardListener.WinForms;
 using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
-using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
 
 namespace ExileClipboardListener.Classes
 {
@@ -152,8 +149,8 @@ namespace ExileClipboardListener.Classes
                 sql = "INSERT INTO StashMod(StashId, StashModId, ModId, ModValue) VALUES (";
                 sql += stashId + ",";
                 sql += (mod + 1) + ",";
-                sql += si.Mod[mod].Id.ToString() + ",";
-                sql += si.Mod[mod].Value.ToString() + ")";
+                sql += si.Mod[mod].Id + ",";
+                sql += si.Mod[mod].Value + ")";
                 GlobalMethods.RunQuery(sql);
             }        
         }

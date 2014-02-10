@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using ExileClipboardListener.WinForms;
 using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
 
@@ -400,7 +398,7 @@ namespace ExileClipboardListener.Classes
                             GlobalMethods.Mod modPartner;
                             modPartner.Id = 0;
                             modPartner.Value = 0;
-                            string position = "";
+                            string position;
                             if (affix.Mod1.Id == mod.Id)
                             {
                                 modPartner = affix.Mod2;
@@ -462,7 +460,8 @@ namespace ExileClipboardListener.Classes
                             //There are multiple levels for each affix, we start with the highest possible for the item and work out way back down until we match or run out of options
                             for (int level = si.ItemLevel; level > 0; level--)
                             {
-                                affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= level ? next : agg);
+                                int levelInternal = level;
+                                affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
 
                                 //if we got no match then give up
                                 if (affixDoubleMod.AffixId == 0)

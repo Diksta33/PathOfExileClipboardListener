@@ -155,8 +155,7 @@ namespace ExileClipboardListener.Classes
             try
             {
                 //Load a null affix
-                var affixDummy = new Affix();
-                affixDummy.AffixId = 0;
+                var affixDummy = new Affix {AffixId = 0};
                 AffixCache.Add(affixDummy);
 
                 //Now the real ones

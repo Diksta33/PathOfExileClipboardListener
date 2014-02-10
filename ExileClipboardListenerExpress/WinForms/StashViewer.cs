@@ -261,7 +261,7 @@ namespace ExileClipboardListener.WinForms
                 return;
             string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM [Stash] WHERE StashId = " + StashGrid.CurrentRow.Cells[0].Value + ";");
             ParseItem.ParseStash(item);
-            new ItemInformation() { AllowStash = false }.ShowDialog();
+            new ItemInformation { AllowStash = false }.ShowDialog();
         }
 
         private void MaxItemLevel_ValueChanged(object sender, EventArgs e)
