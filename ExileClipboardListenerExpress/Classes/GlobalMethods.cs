@@ -492,7 +492,7 @@ namespace ExileClipboardListener.Classes
             return value ?? "";
         }
 
-        public static int StuffGrid(string sql, DataGridView gridTarget, bool reloadColumns = true)
+        public static int StuffGrid(string sql, DataGridView gridTarget, bool reloadColumns = true, bool suppressZeroes = false)
         {
             //This method will run a SQL query and load the results into the specified data grid
             //We try to be clever with dates, if we have a column with a date format then we will convert the SQL results to a date before loading them
@@ -564,10 +564,10 @@ namespace ExileClipboardListener.Classes
                                     }
                                     else if (gridTarget.Columns[i].DefaultCellStyle.Format == "N0")//Number with no decimals
                                     {
-                                        if (dr[i] == DBNull.Value || dr[i].ToString() == "")
+                                        if (dr[i] == DBNull.Value || dr[i].ToString() == "" || (suppressZeroes && dr[i].ToString() == "0"))
                                             // ReSharper disable RedundantCast
                                             row[i] = (int?)null;
-                                        // ReSharper restore RedundantCast
+                                            // ReSharper restore RedundantCast
                                         else
                                             row[i] = Convert.ToInt32(dr[i]);
                                     }
@@ -576,7 +576,7 @@ namespace ExileClipboardListener.Classes
                                         if (dr[i] == DBNull.Value || dr[i].ToString() == "")
                                             // ReSharper disable RedundantCast
                                             row[i] = (decimal?)null;
-                                        // ReSharper restore RedundantCast
+                                            // ReSharper restore RedundantCast
                                         else
                                             row[i] = Convert.ToDecimal(dr[i]);
                                     }

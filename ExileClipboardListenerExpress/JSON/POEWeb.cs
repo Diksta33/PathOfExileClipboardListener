@@ -14,7 +14,7 @@ namespace ExileClipboardListener.JSON
         private const string LoginUrl = @"https://www.pathofexile.com/login";
         private const string CharacterUrl = @"http://www.pathofexile.com/character-window/get-characters";
         private const string StashUrl = @"http://www.pathofexile.com/character-window/get-stash-items?league={0}&tabs=1&tabIndex={1}";
-        //private const string InventoryUrl = @"http://www.pathofexile.com/character-window/get-items?character={0}";
+        private const string InventoryUrl = @"http://www.pathofexile.com/character-window/get-items?character={0}";
         private const string HashRegEx = "name=\\\"hash\\\" value=\\\"(?<hash>[a-zA-Z0-9]{1,})\\\"";
         private static CookieContainer _credentialCookies;
 
@@ -70,7 +70,7 @@ namespace ExileClipboardListener.JSON
 
         public static DataContracts.JSONStash GetStash(string league, string tab)
         {
-            //Desearilise a stash just to get items
+            //Desearilise a stash
             var desearialiseStash = new DataContractJsonSerializer(typeof(DataContracts.JSONStash));
             var requestStash = (HttpWebRequest)RequestThrottle.Instance.Create(String.Format(StashUrl, league, tab));
             requestStash.CookieContainer = _credentialCookies;
@@ -80,7 +80,21 @@ namespace ExileClipboardListener.JSON
             var responseStash = (HttpWebResponse)requestStash.GetResponse();
             var streamStash = GetMemoryStreamFromResponse(responseStash);
             var proxy = (DataContracts.JSONStash)desearialiseStash.ReadObject(streamStash);
-            //MessageBox.Show(proxy.Items.Count + " Items found!");
+            return proxy;
+        }
+
+        public static DataContracts.JSONInventory GetInventory(string character)
+        {
+            //Desearilise an inventory
+            var desearialiseInventory = new DataContractJsonSerializer(typeof(DataContracts.JSONInventory));
+            var requestInventory = (HttpWebRequest)RequestThrottle.Instance.Create(String.Format(InventoryUrl, character));
+            requestInventory.CookieContainer = _credentialCookies;
+            requestInventory.UserAgent = "User-Agent: Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; InfoPath.3; .NET4.0C; .NET4.0E; .NET CLR 1.1.4322)";
+            requestInventory.Method = "GET";
+            requestInventory.ContentType = "application/x-www-form-urlencoded";
+            var responseInventory = (HttpWebResponse)requestInventory.GetResponse();
+            var streamInventory = GetMemoryStreamFromResponse(responseInventory);
+            var proxy = (DataContracts.JSONInventory)desearialiseInventory.ReadObject(streamInventory);
             return proxy;
         }
 

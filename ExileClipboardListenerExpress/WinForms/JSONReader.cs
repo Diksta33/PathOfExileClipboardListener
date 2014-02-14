@@ -10,8 +10,10 @@ namespace ExileClipboardListener.WinForms
     public partial class JSONReader : Form
     {
         private DataContracts.JSONStash _stash;
+        private DataContracts.JSONInventory _inventory;
         private List<JSON.Character> _characters;
         private int _leagueId;
+        private string _stashType;
 
         public JSONReader()
         {
@@ -59,14 +61,15 @@ namespace ExileClipboardListener.WinForms
             //If we have leagues let the stash grabbing commence
             if (League.Items.Count > 0)
             {
-                League.SelectedIndex = 0;
-                League.Enabled = true;
+                CharacterGrid_SelectionChanged(null, null);
                 GrabStashTabs.Enabled = true;
+                GrabInventory.Enabled = true;
             }
         }
 
         private void GrabStash_Click(object sender, EventArgs e)
         {
+            GetCurrentLeague();
             ItemList.Items.Clear();
             Cursor.Current = Cursors.WaitCursor;
             _stash = POEWeb.GetStash(League.Text, StashTab.Text);
@@ -75,6 +78,7 @@ namespace ExileClipboardListener.WinForms
                 ItemList.Items.Add(i.TypeLine);
             StashAll.Enabled = true;
             AddStash.Enabled = true;
+            _stashType = "Stash";
         }
 
         private void JSONReader_Load(object sender, EventArgs e)
@@ -86,7 +90,7 @@ namespace ExileClipboardListener.WinForms
         {
             //Get the text description
             int index = ItemList.SelectedIndex;
-            var i = _stash.Items[index];
+            DataContracts.JSONItem i = _stashType == "Stash" ? _stash.Items[index] : _inventory.Items[index];
             string item = Parser.ParseItem(i);
             ItemScript.Text = item;
 
@@ -101,9 +105,9 @@ namespace ExileClipboardListener.WinForms
             //Parse each item in the list, add them one at a time to the stash for the current league
             for (int i = 0; i < ItemList.Items.Count; i++)
             {
-                toolStripStatusLabel1.Text = "Parsing " + _stash.Items[i].TypeLine + "... " + ((i * 100) / ItemList.Items.Count) + "%";
+                toolStripStatusLabel1.Text = "Parsing " + (_stashType == "Stash" ? _stash.Items[i].TypeLine : _inventory.Items[i].TypeLine) + "... " + ((i * 100) / ItemList.Items.Count) + "%";
                 Application.DoEvents();
-                string itemText = Parser.ParseItem(_stash.Items[i]);
+                string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[i] : _inventory.Items[i]);
                 if (ParseItem.ParseStash(itemText))
                     GlobalMethods.SaveStash(_leagueId);
             }
@@ -114,7 +118,7 @@ namespace ExileClipboardListener.WinForms
         {
             if (ItemList.SelectedIndex == -1)
                 return;
-            string itemText = Parser.ParseItem(_stash.Items[ItemList.SelectedIndex]);
+            string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
             if (ParseItem.ParseStash(itemText))
             {
                 GlobalMethods.SaveStash(_leagueId);
@@ -140,7 +144,7 @@ namespace ExileClipboardListener.WinForms
             GrabStash.Enabled = true;
         }
 
-        private void League_SelectedIndexChanged(object sender, EventArgs e)
+        private void GetCurrentLeague()
         {
             _leagueId = 0;
             while (_leagueId == 0)
@@ -157,6 +161,40 @@ namespace ExileClipboardListener.WinForms
                     GlobalMethods.RunQuery("INSERT INTO League(LeagueName, LeagueParentId) VALUES('" + League.Text + "',NULL);");
                 }
             }
+        }
+
+        private void GrabInventory_Click(object sender, EventArgs e)
+        {
+            GetCurrentLeague();
+            ItemList.Items.Clear();
+            if (CharacterGrid.CurrentRow == null)
+                return;
+            string character = CharacterGrid.CurrentRow.Cells[CharacterGridNameColumn.Index].Value.ToString();
+            Cursor.Current = Cursors.WaitCursor;
+            _inventory = POEWeb.GetInventory(character);
+            Cursor.Current = Cursors.Default;
+            foreach (var i in _inventory.Items)
+                ItemList.Items.Add(i.TypeLine);
+            StashAll.Enabled = true;
+            AddStash.Enabled = true;
+            ViewItem.Enabled = true;
+            _stashType = "Inventory";
+        }
+
+        private void CharacterGrid_SelectionChanged(object sender, EventArgs e)
+        {
+            if (CharacterGrid.CurrentRow == null)
+                return;
+            League.Text = CharacterGrid.CurrentRow.Cells[CharacterGridLeagueColumn.Index].Value.ToString();
+        }
+
+        private void ViewItem_Click(object sender, EventArgs e)
+        {
+            if (ItemList.SelectedIndex == -1)
+                return;
+            string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
+            if (ParseItem.ParseStash(itemText))
+                new ItemInformation { AllowStash = true }.ShowDialog();
         }
     }
 }

@@ -172,7 +172,7 @@ namespace ExileClipboardListener.JSON
         }
 
         [DataContract(Name = "RootObject")]
-        public class Inventory
+        public class JSONInventory
         {
             [DataMember(Name = "items")]
             public List<JSONItem> Items { get; set; }

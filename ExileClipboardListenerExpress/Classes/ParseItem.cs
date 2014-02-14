@@ -62,10 +62,14 @@ namespace ExileClipboardListener.Classes
                     MessageBox.Show("Catastrophic Failure!");
                     return false;
                 }
+                string baseName = "";
 
                 //For normal items there is no item name other than the base item name
                 if (si.RarityId == 1)
+                {
+                    baseName = si.ItemName;
                     si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + si.ItemName.Replace("'", "''") + "';");
+                }
 
                 //Magic items have the base item name embedded in the magic name
                 if (si.RarityId == 2)
@@ -83,16 +87,33 @@ namespace ExileClipboardListener.Classes
                         name = name.Substring(prefix.Length + 1, name.Length - prefix.Length - 1);
                         si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + name.Replace("'", "''") + "';");
                     }
+                    baseName = name;
                 }
 
                 //Rare items have a rare name and then the base item name, as do uniques
                 if (si.RarityId == 3 || si.RarityId == 4)
+                {
+                    baseName = entity[2];
                     si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + entity[2].Replace("'", "''") + "';");
+                }
                 RemoveSection(ref entity);
 
                 //And we stop here for Uniques for now anyway
                 if (si.RarityId == 4 || si.BaseItemId == 0)
                     return false;
+
+                //Two-stone rings cause headaches as there are three base items with the same name 
+                //and so we need to know the implicit mod before we can be sure we have the right base item
+                if (baseName == "Two-Stone Ring")
+                {
+                    //This is pretty poor, but works for now
+                    if (item.Contains("to Cold and Lightning Resistances"))
+                        si.BaseItemId = 24;
+                    else if (item.Contains("to Fire and Cold Resistances"))
+                        si.BaseItemId = 25;
+                    else if (item.Contains("to Fire and Lightning Resistances"))
+                        si.BaseItemId = 26;
+                }
 
                 //If we have a base item then load it once
                 GlobalMethods.LoadBaseItem(si.BaseItemId);
@@ -133,7 +154,7 @@ namespace ExileClipboardListener.Classes
                 si.ReqLevelBase = bi.ReqLevel;
 
                 //Some items have no requirements so be careful
-                if (si.ReqLevel != 0)
+                if (si.ReqLevel != 0 || item.Contains("Requirements:"))
                     RemoveSection(ref entity);
 
                 //Sockets
@@ -341,6 +362,9 @@ namespace ExileClipboardListener.Classes
                     {
                         if (!mod.Implicit)
                         {
+                            //Some mods can be implicit and also appear on items
+                            if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
+                                continue;
                             //MessageBox.Show("Not all affixes were parsed, yet, trying to retrofit them!");
                             allAssigned = false;
                             break;
@@ -582,6 +606,8 @@ namespace ExileClipboardListener.Classes
                     {
                         if (!mod.Implicit)
                         {
+                            if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
+                                continue;
                             MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(");
                             break;
                         }
