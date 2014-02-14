@@ -25,6 +25,8 @@ Quick Summary:
 - Filters can be used in Stash Viewer to score your entire stash in one go;
 - Your stash can be exported for use in third-party applications (e.g. Microsoft Excel).
 
+Now allows direct download of your stashed items via JSON from the Path of Exile website.  This new feature is experimental at the moment.
+
 
 ============================
 Known Issues:
