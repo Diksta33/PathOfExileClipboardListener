@@ -9,7 +9,7 @@ namespace ExileClipboardListener.Classes
 {
     public static class ParseItem
     {
-        public static void ParseStash(string item)
+        public static bool ParseStash(string item)
         {
             //There are a number of sections in the entity that vary depending on rarity and item type
             //
@@ -49,7 +49,7 @@ namespace ExileClipboardListener.Classes
                 if (entity.Count() < 2)
                 {
                     MessageBox.Show("Couldn't split item did you lose the carriage-returns somehow?");
-                    return;
+                    return false;
                 }
 
                 si.ItemName = entity[1];
@@ -60,7 +60,7 @@ namespace ExileClipboardListener.Classes
                 if (si.RarityId == 0)
                 {
                     MessageBox.Show("Catastrophic Failure!");
-                    return;
+                    return false;
                 }
 
                 //For normal items there is no item name other than the base item name
@@ -92,7 +92,7 @@ namespace ExileClipboardListener.Classes
 
                 //And we stop here for Uniques for now anyway
                 if (si.RarityId == 4 || si.BaseItemId == 0)
-                    return;
+                    return false;
 
                 //If we have a base item then load it once
                 GlobalMethods.LoadBaseItem(si.BaseItemId);
@@ -603,6 +603,8 @@ namespace ExileClipboardListener.Classes
             {
                 MessageBox.Show("Unhandled exception: " + ex.Message);
             }
+
+            return true;
         }
 
        private static void RemoveSection(ref string[] entity)

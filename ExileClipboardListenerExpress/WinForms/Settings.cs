@@ -47,6 +47,10 @@ namespace ExileClipboardListener.WinForms
             CollectionPopUpPerm.Checked = Properties.Settings.Default.CollectionPopUpMode == 2;
             CollectionPopUpSeconds.Value = Properties.Settings.Default.CollectionPopUpSeconds == 0 ? 1 : Properties.Settings.Default.CollectionPopUpSeconds;
             DefaultTab.SelectedIndex = Properties.Settings.Default.DefaultTabId;
+
+            //Security
+            Username.Text = Properties.Settings.Default.Username;
+            Password.Text = JSON.StringCipher.Decrypt(Properties.Settings.Default.Password);
         }
 
         private void Save_Click(object sender, EventArgs e)
@@ -63,6 +67,8 @@ namespace ExileClipboardListener.WinForms
             Properties.Settings.Default.CollectionPopUpMode = (CollectionPopUpTimed.Checked ? 1 : 2);
             Properties.Settings.Default.CollectionPopUpSeconds = (int)CollectionPopUpSeconds.Value;
             Properties.Settings.Default.DefaultTabId = DefaultTab.SelectedIndex;
+            Properties.Settings.Default.Username = Username.Text;
+            Properties.Settings.Default.Password = JSON.StringCipher.Encrypt(Properties.Settings.Default.Password);
             Properties.Settings.Default.Save();
             Hide();
         }

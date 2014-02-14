@@ -68,6 +68,11 @@
             this.CollectionPopUpSeconds = new System.Windows.Forms.NumericUpDown();
             this.CollectionPopUpPerm = new System.Windows.Forms.RadioButton();
             this.CollectionPopUpTimed = new System.Windows.Forms.RadioButton();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.Username = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.Password = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StashPopUpSeconds)).BeginInit();
@@ -83,6 +88,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.TolerancePoorFrom)).BeginInit();
             this.groupBox7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CollectionPopUpSeconds)).BeginInit();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -590,11 +596,58 @@
             this.CollectionPopUpTimed.Text = "Pops Up For";
             this.CollectionPopUpTimed.UseVisualStyleBackColor = true;
             // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.Password);
+            this.groupBox8.Controls.Add(this.label13);
+            this.groupBox8.Controls.Add(this.Username);
+            this.groupBox8.Controls.Add(this.label12);
+            this.groupBox8.Location = new System.Drawing.Point(227, 267);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(209, 81);
+            this.groupBox8.TabIndex = 9;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Security (Optional)";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 23);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(55, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Username";
+            // 
+            // Username
+            // 
+            this.Username.Location = new System.Drawing.Point(70, 20);
+            this.Username.Name = "Username";
+            this.Username.Size = new System.Drawing.Size(133, 20);
+            this.Username.TabIndex = 1;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(9, 46);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(53, 13);
+            this.label13.TabIndex = 2;
+            this.label13.Text = "Password";
+            // 
+            // Password
+            // 
+            this.Password.Location = new System.Drawing.Point(70, 46);
+            this.Password.Name = "Password";
+            this.Password.PasswordChar = '*';
+            this.Password.Size = new System.Drawing.Size(133, 20);
+            this.Password.TabIndex = 3;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(449, 440);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.button2);
@@ -632,6 +685,8 @@
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CollectionPopUpSeconds)).EndInit();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -678,5 +733,10 @@
         private System.Windows.Forms.RadioButton CollectionPopUpPerm;
         private System.Windows.Forms.RadioButton CollectionPopUpTimed;
         private System.Windows.Forms.ComboBox DefaultTab;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.TextBox Password;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox Username;
+        private System.Windows.Forms.Label label12;
     }
 }

@@ -44,5 +44,11 @@
     <Setting Name="DefaultTabId" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="Username" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Diablo</Value>
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Diablo</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

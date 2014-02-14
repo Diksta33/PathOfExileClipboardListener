@@ -112,6 +112,11 @@ namespace ExileClipboardListener.Classes
         public static List<object[]> CLevelResults = new List<object[]>();
         public static List<object[]> ItemResults = new List<object[]>();
 
+        public static string DecryptCredentials()
+        {
+            return JSON.StringCipher.Decrypt(Properties.Settings.Default.Password);
+        }
+
         public static void ClearStash()
         {
             StashItem.ItemName = "";
@@ -647,6 +652,81 @@ namespace ExileClipboardListener.Classes
             catch (Exception ex)
             {
                 MessageBox.Show("Unhandled exception: " + ex.Message);
+            }
+        }
+
+        public static void SaveStash(int leagueId)
+        {
+            //Save this item to the database
+            string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
+            sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, DamageElementalMin, DamageElementalMax,";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, OriginalText)";
+            sql += " VALUES(";
+
+            //League
+            sql += leagueId + ",";
+
+            //Basic Details
+            sql += "'" + StashItem.ItemName.Replace("'", "''") + "',";
+            sql += (StashItem.BaseItemId == 0 ? "NULL" : StashItem.BaseItemId.ToString()) + ",";
+            sql += StashItem.RarityId + ",";
+            sql += StashItem.Quality + ",";
+            sql += StashItem.ItemLevel + ",";
+            sql += StashItem.ReqLevelBase + ",";
+
+            //Armour
+            sql += StashItem.Armour + ",";
+            sql += StashItem.Evasion + ",";
+            sql += StashItem.EnergyShield + ",";
+
+            //Weapons
+            sql += StashItem.AttacksPerSecond + ",";
+            sql += StashItem.PhysicalDamageMin + ",";
+            sql += StashItem.PhysicalDamageMax + ",";
+            sql += StashItem.ElementalDamageMin + ",";
+            sql += StashItem.ElementalDamageMin + ",";
+
+            //Implict Affix
+            sql += (StashItem.Affix[0].Mod1.Id == 0 ? "NULL" : StashItem.Affix[0].Mod1.Id.ToString()) + ",";
+            sql += (StashItem.Affix[0].Mod1.Value == 0 ? "NULL" : StashItem.Affix[0].Mod1.Value.ToString()) + ",";
+            sql += (StashItem.Affix[0].Mod2.Id == 0 ? "NULL" : StashItem.Affix[0].Mod2.Id.ToString()) + ",";
+            sql += (StashItem.Affix[0].Mod2.Value == 0 ? "NULL" : StashItem.Affix[0].Mod2.Value.ToString()) + ",";
+
+            //Original Text
+            sql += "'" + StashItem.OriginalText.Replace("'", "''") + "')";
+
+            //Stash this item
+            GlobalMethods.RunQuery(sql);
+
+            //This is particularly nasty, but I don't know how else to get the StashId for the item we just stashed
+            int stashId = GlobalMethods.GetScalarInt("SELECT MAX(StashId) FROM Stash;");
+
+            //Now stash the affixes
+            //Turned off for now as we don't strictly need them
+            //for (int key = 1; key < 7; key++)
+            //{
+            //    sql = "INSERT INTO StashAffix(StashId, AffixType, AffixId, Mod1Id, Mod1Value, Mod2Id, Mod2Value) VALUES (";
+            //    sql += stashId + ",";
+            //    sql += (key < 4 ? "'Prefix'" : "'Suffix'") + ",";
+            //    sql += (StashItem.Affix[key].AffixId == 0 ? "NULL" : StashItem.Affix[key].AffixId.ToString()) + ",";
+            //    sql += (StashItem.Affix[key].Mod1.Id == 0 ? "NULL" : StashItem.Affix[key].Mod1.Id.ToString()) + ",";
+            //    sql += (StashItem.Affix[key].Mod1.Value == 0 ? "NULL" : StashItem.Affix[key].Mod1.Value.ToString()) + ",";
+            //    sql += (StashItem.Affix[key].Mod2.Id == 0 ? "NULL" : StashItem.Affix[key].Mod2.Id.ToString()) + ",";
+            //    sql += (StashItem.Affix[key].Mod2.Value == 0 ? "NULL" : StashItem.Affix[key].Mod2.Value.ToString()) + ")";
+            //    GlobalMethods.RunQuery(sql);
+            //}
+
+            //Finally stash the mods
+            for (int mod = 0; mod < 20; mod++)
+            {
+                if (StashItem.Mod[mod].Id == 0)
+                    break;
+                sql = "INSERT INTO StashMod(StashId, StashModId, ModId, ModValue) VALUES (";
+                sql += stashId + ",";
+                sql += (mod + 1) + ",";
+                sql += StashItem.Mod[mod].Id + ",";
+                sql += StashItem.Mod[mod].Value + ")";
+                GlobalMethods.RunQuery(sql);
             }
         }
     }

@@ -40,7 +40,7 @@
             this.DeleteLeague = new System.Windows.Forms.Button();
             this.SaveLeague = new System.Windows.Forms.Button();
             this.NewLeague = new System.Windows.Forms.Button();
-            this.ParentLeague = new System.Windows.Forms.ComboBox();
+            this.LeagueParent = new System.Windows.Forms.ComboBox();
             this.LeagueStart = new System.Windows.Forms.DateTimePicker();
             this.LeagueEnd = new System.Windows.Forms.DateTimePicker();
             this.ClearStash = new System.Windows.Forms.Button();
@@ -53,6 +53,7 @@
             this.LeagueGrid.AllowUserToAddRows = false;
             this.LeagueGrid.AllowUserToDeleteRows = false;
             this.LeagueGrid.AllowUserToResizeRows = false;
+            this.LeagueGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.LeagueGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.LeagueGrid.Location = new System.Drawing.Point(12, 12);
             this.LeagueGrid.Name = "LeagueGrid";
@@ -168,14 +169,14 @@
             this.NewLeague.UseVisualStyleBackColor = true;
             this.NewLeague.Click += new System.EventHandler(this.NewLeague_Click);
             // 
-            // ParentLeague
+            // LeagueParent
             // 
-            this.ParentLeague.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ParentLeague.FormattingEnabled = true;
-            this.ParentLeague.Location = new System.Drawing.Point(196, 255);
-            this.ParentLeague.Name = "ParentLeague";
-            this.ParentLeague.Size = new System.Drawing.Size(175, 21);
-            this.ParentLeague.TabIndex = 16;
+            this.LeagueParent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.LeagueParent.FormattingEnabled = true;
+            this.LeagueParent.Location = new System.Drawing.Point(196, 255);
+            this.LeagueParent.Name = "LeagueParent";
+            this.LeagueParent.Size = new System.Drawing.Size(175, 21);
+            this.LeagueParent.TabIndex = 16;
             // 
             // LeagueStart
             // 
@@ -222,7 +223,7 @@
             this.Controls.Add(this.ClearStash);
             this.Controls.Add(this.LeagueEnd);
             this.Controls.Add(this.LeagueStart);
-            this.Controls.Add(this.ParentLeague);
+            this.Controls.Add(this.LeagueParent);
             this.Controls.Add(this.NewLeague);
             this.Controls.Add(this.SaveLeague);
             this.Controls.Add(this.DeleteLeague);
@@ -261,7 +262,7 @@
         private System.Windows.Forms.Button DeleteLeague;
         private System.Windows.Forms.Button SaveLeague;
         private System.Windows.Forms.Button NewLeague;
-        private System.Windows.Forms.ComboBox ParentLeague;
+        private System.Windows.Forms.ComboBox LeagueParent;
         private System.Windows.Forms.DateTimePicker LeagueStart;
         private System.Windows.Forms.DateTimePicker LeagueEnd;
         private System.Windows.Forms.Button ClearStash;

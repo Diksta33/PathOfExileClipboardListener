@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>17</ApplicationRevision>
+    <ApplicationRevision>18</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -79,6 +79,7 @@
     <Reference Include="System.Data.SQLite">
       <HintPath>bin\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -93,6 +94,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Classes\ParseItem.cs" />
+    <Compile Include="JSON\DataContracts.cs" />
+    <Compile Include="JSON\Encryption.cs" />
+    <Compile Include="JSON\Extensions.cs" />
+    <Compile Include="JSON\Model.cs" />
+    <Compile Include="JSON\Parser.cs" />
+    <Compile Include="JSON\POEWeb.cs" />
+    <Compile Include="JSON\Throttle.cs" />
     <Compile Include="WinForms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +135,12 @@
     </Compile>
     <Compile Include="WinForms\Filters.Designer.cs">
       <DependentUpon>Filters.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\JSONReader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\JSONReader.Designer.cs">
+      <DependentUpon>JSONReader.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\League.cs">
       <SubType>Form</SubType>
@@ -187,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\Filters.resx">
       <DependentUpon>Filters.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\JSONReader.resx">
+      <DependentUpon>JSONReader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\League.resx">
       <DependentUpon>League.cs</DependentUpon>
@@ -281,6 +298,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

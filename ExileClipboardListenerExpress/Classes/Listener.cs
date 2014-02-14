@@ -40,19 +40,20 @@ namespace ExileClipboardListener.Classes
 
                 //If we get here then something is going to end up being messed up if we already have the pop up form open
                 _loaded = true;
-                ParseItem.ParseStash(item);
-
-                //If we are in collection mode pop up a window
-                DialogResult dr = DialogResult.None;
-                if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
-                    dr = new ItemInformation().ShowDialog();
-
-                //Stash the item if we are in stash mode or said to stash it from the pop up
-                if (GlobalMethods.Mode == GlobalMethods.STASH_MODE || dr == DialogResult.OK)
+                if (ParseItem.ParseStash(item))
                 {
-                    SaveStash();
-                    if (Properties.Settings.Default.StashPopUpMode != 0)
-                        new PopUpStashed().ShowDialog();
+                    //If we are in collection mode pop up a window
+                    DialogResult dr = DialogResult.None;
+                    if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
+                        dr = new ItemInformation().ShowDialog();
+
+                    //Stash the item if we are in stash mode or said to stash it from the pop up
+                    if (GlobalMethods.Mode == GlobalMethods.STASH_MODE || dr == DialogResult.OK)
+                    {
+                        GlobalMethods.SaveStash(GlobalMethods.LeagueId);
+                        if (Properties.Settings.Default.StashPopUpMode != 0)
+                            new PopUpStashed().ShowDialog();
+                    }
                 }
 
                 //Now handle the event
@@ -78,81 +79,6 @@ namespace ExileClipboardListener.Classes
             if (item.Substring(0, 6) != "Rarity")
                 return false;
             return true;
-        }
-
-        private static void SaveStash()
-        {
-            //Save this item to the database
-            string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
-            sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, DamageElementalMin, DamageElementalMax,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, OriginalText)";
-            sql += " VALUES(";
-
-            //League
-            sql += GlobalMethods.LeagueId + ",";
-
-            //Basic Details
-            sql += "'" + si.ItemName + "',";
-            sql += (si.BaseItemId == 0 ? "NULL" : si.BaseItemId.ToString()) + ",";
-            sql += si.RarityId + ",";
-            sql += si.Quality + ",";
-            sql += si.ItemLevel + ",";
-            sql += si.ReqLevelBase + ",";
-
-            //Armour
-            sql += si.Armour + ",";
-            sql += si.Evasion + ",";
-            sql += si.EnergyShield + ",";
-
-            //Weapons
-            sql += si.AttacksPerSecond + ",";
-            sql += si.PhysicalDamageMin + ",";
-            sql += si.PhysicalDamageMax + ",";
-            sql += si.ElementalDamageMin + ",";
-            sql += si.ElementalDamageMin + ",";
-
-            //Implict Affix
-            sql += (si.Affix[0].Mod1.Id == 0 ? "NULL" : si.Affix[0].Mod1.Id.ToString()) + ",";
-            sql += (si.Affix[0].Mod1.Value == 0 ? "NULL" : si.Affix[0].Mod1.Value.ToString()) + ",";
-            sql += (si.Affix[0].Mod2.Id == 0 ? "NULL" : si.Affix[0].Mod2.Id.ToString()) + ",";
-            sql += (si.Affix[0].Mod2.Value == 0 ? "NULL" : si.Affix[0].Mod2.Value.ToString()) + ",";
-            
-            //Original Text
-            sql += "'" + si.OriginalText.Replace("'", "''") + "')";
-
-            //Stash this item
-            GlobalMethods.RunQuery(sql);
-
-            //This is particularly nasty, but I don't know how else to get the StashId for the item we just stashed
-            int stashId = GlobalMethods.GetScalarInt("SELECT MAX(StashId) FROM Stash;");
-
-            //Now stash the affixes
-            //Turned off for now as we don't strictly need them
-            //for (int key = 1; key < 7; key++)
-            //{
-            //    sql = "INSERT INTO StashAffix(StashId, AffixType, AffixId, Mod1Id, Mod1Value, Mod2Id, Mod2Value) VALUES (";
-            //    sql += stashId + ",";
-            //    sql += (key < 4 ? "'Prefix'" : "'Suffix'") + ",";
-            //    sql += (si.Affix[key].AffixId == 0 ? "NULL" : si.Affix[key].AffixId.ToString()) + ",";
-            //    sql += (si.Affix[key].Mod1.Id == 0 ? "NULL" : si.Affix[key].Mod1.Id.ToString()) + ",";
-            //    sql += (si.Affix[key].Mod1.Value == 0 ? "NULL" : si.Affix[key].Mod1.Value.ToString()) + ",";
-            //    sql += (si.Affix[key].Mod2.Id == 0 ? "NULL" : si.Affix[key].Mod2.Id.ToString()) + ",";
-            //    sql += (si.Affix[key].Mod2.Value == 0 ? "NULL" : si.Affix[key].Mod2.Value.ToString()) + ")";
-            //    GlobalMethods.RunQuery(sql);
-            //}
-
-            //Finally stash the mods
-            for (int mod = 0; mod < 20; mod++)
-            {
-                if (si.Mod[mod].Id == 0)
-                    break;
-                sql = "INSERT INTO StashMod(StashId, StashModId, ModId, ModValue) VALUES (";
-                sql += stashId + ",";
-                sql += (mod + 1) + ",";
-                sql += si.Mod[mod].Id + ",";
-                sql += si.Mod[mod].Value + ")";
-                GlobalMethods.RunQuery(sql);
-            }        
         }
 
         //Hidden form to recieve the WM_CLIPBOARDUPDATE message

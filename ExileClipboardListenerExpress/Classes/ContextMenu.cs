@@ -12,6 +12,8 @@ namespace ExileClipboardListener.Classes
         private bool _stashLoaded;
         private bool _filtersLoaded;
         private bool _settingsLoaded;
+        private bool _downloadStashLoaded;
+
         public ContextMenuStrip Menu = new ContextMenuStrip();
 
         public ContextMenuStrip Create()
@@ -48,6 +50,11 @@ namespace ExileClipboardListener.Classes
             //Separator
             sep = new ToolStripSeparator();
             Menu.Items.Add(sep);
+
+            //Download Stash
+            item = new ToolStripMenuItem { Text = "Download Stash" };
+            item.Click += DownloadStashClick;
+            Menu.Items.Add(item);
 
             //View Stash
             item = new ToolStripMenuItem { Text = "View Stash" };
@@ -152,6 +159,16 @@ namespace ExileClipboardListener.Classes
                 _settingsLoaded = true;
                 new Settings().ShowDialog();
                 _settingsLoaded = false;
+            }
+        }
+
+        private void DownloadStashClick(object sender, EventArgs e)
+        {
+            if (!_downloadStashLoaded)
+            {
+                _downloadStashLoaded = true;
+                new JSONReader().ShowDialog();
+                _downloadStashLoaded = false;
             }
         }
 
