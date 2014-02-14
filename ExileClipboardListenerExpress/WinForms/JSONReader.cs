@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using ExileClipboardListener.JSON;
 using ExileClipboardListener.Classes;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace ExileClipboardListener.WinForms
 {
@@ -21,6 +20,11 @@ namespace ExileClipboardListener.WinForms
 
         private void Logon_Click(object sender, EventArgs e)
         {
+            if (Properties.Settings.Default.Username == Properties.Settings.Default.PropertyValues["Username"].Property.DefaultValue.ToString())
+            {
+                MessageBox.Show("You need to enter your username/ password in the Settings before you can use this feature!");
+                return;
+            }
             Cursor.Current = Cursors.WaitCursor;
             if (POEWeb.Authenticate())
             {
@@ -83,13 +87,13 @@ namespace ExileClipboardListener.WinForms
             //Get the text description
             int index = ItemList.SelectedIndex;
             var i = _stash.Items[index];
-            string item = JSON.Parser.ParseItem(i);
+            string item = Parser.ParseItem(i);
             ItemScript.Text = item;
 
             //Get the icon image
             var size = new Size(32 * i.Width, 32 * i.Height);
             ItemIcon.Size = size;
-            ItemIcon.Image = JSON.Parser.GetImage(i.Icon);
+            ItemIcon.Image = Parser.GetImage(i.Icon);
         }
 
         private void StashAll_Click(object sender, EventArgs e)
@@ -97,9 +101,9 @@ namespace ExileClipboardListener.WinForms
             //Parse each item in the list, add them one at a time to the stash for the current league
             for (int i = 0; i < ItemList.Items.Count; i++)
             {
-                toolStripStatusLabel1.Text = "Parsing " + _stash.Items[i].TypeLine + "... " + ((i * 100) / ItemList.Items.Count).ToString() + "%";
+                toolStripStatusLabel1.Text = "Parsing " + _stash.Items[i].TypeLine + "... " + ((i * 100) / ItemList.Items.Count) + "%";
                 Application.DoEvents();
-                string itemText = JSON.Parser.ParseItem(_stash.Items[i]);
+                string itemText = Parser.ParseItem(_stash.Items[i]);
                 if (ParseItem.ParseStash(itemText))
                     GlobalMethods.SaveStash(_leagueId);
             }
@@ -110,7 +114,7 @@ namespace ExileClipboardListener.WinForms
         {
             if (ItemList.SelectedIndex == -1)
                 return;
-            string itemText = JSON.Parser.ParseItem(_stash.Items[ItemList.SelectedIndex]);
+            string itemText = Parser.ParseItem(_stash.Items[ItemList.SelectedIndex]);
             if (ParseItem.ParseStash(itemText))
             {
                 GlobalMethods.SaveStash(_leagueId);

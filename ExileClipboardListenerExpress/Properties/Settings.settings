@@ -45,10 +45,10 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="Username" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Diablo</Value>
+      <Value Profile="(Default)">The Butcher</Value>
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Diablo</Value>
+      <Value Profile="(Default)">Fresh Meat</Value>
     </Setting>
   </Settings>
 </SettingsFile>

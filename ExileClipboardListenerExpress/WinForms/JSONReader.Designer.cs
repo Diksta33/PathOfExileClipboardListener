@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Logon = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StashTab = new System.Windows.Forms.ComboBox();
@@ -49,6 +49,9 @@
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AddStash = new System.Windows.Forms.Button();
             this.GrabStashTabs = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ItemIcon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CharacterGrid)).BeginInit();
@@ -169,7 +172,7 @@
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 606);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(777, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(799, 22);
             this.statusStrip1.TabIndex = 18;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -201,8 +204,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle4.Format = "N0";
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Format = "N0";
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
             this.Column1.HeaderText = "Level";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -234,7 +237,7 @@
             this.AddStash.Enabled = false;
             this.AddStash.Location = new System.Drawing.Point(691, 551);
             this.AddStash.Name = "AddStash";
-            this.AddStash.Size = new System.Drawing.Size(78, 23);
+            this.AddStash.Size = new System.Drawing.Size(96, 23);
             this.AddStash.TabIndex = 20;
             this.AddStash.Text = "Add to Stash";
             this.AddStash.UseVisualStyleBackColor = true;
@@ -251,11 +254,42 @@
             this.GrabStashTabs.UseVisualStyleBackColor = true;
             this.GrabStashTabs.Click += new System.EventHandler(this.GrabStashTabs_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(13, 281);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(46, 13);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "Item List";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(381, 281);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.TabIndex = 23;
+            this.label4.Text = "Item Script";
+            // 
+            // button1
+            // 
+            this.button1.Enabled = false;
+            this.button1.Location = new System.Drawing.Point(691, 41);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(103, 23);
+            this.button1.TabIndex = 24;
+            this.button1.Text = "Grab Inventory";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // JSONReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(777, 628);
+            this.ClientSize = new System.Drawing.Size(799, 628);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.GrabStashTabs);
             this.Controls.Add(this.AddStash);
             this.Controls.Add(this.CharacterGrid);
@@ -275,7 +309,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "JSONReader";
-            this.Text = "JSONReader";
+            this.Text = "Stash Downloader";
             this.Load += new System.EventHandler(this.JSONReader_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ItemIcon)).EndInit();
             this.statusStrip1.ResumeLayout(false);
@@ -308,5 +342,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
         private System.Windows.Forms.Button AddStash;
         private System.Windows.Forms.Button GrabStashTabs;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button1;
     }
 }

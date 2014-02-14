@@ -68,7 +68,7 @@ namespace ExileClipboardListener.WinForms
             Properties.Settings.Default.CollectionPopUpSeconds = (int)CollectionPopUpSeconds.Value;
             Properties.Settings.Default.DefaultTabId = DefaultTab.SelectedIndex;
             Properties.Settings.Default.Username = Username.Text;
-            Properties.Settings.Default.Password = JSON.StringCipher.Encrypt(Properties.Settings.Default.Password);
+            Properties.Settings.Default.Password = JSON.StringCipher.Encrypt(Password.Text);
             Properties.Settings.Default.Save();
             Hide();
         }

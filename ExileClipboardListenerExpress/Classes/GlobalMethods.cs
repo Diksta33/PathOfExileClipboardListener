@@ -696,10 +696,10 @@ namespace ExileClipboardListener.Classes
             sql += "'" + StashItem.OriginalText.Replace("'", "''") + "')";
 
             //Stash this item
-            GlobalMethods.RunQuery(sql);
+            RunQuery(sql);
 
             //This is particularly nasty, but I don't know how else to get the StashId for the item we just stashed
-            int stashId = GlobalMethods.GetScalarInt("SELECT MAX(StashId) FROM Stash;");
+            int stashId = GetScalarInt("SELECT MAX(StashId) FROM Stash;");
 
             //Now stash the affixes
             //Turned off for now as we don't strictly need them
@@ -726,7 +726,7 @@ namespace ExileClipboardListener.Classes
                 sql += (mod + 1) + ",";
                 sql += StashItem.Mod[mod].Id + ",";
                 sql += StashItem.Mod[mod].Value + ")";
-                GlobalMethods.RunQuery(sql);
+                RunQuery(sql);
             }
         }
     }
