@@ -25,7 +25,7 @@ Quick Summary:
 - Filters can be used in Stash Viewer to score your entire stash in one go;
 - Your stash can be exported for use in third-party applications (e.g. Microsoft Excel).
 
-Now allows direct download of your stashed items via JSON from the Path of Exile website.  This new feature is experimental at the moment.
+Now allows direct download of your stashed items via JSON from the Path of Exile website.  This new feature is experimental at the moment.  Note that Item Level can't be parsed this way (to my knowledge) so I have to assume that every item is iLevel 100 :(
 
 
 ============================
