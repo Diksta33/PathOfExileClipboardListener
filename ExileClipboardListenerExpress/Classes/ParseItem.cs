@@ -104,6 +104,7 @@ namespace ExileClipboardListener.Classes
 
                 //Two-stone rings cause headaches as there are three base items with the same name 
                 //and so we need to know the implicit mod before we can be sure we have the right base item
+                //TODO: this needs improving
                 if (baseName == "Two-Stone Ring")
                 {
                     //This is pretty poor, but works for now
@@ -191,7 +192,7 @@ namespace ExileClipboardListener.Classes
                 }
 
                 //Secondary
-                //If there is a secondary implicit mod then it's just a case of looking up the values and storing them (as there is no roll - yet!)
+                //If there is a secondary implicit mod then we check this the same way
                 if (bi.Mod2.Id != 0)
                 {
                     var implicitMod = GlobalMethods.LookUpMod(bi.Mod2.Id);
@@ -363,6 +364,7 @@ namespace ExileClipboardListener.Classes
                         if (!mod.Implicit)
                         {
                             //Some mods can be implicit and also appear on items
+                            //TODO: this needs improving!
                             if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
                                 continue;
                             //MessageBox.Show("Not all affixes were parsed, yet, trying to retrofit them!");
@@ -606,6 +608,7 @@ namespace ExileClipboardListener.Classes
                     {
                         if (!mod.Implicit)
                         {
+                            //TODO: this needs improving!
                             if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
                                 continue;
                             MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(");

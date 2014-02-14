@@ -187,12 +187,14 @@ namespace ExileClipboardListener.JSON
 
         public class JSONTab
         {
-            public string N { get; set; }
-            public int I { get; set; }
-            public Colour Colour { get; set; }
-            public string SrcL { get; set; }
-            public string SrcC { get; set; }
-            public string SrcR { get; set; }
+            // ReSharper disable InconsistentNaming
+            public string n { get; set; }
+            public int i { get; set; }
+            public Colour colour { get; set; }
+            public string srcL { get; set; }
+            public string srcC { get; set; }
+            public string srcR { get; set; }
+            // ReSharper restore InconsistentNaming
         }
     }
 }

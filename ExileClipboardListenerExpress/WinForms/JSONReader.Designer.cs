@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Logon = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StashTab = new System.Windows.Forms.ComboBox();
@@ -43,15 +43,15 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.CharacterGrid = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CharacterGridNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CharacterGridLeagueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AddStash = new System.Windows.Forms.Button();
             this.GrabStashTabs = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.GrabInventory = new System.Windows.Forms.Button();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CharacterGridNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CharacterGridLeagueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ViewItem = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ItemIcon)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -84,7 +84,7 @@
             this.StashTab.FormattingEnabled = true;
             this.StashTab.Location = new System.Drawing.Point(75, 233);
             this.StashTab.Name = "StashTab";
-            this.StashTab.Size = new System.Drawing.Size(128, 21);
+            this.StashTab.Size = new System.Drawing.Size(505, 21);
             this.StashTab.TabIndex = 9;
             // 
             // label1
@@ -103,12 +103,13 @@
             this.League.FormattingEnabled = true;
             this.League.Location = new System.Drawing.Point(75, 206);
             this.League.Name = "League";
-            this.League.Size = new System.Drawing.Size(212, 21);
+            this.League.Size = new System.Drawing.Size(505, 21);
             this.League.Sorted = true;
             this.League.TabIndex = 7;
             // 
             // ItemIcon
             // 
+            this.ItemIcon.BackColor = System.Drawing.Color.DarkBlue;
             this.ItemIcon.Location = new System.Drawing.Point(691, 297);
             this.ItemIcon.Name = "ItemIcon";
             this.ItemIcon.Size = new System.Drawing.Size(32, 32);
@@ -147,9 +148,9 @@
             // GrabStash
             // 
             this.GrabStash.Enabled = false;
-            this.GrabStash.Location = new System.Drawing.Point(209, 233);
+            this.GrabStash.Location = new System.Drawing.Point(586, 235);
             this.GrabStash.Name = "GrabStash";
-            this.GrabStash.Size = new System.Drawing.Size(78, 23);
+            this.GrabStash.Size = new System.Drawing.Size(99, 23);
             this.GrabStash.TabIndex = 12;
             this.GrabStash.Text = "Grab Stash";
             this.GrabStash.UseVisualStyleBackColor = true;
@@ -203,6 +204,36 @@
             this.CharacterGrid.TabIndex = 19;
             this.CharacterGrid.SelectionChanged += new System.EventHandler(this.CharacterGrid_SelectionChanged);
             // 
+            // Column1
+            // 
+            dataGridViewCellStyle1.Format = "N0";
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Column1.HeaderText = "Level";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 58;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "Class";
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Width = 57;
+            // 
+            // CharacterGridNameColumn
+            // 
+            this.CharacterGridNameColumn.HeaderText = "Name";
+            this.CharacterGridNameColumn.Name = "CharacterGridNameColumn";
+            this.CharacterGridNameColumn.ReadOnly = true;
+            this.CharacterGridNameColumn.Width = 60;
+            // 
+            // CharacterGridLeagueColumn
+            // 
+            this.CharacterGridLeagueColumn.HeaderText = "League";
+            this.CharacterGridLeagueColumn.Name = "CharacterGridLeagueColumn";
+            this.CharacterGridLeagueColumn.ReadOnly = true;
+            this.CharacterGridLeagueColumn.Width = 68;
+            // 
             // AddStash
             // 
             this.AddStash.Enabled = false;
@@ -217,7 +248,7 @@
             // GrabStashTabs
             // 
             this.GrabStashTabs.Enabled = false;
-            this.GrabStashTabs.Location = new System.Drawing.Point(293, 206);
+            this.GrabStashTabs.Location = new System.Drawing.Point(586, 206);
             this.GrabStashTabs.Name = "GrabStashTabs";
             this.GrabStashTabs.Size = new System.Drawing.Size(99, 23);
             this.GrabStashTabs.TabIndex = 21;
@@ -253,36 +284,6 @@
             this.GrabInventory.Text = "Grab Inventory";
             this.GrabInventory.UseVisualStyleBackColor = true;
             this.GrabInventory.Click += new System.EventHandler(this.GrabInventory_Click);
-            // 
-            // Column1
-            // 
-            dataGridViewCellStyle2.Format = "N0";
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Column1.HeaderText = "Level";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 58;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Class";
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Width = 57;
-            // 
-            // CharacterGridNameColumn
-            // 
-            this.CharacterGridNameColumn.HeaderText = "Name";
-            this.CharacterGridNameColumn.Name = "CharacterGridNameColumn";
-            this.CharacterGridNameColumn.ReadOnly = true;
-            this.CharacterGridNameColumn.Width = 60;
-            // 
-            // CharacterGridLeagueColumn
-            // 
-            this.CharacterGridLeagueColumn.HeaderText = "League";
-            this.CharacterGridLeagueColumn.Name = "CharacterGridLeagueColumn";
-            this.CharacterGridLeagueColumn.ReadOnly = true;
-            this.CharacterGridLeagueColumn.Width = 68;
             // 
             // ViewItem
             // 

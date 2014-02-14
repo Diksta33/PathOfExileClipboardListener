@@ -71,8 +71,13 @@ namespace ExileClipboardListener.WinForms
         {
             GetCurrentLeague();
             ItemList.Items.Clear();
+
+            //Determine the tab number
+            string tabNumber = StashTab.Text.Split('[')[1].Split(']')[0];
+            while (tabNumber.Length > 1 && tabNumber.Substring(0, 1) == "0")
+                tabNumber = tabNumber.Substring(1, tabNumber.Length - 1);
             Cursor.Current = Cursors.WaitCursor;
-            _stash = POEWeb.GetStash(League.Text, StashTab.Text);
+            _stash = POEWeb.GetStash(League.Text, tabNumber);
             Cursor.Current = Cursors.Default;
             foreach (var i in _stash.Items)
                 ItemList.Items.Add(i.TypeLine);
@@ -135,8 +140,8 @@ namespace ExileClipboardListener.WinForms
             Cursor.Current = Cursors.WaitCursor;
             _stash = POEWeb.GetStash(League.Text, "1");
             Cursor.Current = Cursors.Default;
-            for (int tab = 1; tab <= _stash.NumTabs; tab++)
-                StashTab.Items.Add(tab.ToString());
+            for (int tab = 0; tab < _stash.NumTabs; tab++)
+                StashTab.Items.Add("Tab [" + tab.ToString("000") + "] " + _stash.Tabs[tab].n);
             if (StashTab.Items.Count > 0)
                 StashTab.SelectedIndex = 0;
             StashTab.Enabled = true;
