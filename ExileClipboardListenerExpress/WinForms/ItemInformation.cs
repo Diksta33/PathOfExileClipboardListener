@@ -106,10 +106,15 @@ namespace ExileClipboardListener.WinForms
             ReqLevelBase.Text = si.ReqLevelBase.ToString();
             ReqStr.Text = bi.ReqStr.ToString(); 
             ReqDex.Text = bi.ReqDex.ToString(); 
-            ReqInt.Text = bi.ReqInt.ToString(); 
+            ReqInt.Text = bi.ReqInt.ToString();
 
             //Sockets
             Sockets.Text = si.Sockets;
+
+            //Icon
+            var size = new Size(32 * bi.IconWidth, 32 * bi.IconHeight);
+            ItemIcon.Size = size;
+            ItemIcon.Image = bi.Icon;
 
             //Show all mods
             foreach (GlobalMethods.Mod m in si.Mod)

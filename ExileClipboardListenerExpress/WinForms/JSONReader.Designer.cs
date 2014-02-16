@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Logon = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StashTab = new System.Windows.Forms.ComboBox();
@@ -36,7 +36,6 @@
             this.League = new System.Windows.Forms.ComboBox();
             this.ItemIcon = new System.Windows.Forms.PictureBox();
             this.ItemScript = new System.Windows.Forms.RichTextBox();
-            this.GrabCharacters = new System.Windows.Forms.Button();
             this.ItemList = new System.Windows.Forms.ListBox();
             this.GrabStash = new System.Windows.Forms.Button();
             this.StashAll = new System.Windows.Forms.Button();
@@ -48,11 +47,11 @@
             this.CharacterGridNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CharacterGridLeagueColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AddStash = new System.Windows.Forms.Button();
-            this.GrabStashTabs = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.GrabInventory = new System.Windows.Forms.Button();
             this.ViewItem = new System.Windows.Forms.Button();
+            this.StashLeague = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ItemIcon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CharacterGrid)).BeginInit();
@@ -71,7 +70,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 238);
+            this.label2.Location = new System.Drawing.Point(13, 211);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 10;
@@ -82,7 +81,7 @@
             this.StashTab.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.StashTab.Enabled = false;
             this.StashTab.FormattingEnabled = true;
-            this.StashTab.Location = new System.Drawing.Point(75, 233);
+            this.StashTab.Location = new System.Drawing.Point(75, 206);
             this.StashTab.Name = "StashTab";
             this.StashTab.Size = new System.Drawing.Size(505, 21);
             this.StashTab.TabIndex = 9;
@@ -90,7 +89,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 209);
+            this.label1.Location = new System.Drawing.Point(98, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 8;
@@ -101,11 +100,12 @@
             this.League.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.League.Enabled = false;
             this.League.FormattingEnabled = true;
-            this.League.Location = new System.Drawing.Point(75, 206);
+            this.League.Location = new System.Drawing.Point(160, 12);
             this.League.Name = "League";
-            this.League.Size = new System.Drawing.Size(505, 21);
+            this.League.Size = new System.Drawing.Size(525, 21);
             this.League.Sorted = true;
             this.League.TabIndex = 7;
+            this.League.SelectedIndexChanged += new System.EventHandler(this.League_SelectedIndexChanged);
             // 
             // ItemIcon
             // 
@@ -119,36 +119,25 @@
             // 
             // ItemScript
             // 
-            this.ItemScript.Location = new System.Drawing.Point(384, 297);
+            this.ItemScript.Location = new System.Drawing.Point(384, 255);
             this.ItemScript.Name = "ItemScript";
-            this.ItemScript.Size = new System.Drawing.Size(301, 277);
+            this.ItemScript.Size = new System.Drawing.Size(301, 348);
             this.ItemScript.TabIndex = 15;
             this.ItemScript.Text = "";
-            // 
-            // GrabCharacters
-            // 
-            this.GrabCharacters.Enabled = false;
-            this.GrabCharacters.Location = new System.Drawing.Point(93, 12);
-            this.GrabCharacters.Name = "GrabCharacters";
-            this.GrabCharacters.Size = new System.Drawing.Size(78, 23);
-            this.GrabCharacters.TabIndex = 14;
-            this.GrabCharacters.Text = "Grab Chars";
-            this.GrabCharacters.UseVisualStyleBackColor = true;
-            this.GrabCharacters.Click += new System.EventHandler(this.GrabCharacters_Click);
             // 
             // ItemList
             // 
             this.ItemList.FormattingEnabled = true;
-            this.ItemList.Location = new System.Drawing.Point(12, 297);
+            this.ItemList.Location = new System.Drawing.Point(12, 255);
             this.ItemList.Name = "ItemList";
-            this.ItemList.Size = new System.Drawing.Size(366, 277);
+            this.ItemList.Size = new System.Drawing.Size(366, 316);
             this.ItemList.TabIndex = 13;
             this.ItemList.SelectedIndexChanged += new System.EventHandler(this.ItemList_SelectedIndexChanged);
             // 
             // GrabStash
             // 
             this.GrabStash.Enabled = false;
-            this.GrabStash.Location = new System.Drawing.Point(586, 235);
+            this.GrabStash.Location = new System.Drawing.Point(586, 206);
             this.GrabStash.Name = "GrabStash";
             this.GrabStash.Size = new System.Drawing.Size(99, 23);
             this.GrabStash.TabIndex = 12;
@@ -173,7 +162,7 @@
             this.toolStripStatusLabel1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 606);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(799, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(820, 22);
             this.statusStrip1.TabIndex = 18;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -206,8 +195,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle1.Format = "N0";
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Format = "N0";
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
             this.Column1.HeaderText = "Level";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -239,27 +228,16 @@
             this.AddStash.Enabled = false;
             this.AddStash.Location = new System.Drawing.Point(691, 551);
             this.AddStash.Name = "AddStash";
-            this.AddStash.Size = new System.Drawing.Size(96, 23);
+            this.AddStash.Size = new System.Drawing.Size(117, 23);
             this.AddStash.TabIndex = 20;
             this.AddStash.Text = "Add to Stash";
             this.AddStash.UseVisualStyleBackColor = true;
             this.AddStash.Click += new System.EventHandler(this.AddStash_Click);
             // 
-            // GrabStashTabs
-            // 
-            this.GrabStashTabs.Enabled = false;
-            this.GrabStashTabs.Location = new System.Drawing.Point(586, 206);
-            this.GrabStashTabs.Name = "GrabStashTabs";
-            this.GrabStashTabs.Size = new System.Drawing.Size(99, 23);
-            this.GrabStashTabs.TabIndex = 21;
-            this.GrabStashTabs.Text = "Grab Stash Tabs";
-            this.GrabStashTabs.UseVisualStyleBackColor = true;
-            this.GrabStashTabs.Click += new System.EventHandler(this.GrabStashTabs_Click);
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 281);
+            this.label3.Location = new System.Drawing.Point(13, 239);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 22;
@@ -268,7 +246,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(381, 281);
+            this.label4.Location = new System.Drawing.Point(381, 239);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 23;
@@ -279,7 +257,7 @@
             this.GrabInventory.Enabled = false;
             this.GrabInventory.Location = new System.Drawing.Point(691, 41);
             this.GrabInventory.Name = "GrabInventory";
-            this.GrabInventory.Size = new System.Drawing.Size(103, 23);
+            this.GrabInventory.Size = new System.Drawing.Size(117, 23);
             this.GrabInventory.TabIndex = 24;
             this.GrabInventory.Text = "Grab Inventory";
             this.GrabInventory.UseVisualStyleBackColor = true;
@@ -290,29 +268,39 @@
             this.ViewItem.Enabled = false;
             this.ViewItem.Location = new System.Drawing.Point(691, 522);
             this.ViewItem.Name = "ViewItem";
-            this.ViewItem.Size = new System.Drawing.Size(96, 23);
+            this.ViewItem.Size = new System.Drawing.Size(117, 23);
             this.ViewItem.TabIndex = 25;
             this.ViewItem.Text = "View Item";
             this.ViewItem.UseVisualStyleBackColor = true;
             this.ViewItem.Click += new System.EventHandler(this.ViewItem_Click);
             // 
+            // StashLeague
+            // 
+            this.StashLeague.Enabled = false;
+            this.StashLeague.Location = new System.Drawing.Point(691, 70);
+            this.StashLeague.Name = "StashLeague";
+            this.StashLeague.Size = new System.Drawing.Size(117, 23);
+            this.StashLeague.TabIndex = 26;
+            this.StashLeague.Text = "Stash Entire League";
+            this.StashLeague.UseVisualStyleBackColor = true;
+            this.StashLeague.Click += new System.EventHandler(this.StashLeague_Click);
+            // 
             // JSONReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(799, 628);
+            this.ClientSize = new System.Drawing.Size(820, 628);
+            this.Controls.Add(this.StashLeague);
             this.Controls.Add(this.ViewItem);
             this.Controls.Add(this.GrabInventory);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.GrabStashTabs);
             this.Controls.Add(this.AddStash);
             this.Controls.Add(this.CharacterGrid);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.StashAll);
             this.Controls.Add(this.ItemIcon);
             this.Controls.Add(this.ItemScript);
-            this.Controls.Add(this.GrabCharacters);
             this.Controls.Add(this.ItemList);
             this.Controls.Add(this.GrabStash);
             this.Controls.Add(this.label2);
@@ -344,7 +332,6 @@
         private System.Windows.Forms.ComboBox League;
         private System.Windows.Forms.PictureBox ItemIcon;
         private System.Windows.Forms.RichTextBox ItemScript;
-        private System.Windows.Forms.Button GrabCharacters;
         private System.Windows.Forms.ListBox ItemList;
         private System.Windows.Forms.Button GrabStash;
         private System.Windows.Forms.Button StashAll;
@@ -352,7 +339,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.DataGridView CharacterGrid;
         private System.Windows.Forms.Button AddStash;
-        private System.Windows.Forms.Button GrabStashTabs;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button GrabInventory;
@@ -361,5 +347,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CharacterGridNameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn CharacterGridLeagueColumn;
         private System.Windows.Forms.Button ViewItem;
+        private System.Windows.Forms.Button StashLeague;
     }
 }

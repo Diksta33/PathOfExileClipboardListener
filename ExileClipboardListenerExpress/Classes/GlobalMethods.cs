@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Data.SQLite;
+using System.Drawing;
+using System.IO;
 
 namespace ExileClipboardListener.Classes
 {
@@ -59,6 +61,9 @@ namespace ExileClipboardListener.Classes
             public static decimal DPS;
             public static Mod Mod1;
             public static Mod Mod2;
+            public static int IconWidth;
+            public static int IconHeight;
+            public static Image Icon;
         }
 
         //Affix class - this could also be materialised as a view in the database
@@ -295,6 +300,15 @@ namespace ExileClipboardListener.Classes
                                 BaseItem.Mod2.Id = dr["Mod2Id"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2Id"]);
                                 BaseItem.Mod2.ValueMin = dr["Mod2ValueMin"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMin"]);
                                 BaseItem.Mod2.ValueMax = dr["Mod2ValueMax"] == DBNull.Value ? 0 : Convert.ToInt32(dr["Mod2ValueMax"]);
+                                BaseItem.IconWidth = dr["IconWidth"] == DBNull.Value ? 0 : Convert.ToInt32(dr["IconWidth"]);
+                                BaseItem.IconHeight = dr["IconHeight"] == DBNull.Value ? 0 : Convert.ToInt32(dr["IconHeight"]);
+                                if (dr["Icon"] != DBNull.Value)
+                                {
+                                    var imageBytes = (System.Byte[])dr["Icon"];
+                                    BaseItem.Icon = ByteArrayToImage(imageBytes);
+                                }
+                                else
+                                    BaseItem.Icon = null;
                             }
                         }
                     }
@@ -306,6 +320,49 @@ namespace ExileClipboardListener.Classes
                 return;
             }
             return;
+        }
+
+        public static void SetBaseItemIcon(int baseItemId, Image icon, int width, int height)
+        {
+            try
+            {
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandText = "UPDATE BaseItem SET Icon = @Icon, IconWidth = " + width + ", IconHeight = " + height + " WHERE BaseItemId = " + baseItemId + ";";
+                        var parameter = new SQLiteParameter("@Icon", System.Data.DbType.Binary);
+                        parameter.Value = ImageToByteArray(icon);
+                        com.Parameters.Add(parameter);
+                        com.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
+            return;
+        }
+
+        private static Image ByteArrayToImage(byte[] byteArrayIn)
+        {
+            MemoryStream ms = new MemoryStream(byteArrayIn);
+            Image returnImage = Image.FromStream(ms);
+            return returnImage;
+        }
+        
+        private static byte[] ImageToByteArray(Image imageIn)
+        {
+            //MemoryStream ms = new MemoryStream();
+            //imageIn.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            //return ms.ToArray();
+
+            var imageConverter = new ImageConverter();
+            byte[] xByte = (byte[])imageConverter.ConvertTo(imageIn, typeof(byte[]));
+            return xByte;
         }
 
         public static Mod FindMod(string modName, int modPair, string itemTypeName, string itemSubTypeName)

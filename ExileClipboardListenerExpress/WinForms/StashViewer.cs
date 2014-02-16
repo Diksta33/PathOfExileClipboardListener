@@ -31,7 +31,7 @@ namespace ExileClipboardListener.WinForms
             Mod.SelectedIndex = 0;
             GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT FilterName FROM FilterHeader ORDER BY 1;", FilterList);
             FilterList.SelectedIndex = 0;
-            RefreshGrid();
+            //RefreshGrid();
         }
 
         private void RefreshGrid()

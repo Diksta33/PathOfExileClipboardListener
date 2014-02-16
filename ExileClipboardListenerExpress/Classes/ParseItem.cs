@@ -98,8 +98,8 @@ namespace ExileClipboardListener.Classes
                 }
                 RemoveSection(ref entity);
 
-                //And we stop here for Uniques for now anyway
-                if (si.RarityId == 4 || si.BaseItemId == 0)
+                //And we stop here if we didn't get a base item
+                if (si.BaseItemId == 0)
                     return false;
 
                 //Two-stone rings cause headaches as there are three base items with the same name 
@@ -120,12 +120,12 @@ namespace ExileClipboardListener.Classes
                 GlobalMethods.LoadBaseItem(si.BaseItemId);
 
                 //The second section is the item data
-                //Jewellery doesn't have a section, so we need to determine the item type first from the Base Item
+                //Jewellery/ Flasks don't have a section, so we need to determine the item type first from the Base Item
                 string itemTypeName = bi.ItemTypeName;
                 string itemSubTypeName = bi.ItemSubTypeName;
                 si.ItemTypeName = itemTypeName;
                 si.ItemSubTypeName = itemSubTypeName;
-                if (itemTypeName != "Jewellery")
+                if (itemTypeName != "Jewellery" && itemTypeName != "Flask")
                 {
                     //Armour
                     si.Armour = FindAnyValue<int>(entity, "Armour");
@@ -146,6 +146,10 @@ namespace ExileClipboardListener.Classes
                     RemoveSection(ref entity);
                 }
 
+                //If this is a flask give up for now as they have some weird properties
+                if (itemTypeName == "Flask")
+                    return true;
+
                 //Requirements
                 //(but these are on the base item already so we ignore them)
                 //var reqStr = Math.Max(FindAnyValue<int>(entity, "Str"), FindValue(entity, "Str (gem)"));
@@ -160,7 +164,7 @@ namespace ExileClipboardListener.Classes
 
                 //Sockets
                 //For now just store them
-                if (itemTypeName != "Jewellery")
+                if (itemTypeName != "Jewellery" && itemTypeName != "Flask")
                 {
                     si.Sockets = FindAnyValue<string>(entity, "Sockets");
                     RemoveSection(ref entity);
@@ -221,13 +225,20 @@ namespace ExileClipboardListener.Classes
                         string modValue = s.Split(' ')[0];
                         string modName = s.Substring(modValue.Length + 1, s.Length - modValue.Length - 1).Trim();
 
+                        //Two mods causes headaches as they just aren't consistent so we just translate them
+                        if (modName == "increased maximum Energy Shield")
+                            modName = "increased Energy Shield";
+                        if (modName == "increased Global Critical Strike Chance")
+                            modName = "increased Critical Strike Chance";
+
                         //We need to be a little careful, this is the first mod so only pick mods that are 1st in a sequence, e.g. physical damage min/ max
                         //We also need to check if the mod is allowed on this item type
                         //We sometimes have implict mods that have the same name as affix mods so we try to pick the correct one
                         var match = GlobalMethods.FindMod(modName, 1, itemTypeName, itemSubTypeName);
                         if (match.Id == 0)
                         {
-                            MessageBox.Show("Failed to find a mod with a name of " + modName + "!");
+                            if (si.RarityId != 4)
+                                MessageBox.Show("Failed to find a mod with a name of " + modName + "!");
                         }
                         else
                         {
@@ -240,7 +251,12 @@ namespace ExileClipboardListener.Classes
                             if (modName == "Life Regenerated per second")
                                 match.Value = Convert.ToInt32(Convert.ToDecimal(modValue) * 60);
                             else
-                                match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
+                            {
+                                if (modValue == "No")
+                                    match.Value = 0;
+                                else
+                                    match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
+                            }
                             mods.Add(match);
 
                             //Check to see if this is a mod pair, if it is then match the secondary mod
@@ -260,6 +276,10 @@ namespace ExileClipboardListener.Classes
                 {
                     si.Mod[i] = mods[i];
                 }
+
+                //If this item is a legendary or a flask then don't parse the affixes
+                if (si.RarityId == 4 || itemTypeName == "Flask")
+                    return true;
 
                 //Because some prefixes/ suffixes have two mods we need to find these first and then scoop up whatever is left as single mod affixes
                 //We also have the situation of double mods, e.g. Item Quantity is a prefix and a suffix, in these cases we are limited to how much we can determine

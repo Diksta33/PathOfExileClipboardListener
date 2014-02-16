@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Drawing;
+using ExileClipboardListener.Classes;
+using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
 
 namespace ExileClipboardListener.JSON
 {
@@ -30,7 +32,7 @@ namespace ExileClipboardListener.JSON
             {
                 item += "--------" + Environment.NewLine;
                 foreach (var p in i.Properties)
-                    item += p.Name + (p.Values.Count != 0 ? ": " + ((object[])p.Values[0])[0] : "") + Environment.NewLine;
+                    item += p.Name + (p.Values.Count != 0 && p.Name != "" ? ": " : "") + (p.Values.Count != 0 ? ((object[])p.Values[0])[0] : "") + Environment.NewLine;
             }
 
             //Requirements
@@ -86,7 +88,8 @@ namespace ExileClipboardListener.JSON
             {
                 item += "--------" + Environment.NewLine;
                 if (i.FlavourText != null)
-                    item += i.FlavourText + Environment.NewLine;
+                    foreach (string flavourText in i.FlavourText)
+                        item += flavourText + Environment.NewLine;
                 if (i.ImplicitMods != null)
                     foreach (var im in i.ImplicitMods)
                         item += im + Environment.NewLine;
@@ -103,14 +106,47 @@ namespace ExileClipboardListener.JSON
             return item;
         }
 
-        public static Bitmap GetImage(string iconURL)
+        public static Bitmap GetImage(string baseItem, string iconURL, int width, int height)
         {
-            //Finally we try to load the item image
+            //Remove any suffix
+            baseItem = baseItem.Split(new[] { " of " }, StringSplitOptions.None)[0];
+
+            //Determine the base item
+            int baseItemId;
+            baseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + baseItem.Replace("'", "''") + "';");
+
+            //We might also need to remove the prefix
+            if (baseItemId == 0)
+            {
+                string prefix = baseItem.Split(' ')[0];
+                if (baseItem.Length > prefix.Length)
+                {
+                    baseItem = baseItem.Substring(prefix.Length + 1, baseItem.Length - prefix.Length - 1);
+                    baseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + baseItem.Replace("'", "''") + "';");
+                }
+            }
+
+            //See if we already have the icon
+            if (baseItemId != 0)
+            {
+                GlobalMethods.LoadBaseItem(baseItemId);
+                if (bi.Icon != null)
+                {
+                    return new Bitmap(bi.Icon);
+                }
+            }
+
+            //We try to load the item image
             var request = WebRequest.Create(iconURL);
             var resp = request.GetResponse();
             var respStream = resp.GetResponseStream();
             var bmp = new Bitmap(respStream);
             respStream.Dispose();
+
+            //If we have identified the base item and it didn't have an image then set it now
+            if (baseItemId != 0)
+                GlobalMethods.SetBaseItemIcon(baseItemId, bmp, width, height);
+
             return bmp;
         }
     }
