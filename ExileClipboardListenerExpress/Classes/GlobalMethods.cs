@@ -105,6 +105,9 @@ namespace ExileClipboardListener.Classes
             public static decimal AttacksPerSecond;
             public static decimal BaseDamagePerSecond;
             public static decimal DamagePerSecond;
+            public static decimal eDPS;
+            public static decimal pDPS;
+            public static decimal tDPS;
             public static decimal CriticalStrikeChance;
             public static string Sockets;
             public static Mod[] Mod = new Mod[20];
@@ -140,6 +143,9 @@ namespace ExileClipboardListener.Classes
             StashItem.ElementalDamageMax = 0;
             StashItem.AttacksPerSecond = 0;
             StashItem.DamagePerSecond = 0;
+            StashItem.eDPS = 0;
+            StashItem.pDPS = 0;
+            StashItem.tDPS = 0;
             StashItem.CriticalStrikeChance = 0;
             StashItem.Sockets = "";
             for (int affix = 0; affix < 7; affix++)
@@ -583,9 +589,9 @@ namespace ExileClipboardListener.Classes
                                         col.DefaultCellStyle.Format = "N0";
                                         col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                                     }
-                                    else if (dr.GetDataTypeName(i).ToUpper().Contains("NUMERIC"))
+                                    else if (dr.GetDataTypeName(i).ToUpper().Contains("DOUBLE"))
                                     {
-                                        col.DefaultCellStyle.Format = "N";
+                                        col.DefaultCellStyle.Format = "N2";
                                         col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                                     }
                                     gridTarget.Columns.Add(col);
@@ -600,7 +606,7 @@ namespace ExileClipboardListener.Classes
                                     gridTarget.Columns[i].ValueType = typeof(DateTime);
                                 else if (gridTarget.Columns[i].DefaultCellStyle.Format == "N0")
                                     gridTarget.Columns[i].ValueType = typeof(int);
-                                else if (gridTarget.Columns[i].DefaultCellStyle.Format.Length > 1 && gridTarget.Columns[i].DefaultCellStyle.Format.Substring(0, 1) == "N")
+                                else if (gridTarget.Columns[i].DefaultCellStyle.Format.Length >= 1 && gridTarget.Columns[i].DefaultCellStyle.Format.Substring(0, 1) == "N")
                                     gridTarget.Columns[i].ValueType = typeof(decimal);
                             }
 
@@ -716,7 +722,7 @@ namespace ExileClipboardListener.Classes
         {
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
-            sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, DamageElementalMin, DamageElementalMax,";
+            sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";
             sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, OriginalText)";
             sql += " VALUES(";
 
@@ -740,8 +746,11 @@ namespace ExileClipboardListener.Classes
             sql += StashItem.AttacksPerSecond + ",";
             sql += StashItem.PhysicalDamageMin + ",";
             sql += StashItem.PhysicalDamageMax + ",";
+            sql += StashItem.pDPS + ",";
             sql += StashItem.ElementalDamageMin + ",";
             sql += StashItem.ElementalDamageMin + ",";
+            sql += StashItem.eDPS + ",";
+            sql += StashItem.tDPS + ",";
 
             //Implict Affix
             sql += (StashItem.Affix[0].Mod1.Id == 0 ? "NULL" : StashItem.Affix[0].Mod1.Id.ToString()) + ",";

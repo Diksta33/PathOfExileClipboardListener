@@ -88,18 +88,24 @@ namespace ExileClipboardListener.WinForms
 	                MAX(r.RarityName) AS [Rarity], 
 	                CAST(MAX(s.Quality) AS INTEGER) AS [Quality], 
 	                CAST(MAX(s.ItemLevel) AS INTEGER) AS [Item Level], 
-	                CAST(MAX(b.ReqLevel) AS INTEGER) AS [Req Level], 
-	                CAST(MAX(b.ReqStr) AS INTEGER) AS [Req Str], 
-	                CAST(MAX(b.ReqDex) AS INTEGER) AS [Req Dex], 
-	                CAST(MAX(b.ReqInt) AS INTEGER) AS [Req Int],
+	                CAST(MAX(b.ReqLevel) AS INTEGER) AS [Req Level],
+                    CAST(MAX(s.AttackSpeed) AS NUMERIC(18,2)) AS [APS],
+                    CAST(MAX(s.PhysicalDPS) AS NUMERIC(18,2)) AS [pDPS],
+                    CAST(MAX(s.ElementalDPS) AS NUMERIC(18,2)) AS [eDPS],
+                    CAST(MAX(s.TotalDPS) AS NUMERIC(18,2)) AS [tDPS],
+	                CAST(MAX(s.Armour) AS INTEGER) AS [Armour], 
+	                CAST(MAX(s.Evasion) AS INTEGER) AS [Evasion], 
+	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield]";
+            if (!CompactView.Checked)
+                sql += @",
+	                CAST(MAX(IFNULL(b.DamagePhysicalMin, 0)) AS INTEGER) AS [Base Damage Physical Min],
+	                CAST(MAX(IFNULL(b.DamagePhysicalMax, 0)) AS INTEGER) AS [Base Damage Physical Max],
 	                CAST(MAX(b.Armour) AS INTEGER) AS [Base Armour],
 	                CAST(MAX(b.Evasion) AS INTEGER) AS [Base Evasion],
 	                CAST(MAX(b.EnergyShield) AS INTEGER) AS [Base Energy Shield],
-	                CAST(MAX(s.Armour) AS INTEGER) AS [Armour], 
-	                CAST(MAX(s.Evasion) AS INTEGER) AS [Evasion], 
-	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield],
-	                CAST(MAX(IFNULL(b.DamagePhysicalMin, 0)) AS INTEGER) AS [Base Damage Physical Min],
-	                CAST(MAX(IFNULL(b.DamagePhysicalMax, 0)) AS INTEGER) AS [Base Damage Physical Max],
+	                CAST(MAX(b.ReqStr) AS INTEGER) AS [Req Str], 
+	                CAST(MAX(b.ReqDex) AS INTEGER) AS [Req Dex], 
+	                CAST(MAX(b.ReqInt) AS INTEGER) AS [Req Int],
 	                MAX(mi1.ModName) AS [Implict Mod 1],
 	                CAST(MAX(IFNULL(s.ImplicitMod1Value, 0)) AS INTEGER) AS [Implict Mod 1 Value],
 	                MAX(mi2.ModName) AS [Implicit Mod 2],
@@ -127,7 +133,8 @@ namespace ExileClipboardListener.WinForms
                     MAX(m11.ModName) AS [Mod 11 Name],
                     CAST(MAX(CASE WHEN sm.StashModId = 11 THEN sm.ModValue ELSE 0 END) AS INTEGER) AS [Mod 11 Value],
                     MAX(m12.ModName) AS [Mod 12 Name],
-                    CAST(MAX(CASE WHEN sm.StashModId = 12 THEN sm.ModValue ELSE 0 END) AS INTEGER) AS [Mod 12 Value]
+                    CAST(MAX(CASE WHEN sm.StashModId = 12 THEN sm.ModValue ELSE 0 END) AS INTEGER) AS [Mod 12 Value]";
+            sql += @"
                 FROM 
 	                Stash s 
 	                INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId 
@@ -184,11 +191,21 @@ namespace ExileClipboardListener.WinForms
                 sql += (where ? " AND " : " WHERE ") + " s.ItemLevel <= " + MaxItemLevel.Value + " ";
                 where = true;
             }
+            if (MinReqLevel.Value > 1)
+            {
+                sql += (where ? " AND " : " WHERE ") + " s.ReqLevel >= " + MinReqLevel.Value + " ";
+                where = true;
+            }
+            if (MaxReqLevel.Value > 1)
+            {
+                sql += (where ? " AND " : " WHERE ") + " s.ReqLevel <= " + MaxReqLevel.Value + " ";
+                where = true;
+            }
             if (scored && HideZeroScores.Checked)
             {
                 sql += (where ? " AND " : " WHERE ") + " IFNULL(ss.Score, 0) > 0";
             }
-            sql += " GROUP BY s.ItemName;";
+            sql += " GROUP BY s.StashId, s.ItemName;";
             ItemCount.Text = GlobalMethods.StuffGrid(sql, StashGrid, true, true).ToString("#,##0") + " items";
             Cursor.Current = Cursors.Default;
         }

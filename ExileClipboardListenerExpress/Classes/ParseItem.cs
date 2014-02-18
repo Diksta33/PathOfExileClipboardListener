@@ -102,6 +102,10 @@ namespace ExileClipboardListener.Classes
                 if (si.BaseItemId == 0)
                     return false;
 
+                //Sometimes quality comes after the first seperator
+                if (si.Quality == 0)
+                    si.Quality = FindAnyValue<int>(entity, "Quality");
+
                 //Two-stone rings cause headaches as there are three base items with the same name 
                 //and so we need to know the implicit mod before we can be sure we have the right base item
                 //TODO: this needs improving
@@ -173,6 +177,18 @@ namespace ExileClipboardListener.Classes
                 //Item Level
                 si.ItemLevel = FindAnyValue<int>(entity, "Itemlevel");
                 RemoveSection(ref entity);
+
+                //Work out the pDPS and eDPS
+                if (si.AttacksPerSecond != 0)
+                {
+                    si.pDPS = Convert.ToDecimal((si.PhysicalDamageMax + si.PhysicalDamageMin) / 2) * si.AttacksPerSecond;
+                    si.eDPS = Convert.ToDecimal((si.ElementalDamageMax + si.ElementalDamageMin) / 2) * si.AttacksPerSecond;
+                    si.tDPS = si.pDPS + si.eDPS;
+                }
+
+                //Temporarily stop uniques here as they are just too problematic
+                if (si.RarityId == 4)
+                    return true;
 
                 //Implict modifiers, there may not be any so we are a little careful
                 bool seenImplicit = false;
@@ -374,6 +390,55 @@ namespace ExileClipboardListener.Classes
                     }
                 }
 
+                //Now we need to handle IIR, we will be in one of two situations now
+                //One is that IIR has been assigned to a prefix but might turn out to be a suffix, we deal with this later
+                //The other is that IIR hasn't been assigned at all as the value is too large for the item level as it is BOTH a prefix and a suffix
+                //We deal with this here
+                var iirMod = mods.FirstOrDefault(m => m.Name == "Base Item Found Rarity +%");
+                if (iirMod.Name != null)
+                {
+                    var iir = iirMod.Value;
+                    mods.Remove(iirMod);
+                    iirMod.Value = iirMod.Value / 2;
+                    mods.Add(iirMod);
+                    var newMod = iirMod;
+                    newMod.Value = iir - iirMod.Value;
+                    mods.Add(newMod);
+
+                    //Find affixes with one mod
+                    //TODO: Refactor this into a method
+                    foreach (var f in GlobalMethods.AffixCache)
+                    {
+                        bool matchedPrefix = false;
+                        bool matchedSuffix = false;
+                        foreach (var mp in mods)
+                        {
+                            if (mp.Name != "Base Item Found Rarity +%")
+                                continue;
+                            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel && (f.AffixType != "Prefix" || !matchedPrefix) && (f.AffixType != "Suffix" || !matchedSuffix))
+                            {
+                                //We got a hit
+                                var affix = f;
+                                affix.Mod1 = mp;
+                                affix.Mod1.ValueMin = f.Mod1.ValueMin;
+                                affix.Mod1.ValueMax = f.Mod1.ValueMax;
+                                if (f.AffixType == "Prefix")
+                                {
+                                    prefixes.Add(affix);
+                                    matchedPrefix = true;
+                                }
+                                else
+                                {
+                                    suffixes.Add(affix);
+                                    matchedSuffix = true;
+                                }
+                                mods.Remove(mp);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 //Is there anything left over?
                 //If we only have implict mods left over then this is fine
                 bool allAssigned = true;
@@ -457,7 +522,7 @@ namespace ExileClipboardListener.Classes
                             }
                             else
                             {
-                                MessageBox.Show("Retrofit process went wrong!");
+                                //MessageBox.Show("Retrofit process went wrong!");
                                 continue;
                             }
 
@@ -476,7 +541,7 @@ namespace ExileClipboardListener.Classes
                             //Better check this is all going to plan so far!
                             if (modIndex == -1)
                             {
-                                MessageBox.Show("Retrofit process went badly wrong!");
+                                //MessageBox.Show("Retrofit process went badly wrong!");
                                 break;
                             }
 
@@ -507,12 +572,20 @@ namespace ExileClipboardListener.Classes
                             for (int level = si.ItemLevel; level > 0; level--)
                             {
                                 int levelInternal = level;
-                                affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
+
+                                //If we are dealing with spell damage/ mana we have an extra problem, we need to know if this is 1-handed or 2-handed
+                                //For now I will hardcode these values for "simplicty"
+                                if (primaryMod.Name == "Spell Damage +%" && si.ItemSubTypeName == "Staff")
+                                    affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "Staff Spell Damage" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
+                                else if (primaryMod.Name == "Spell Damage +%")
+                                    affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "One Hand Spell Damage and Mana" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
+                                else
+                                    affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
 
                                 //if we got no match then give up
                                 if (affixDoubleMod.AffixId == 0)
                                 {
-                                    MessageBox.Show("Urrghh!");
+                                    //MessageBox.Show("Urrghh!");
                                     break;
                                 }
 
@@ -553,7 +626,7 @@ namespace ExileClipboardListener.Classes
                             //We should get two affixes out of this
                             if (affixDoubleMod.AffixId == 0 || affixSingleMod.AffixId == 0)
                             {
-                                MessageBox.Show("Retrofit process went badly wrong!");
+                                //MessageBox.Show("Retrofit process went badly wrong!");
                                 break;
                             }
 
@@ -616,6 +689,50 @@ namespace ExileClipboardListener.Classes
                             {
                                 if (mods[i].Id == primaryMod.Id || mods[i].Id == secondaryMod.Id)
                                     mods.RemoveAt(i);
+                            }
+                        }
+                    }
+                }
+
+                //Now we need to handle the second case of IIR messing us up
+                //This time we might have everything assigned but have ended up with 4 prefixes and 2 suffixes (for example)
+                //This will be because IIR will get pushed into a prefix before a suffix and prefix ranges are more generous
+                //So we need to check to see if this is the case and move it over
+                if (prefixes.Count > 3)
+                {
+                    var unwantedMod = new GlobalMethods.Mod();
+                    foreach (var p in prefixes)
+                    {
+                        if (p.Mod1.Name == "Base Item Found Rarity +%")
+                        {
+                            unwantedMod = p.Mod1;
+                            prefixes.Remove(p);
+                            break;
+                        }
+                    }
+
+                    //If we found the IIR mod then kick it into a suffix if possible
+                    if (unwantedMod.Name != null)
+                    {
+                        //Find affixes with one mod
+                        //TODO: Refactor this into a method
+                        foreach (var f in GlobalMethods.AffixCache)
+                        {
+                            foreach (var mp in mods)
+                            {
+                                if (mp.Name != "Base Item Found Rarity +%" || f.AffixType == "Prefix")
+                                    continue;
+                                if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                                {
+                                    //We got a hit
+                                    var affix = f;
+                                    affix.Mod1 = mp;
+                                    affix.Mod1.ValueMin = f.Mod1.ValueMin;
+                                    affix.Mod1.ValueMax = f.Mod1.ValueMax;
+                                    suffixes.Add(affix);
+                                    mods.Remove(mp);
+                                    break;
+                                }
                             }
                         }
                     }

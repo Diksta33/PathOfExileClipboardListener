@@ -58,6 +58,7 @@ namespace ExileClipboardListener.WinForms
         {
             GetCurrentLeague();
             ItemList.Items.Clear();
+            ItemScript.Text = "";
 
             //Determine the tab number
             string tabNumber = StashTab.Text.Split('[')[1].Split(']')[0];
@@ -159,6 +160,7 @@ namespace ExileClipboardListener.WinForms
         {
             GetCurrentLeague();
             ItemList.Items.Clear();
+            ItemScript.Text = "";
             if (CharacterGrid.CurrentRow == null)
                 return;
             string character = CharacterGrid.CurrentRow.Cells[CharacterGridNameColumn.Index].Value.ToString();
@@ -217,6 +219,8 @@ namespace ExileClipboardListener.WinForms
 
         private void StashLeague_Click(object sender, EventArgs e)
         {
+            ItemList.Items.Clear();
+            ItemScript.Text = "";
             Cursor.Current = Cursors.WaitCursor;
             GetCurrentLeague();
 

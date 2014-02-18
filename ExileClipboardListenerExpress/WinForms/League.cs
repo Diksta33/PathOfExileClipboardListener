@@ -113,6 +113,7 @@ namespace ExileClipboardListener.WinForms
         {
             if (MessageBox.Show("Are you sure?", "Confirm Delete", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
+            GlobalMethods.RunQuery("DELETE FROM StashMod WHERE EXISTS (SELECT * FROM Stash s WHERE s.LeagueId = " + _leagueId + " AND s.StashId = StashMod.StashId);");
             GlobalMethods.RunQuery("DELETE FROM Stash WHERE LeagueId = " + _leagueId + ";");
             RefreshLeagueGrid();
         }

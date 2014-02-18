@@ -50,9 +50,15 @@
             this.MaxItemLevel = new System.Windows.Forms.NumericUpDown();
             this.HideZeroScores = new System.Windows.Forms.CheckBox();
             this.DeleteItem = new System.Windows.Forms.Button();
+            this.CompactView = new System.Windows.Forms.CheckBox();
+            this.MaxReqLevel = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.MinReqLevel = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxReqLevel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinReqLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // StashGrid
@@ -289,11 +295,70 @@
             this.DeleteItem.UseVisualStyleBackColor = true;
             this.DeleteItem.Click += new System.EventHandler(this.DeleteItem_Click);
             // 
+            // CompactView
+            // 
+            this.CompactView.AutoSize = true;
+            this.CompactView.Checked = true;
+            this.CompactView.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CompactView.Location = new System.Drawing.Point(1136, 5);
+            this.CompactView.Name = "CompactView";
+            this.CompactView.Size = new System.Drawing.Size(94, 17);
+            this.CompactView.TabIndex = 20;
+            this.CompactView.Text = "Compact View";
+            this.CompactView.UseVisualStyleBackColor = true;
+            // 
+            // MaxReqLevel
+            // 
+            this.MaxReqLevel.Location = new System.Drawing.Point(1028, 614);
+            this.MaxReqLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MaxReqLevel.Name = "MaxReqLevel";
+            this.MaxReqLevel.Size = new System.Drawing.Size(47, 20);
+            this.MaxReqLevel.TabIndex = 23;
+            this.MaxReqLevel.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(972, 598);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(105, 13);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "Min  Req Level  Max";
+            // 
+            // MinReqLevel
+            // 
+            this.MinReqLevel.Location = new System.Drawing.Point(975, 614);
+            this.MinReqLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MinReqLevel.Name = "MinReqLevel";
+            this.MinReqLevel.Size = new System.Drawing.Size(47, 20);
+            this.MinReqLevel.TabIndex = 21;
+            this.MinReqLevel.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // StashViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1373, 636);
+            this.Controls.Add(this.MaxReqLevel);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.MinReqLevel);
+            this.Controls.Add(this.CompactView);
             this.Controls.Add(this.DeleteItem);
             this.Controls.Add(this.HideZeroScores);
             this.Controls.Add(this.MaxItemLevel);
@@ -324,6 +389,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MaxReqLevel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MinReqLevel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -352,5 +419,9 @@
         private System.Windows.Forms.NumericUpDown MaxItemLevel;
         private System.Windows.Forms.CheckBox HideZeroScores;
         private System.Windows.Forms.Button DeleteItem;
+        private System.Windows.Forms.CheckBox CompactView;
+        private System.Windows.Forms.NumericUpDown MaxReqLevel;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown MinReqLevel;
     }
 }

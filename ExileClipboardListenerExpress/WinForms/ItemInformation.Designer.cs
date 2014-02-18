@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.FilterResultsGrid = new System.Windows.Forms.DataGridView();
             this.FilterNameColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AverageScoreColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -190,6 +190,8 @@
             this.label46 = new System.Windows.Forms.Label();
             this.League = new System.Windows.Forms.ComboBox();
             this.ItemIcon = new System.Windows.Forms.PictureBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.TotalDPS = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -232,8 +234,8 @@
             // FilterNameColumn
             // 
             this.FilterNameColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle9.NullValue = null;
-            this.FilterNameColumn.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle1.NullValue = null;
+            this.FilterNameColumn.DefaultCellStyle = dataGridViewCellStyle1;
             this.FilterNameColumn.HeaderText = "Filter Name";
             this.FilterNameColumn.Name = "FilterNameColumn";
             this.FilterNameColumn.ReadOnly = true;
@@ -242,9 +244,9 @@
             // AverageScoreColumn
             // 
             this.AverageScoreColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle10.Format = "0%";
-            this.AverageScoreColumn.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "0%";
+            this.AverageScoreColumn.DefaultCellStyle = dataGridViewCellStyle2;
             this.AverageScoreColumn.HeaderText = "Average Score";
             this.AverageScoreColumn.Name = "AverageScoreColumn";
             this.AverageScoreColumn.ReadOnly = true;
@@ -533,6 +535,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.label47);
+            this.groupBox3.Controls.Add(this.TotalDPS);
             this.groupBox3.Controls.Add(this.label45);
             this.groupBox3.Controls.Add(this.label44);
             this.groupBox3.Controls.Add(this.label43);
@@ -562,7 +566,7 @@
             // label45
             // 
             this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(159, 126);
+            this.label45.Location = new System.Drawing.Point(157, 97);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(35, 13);
             this.label45.TabIndex = 36;
@@ -571,7 +575,7 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(106, 126);
+            this.label44.Location = new System.Drawing.Point(104, 97);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(35, 13);
             this.label44.TabIndex = 35;
@@ -580,7 +584,7 @@
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(47, 126);
+            this.label43.Location = new System.Drawing.Point(45, 97);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(31, 13);
             this.label43.TabIndex = 34;
@@ -589,7 +593,7 @@
             // ElementalDPS
             // 
             this.ElementalDPS.Enabled = false;
-            this.ElementalDPS.Location = new System.Drawing.Point(162, 142);
+            this.ElementalDPS.Location = new System.Drawing.Point(160, 113);
             this.ElementalDPS.Name = "ElementalDPS";
             this.ElementalDPS.Size = new System.Drawing.Size(50, 20);
             this.ElementalDPS.TabIndex = 33;
@@ -598,7 +602,7 @@
             // PhysicalDPS
             // 
             this.PhysicalDPS.Enabled = false;
-            this.PhysicalDPS.Location = new System.Drawing.Point(106, 142);
+            this.PhysicalDPS.Location = new System.Drawing.Point(104, 113);
             this.PhysicalDPS.Name = "PhysicalDPS";
             this.PhysicalDPS.Size = new System.Drawing.Size(50, 20);
             this.PhysicalDPS.TabIndex = 32;
@@ -607,7 +611,7 @@
             // AttackSpeed
             // 
             this.AttackSpeed.Enabled = false;
-            this.AttackSpeed.Location = new System.Drawing.Point(81, 97);
+            this.AttackSpeed.Location = new System.Drawing.Point(156, 71);
             this.AttackSpeed.Name = "AttackSpeed";
             this.AttackSpeed.Size = new System.Drawing.Size(38, 20);
             this.AttackSpeed.TabIndex = 31;
@@ -616,7 +620,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(15, 100);
+            this.label42.Location = new System.Drawing.Point(125, 74);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(28, 13);
             this.label42.TabIndex = 30;
@@ -625,7 +629,7 @@
             // BaseDPS
             // 
             this.BaseDPS.Enabled = false;
-            this.BaseDPS.Location = new System.Drawing.Point(50, 142);
+            this.BaseDPS.Location = new System.Drawing.Point(48, 113);
             this.BaseDPS.Name = "BaseDPS";
             this.BaseDPS.Size = new System.Drawing.Size(50, 20);
             this.BaseDPS.TabIndex = 29;
@@ -634,7 +638,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(15, 149);
+            this.label36.Location = new System.Drawing.Point(13, 120);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(29, 13);
             this.label36.TabIndex = 28;
@@ -679,7 +683,7 @@
             // ElementalDamageTo
             // 
             this.ElementalDamageTo.Enabled = false;
-            this.ElementalDamageTo.Location = new System.Drawing.Point(147, 45);
+            this.ElementalDamageTo.Location = new System.Drawing.Point(156, 45);
             this.ElementalDamageTo.Name = "ElementalDamageTo";
             this.ElementalDamageTo.Size = new System.Drawing.Size(38, 20);
             this.ElementalDamageTo.TabIndex = 21;
@@ -688,7 +692,7 @@
             // PhysicalDamageTo
             // 
             this.PhysicalDamageTo.Enabled = false;
-            this.PhysicalDamageTo.Location = new System.Drawing.Point(147, 19);
+            this.PhysicalDamageTo.Location = new System.Drawing.Point(156, 19);
             this.PhysicalDamageTo.Name = "PhysicalDamageTo";
             this.PhysicalDamageTo.Size = new System.Drawing.Size(38, 20);
             this.PhysicalDamageTo.TabIndex = 20;
@@ -809,9 +813,9 @@
             // ModItemValueColumn
             // 
             this.ModItemValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle11.Format = "N0";
-            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle3.Format = "N0";
+            this.ModItemValueColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.ModItemValueColumn.HeaderText = "Item Value";
             this.ModItemValueColumn.Name = "ModItemValueColumn";
             this.ModItemValueColumn.ReadOnly = true;
@@ -905,9 +909,9 @@
             // AffixLevelColumn
             // 
             this.AffixLevelColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle12.Format = "N0";
-            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            this.AffixLevelColumn.DefaultCellStyle = dataGridViewCellStyle4;
             this.AffixLevelColumn.HeaderText = "Level";
             this.AffixLevelColumn.Name = "AffixLevelColumn";
             this.AffixLevelColumn.ReadOnly = true;
@@ -940,8 +944,8 @@
             // AffixPrimaryModRangeColumn
             // 
             this.AffixPrimaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixPrimaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle5;
             this.AffixPrimaryModRangeColumn.HeaderText = "Range";
             this.AffixPrimaryModRangeColumn.Name = "AffixPrimaryModRangeColumn";
             this.AffixPrimaryModRangeColumn.ReadOnly = true;
@@ -950,9 +954,9 @@
             // AffixPrimaryModValueColumn
             // 
             this.AffixPrimaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle14.Format = "N0";
-            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle6.Format = "N0";
+            this.AffixPrimaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle6;
             this.AffixPrimaryModValueColumn.HeaderText = "Value";
             this.AffixPrimaryModValueColumn.Name = "AffixPrimaryModValueColumn";
             this.AffixPrimaryModValueColumn.ReadOnly = true;
@@ -969,8 +973,8 @@
             // AffixSecondaryModRangeColumn
             // 
             this.AffixSecondaryModRangeColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.AffixSecondaryModRangeColumn.DefaultCellStyle = dataGridViewCellStyle7;
             this.AffixSecondaryModRangeColumn.HeaderText = "Range";
             this.AffixSecondaryModRangeColumn.Name = "AffixSecondaryModRangeColumn";
             this.AffixSecondaryModRangeColumn.ReadOnly = true;
@@ -979,9 +983,9 @@
             // AffixSecondaryModValueColumn
             // 
             this.AffixSecondaryModValueColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle16.Format = "N0";
-            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle8.Format = "N0";
+            this.AffixSecondaryModValueColumn.DefaultCellStyle = dataGridViewCellStyle8;
             this.AffixSecondaryModValueColumn.HeaderText = "Value";
             this.AffixSecondaryModValueColumn.Name = "AffixSecondaryModValueColumn";
             this.AffixSecondaryModValueColumn.ReadOnly = true;
@@ -1749,6 +1753,24 @@
             this.ItemIcon.TabIndex = 29;
             this.ItemIcon.TabStop = false;
             // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(157, 136);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(31, 13);
+            this.label47.TabIndex = 38;
+            this.label47.Text = "Total";
+            // 
+            // TotalDPS
+            // 
+            this.TotalDPS.Enabled = false;
+            this.TotalDPS.Location = new System.Drawing.Point(160, 152);
+            this.TotalDPS.Name = "TotalDPS";
+            this.TotalDPS.Size = new System.Drawing.Size(50, 20);
+            this.TotalDPS.TabIndex = 37;
+            this.TotalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // ItemInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1959,5 +1981,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ModNameColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn ModItemValueColumn;
         private System.Windows.Forms.PictureBox ItemIcon;
+        private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.TextBox TotalDPS;
     }
 }

@@ -87,18 +87,9 @@ namespace ExileClipboardListener.WinForms
             BaseAttackSpeed.Text = si.BaseAttacksPerSecond.ToString("#0.00");
             AttackSpeed.Text = si.AttacksPerSecond.ToString("#0.00");
             BaseDPS.Text = si.DamagePerSecond.ToString("#0.00");
-
-            //Work out the pDPS and eDPS
-            decimal attackSpeed;
-            if (decimal.TryParse(AttackSpeed.Text, out attackSpeed))
-            {
-                int damMin;
-                int damMax;
-                if (int.TryParse(PhysicalDamageFrom.Text, out damMin) && int.TryParse(PhysicalDamageTo.Text, out damMax))
-                    PhysicalDPS.Text = ((Convert.ToDecimal((damMax + damMin) / 2.0)) * attackSpeed).ToString("#0.00");
-                if (int.TryParse(ElementalDamageFrom.Text, out damMin) && int.TryParse(ElementalDamageTo.Text, out damMax))
-                    ElementalDPS.Text = ((Convert.ToDecimal((damMax + damMin) / 2.0)) * attackSpeed).ToString("#0.00");
-            }
+            PhysicalDPS.Text = si.pDPS.ToString("#0.00");
+            ElementalDPS.Text = si.eDPS.ToString("#0.00");
+            TotalDPS.Text = si.tDPS.ToString("#0.00");
 
             //Requirements
             ItemLevel.Text = si.ItemLevel.ToString();
