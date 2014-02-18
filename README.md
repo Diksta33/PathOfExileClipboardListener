@@ -27,10 +27,14 @@ Quick Summary:
 
 Now allows direct download of your stashed items via JSON from the Path of Exile website.  This new feature is experimental at the moment.  Note that Item Level can't be parsed this way (to my knowledge) so I have to assume that every item is iLevel 100 :(
 
+To use the Download Stash feature you will need to enter your login details in the settings box.  They get encrypted (a bit) before being stored.  Note also that the download will stall from time to time, sometimes for quite a long time.  So be patient when downloading large stashes.
+
+There is no uniqueness test yet, so if you stash the same item twice you wil have two copies.  I might add a delete option to the Stash Viewer.
+
 
 ============================
 Known Issues:
 
 - Characters don't do anything yet;
-- Flasks, Quivers and Unqiues aren't parsed;
+- Flasks, Quivers and Unqiues aren't parsed but flasks and uniques can now be stashed;
 - IIR doesn't work properly because it can be a prefix AND a suffix :(
