@@ -207,6 +207,9 @@ namespace ExileClipboardListener.WinForms
             }
             sql += " GROUP BY s.StashId, s.ItemName;";
             ItemCount.Text = GlobalMethods.StuffGrid(sql, StashGrid, true, true).ToString("#,##0") + " items";
+
+            //Hide the StashId, it's just a number
+            StashGrid.Columns[0].Visible = false;
             Cursor.Current = Cursors.Default;
         }
 
