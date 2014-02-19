@@ -310,7 +310,7 @@ namespace ExileClipboardListener.Classes
                                 BaseItem.IconHeight = dr["IconHeight"] == DBNull.Value ? 0 : Convert.ToInt32(dr["IconHeight"]);
                                 if (dr["Icon"] != DBNull.Value)
                                 {
-                                    var imageBytes = (System.Byte[])dr["Icon"];
+                                    var imageBytes = (Byte[])dr["Icon"];
                                     BaseItem.Icon = ByteArrayToImage(imageBytes);
                                 }
                                 else
@@ -338,8 +338,7 @@ namespace ExileClipboardListener.Classes
                     using (var com = con.CreateCommand())
                     {
                         com.CommandText = "UPDATE BaseItem SET Icon = @Icon, IconWidth = " + width + ", IconHeight = " + height + " WHERE BaseItemId = " + baseItemId + ";";
-                        var parameter = new SQLiteParameter("@Icon", System.Data.DbType.Binary);
-                        parameter.Value = ImageToByteArray(icon);
+                        var parameter = new SQLiteParameter("@Icon", System.Data.DbType.Binary) {Value = ImageToByteArray(icon)};
                         com.Parameters.Add(parameter);
                         com.ExecuteNonQuery();
                     }
@@ -355,7 +354,7 @@ namespace ExileClipboardListener.Classes
 
         private static Image ByteArrayToImage(byte[] byteArrayIn)
         {
-            MemoryStream ms = new MemoryStream(byteArrayIn);
+            var ms = new MemoryStream(byteArrayIn);
             Image returnImage = Image.FromStream(ms);
             return returnImage;
         }
@@ -367,7 +366,7 @@ namespace ExileClipboardListener.Classes
             //return ms.ToArray();
 
             var imageConverter = new ImageConverter();
-            byte[] xByte = (byte[])imageConverter.ConvertTo(imageIn, typeof(byte[]));
+            var xByte = (byte[])imageConverter.ConvertTo(imageIn, typeof(byte[]));
             return xByte;
         }
 

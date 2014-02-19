@@ -17,8 +17,6 @@ namespace ExileClipboardListener.JSON
     }
     public sealed class RequestThrottle
     {
-        private int _outstandingRequests;
-
         private readonly Queue<DateTime> _requestTimes = new Queue<DateTime>();
 
         public event ThottledEventHandler Throttled;
@@ -53,10 +51,7 @@ namespace ExileClipboardListener.JSON
         /// <summary>
         ///   If you are interested in monitoring
         /// </summary>
-        public int OutstandingRequests
-        {
-            get { return _outstandingRequests; }
-        }
+        public int OutstandingRequests { get; private set; }
 
         /// <summary>
         ///   The quantitive portion (xxx) of the of 30 requests per 5 seconds
@@ -83,7 +78,7 @@ namespace ExileClipboardListener.JSON
         /// </summary>
         public void Complete()
         {
-            _outstandingRequests--;
+            OutstandingRequests--;
         }
 
         /// <summary>
@@ -100,9 +95,9 @@ namespace ExileClipboardListener.JSON
                 // note: we could use a list of WeakReferences and 
                 // may do so at a later date, but for now, this
                 // works just fine as long as you call .Complete
-                _outstandingRequests++;
+                OutstandingRequests++;
 
-                while (_outstandingRequests > MaxPendingRequests)
+                while (OutstandingRequests > MaxPendingRequests)
                 {
                     using (var throttleGate = new AutoResetEvent(false))
                     {

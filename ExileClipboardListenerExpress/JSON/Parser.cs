@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Drawing;
 using ExileClipboardListener.Classes;
 using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
@@ -112,8 +109,7 @@ namespace ExileClipboardListener.JSON
             baseItem = baseItem.Split(new[] { " of " }, StringSplitOptions.None)[0];
 
             //Determine the base item
-            int baseItemId;
-            baseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + baseItem.Replace("'", "''") + "';");
+            int baseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + baseItem.Replace("'", "''") + "';");
 
             //We might also need to remove the prefix
             if (baseItemId == 0)

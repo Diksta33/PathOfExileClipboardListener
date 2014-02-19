@@ -407,10 +407,10 @@ namespace ExileClipboardListener.Classes
 
                     //Find affixes with one mod
                     //TODO: Refactor this into a method
+                    bool matchedPrefix = false;
+                    bool matchedSuffix = false;
                     foreach (var f in GlobalMethods.AffixCache)
                     {
-                        bool matchedPrefix = false;
-                        bool matchedSuffix = false;
                         foreach (var mp in mods)
                         {
                             if (mp.Name != "Base Item Found Rarity +%")
