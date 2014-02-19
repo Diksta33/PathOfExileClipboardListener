@@ -32,7 +32,7 @@ namespace ExileClipboardListener.JSON
             {
                 item += "--------" + Environment.NewLine;
                 foreach (var p in i.Properties)
-                    item += p.Name + (p.Values.Count != 0 && p.Name != "" ? ": " : "") + (p.Values.Count != 0 ? ((object[])p.Values[0])[0] : "") + Environment.NewLine;
+                    item += p.Name + (p.Values.Count >= 1 && p.Name != "" ? ": " : "") + (p.Values.Count >= 1 ? ((object[])p.Values[0])[0] : "") + (p.Values.Count >= 2 ? ", " + ((object[])p.Values[1])[0] : "") + Environment.NewLine;
             }
 
             //Requirements

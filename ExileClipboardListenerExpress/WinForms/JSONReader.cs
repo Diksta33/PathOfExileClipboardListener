@@ -188,7 +188,17 @@ namespace ExileClipboardListener.WinForms
                 return;
             string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
             if (ParseItem.ParseStash(itemText))
-                new ItemInformation { AllowStash = true }.ShowDialog();
+            {
+                var dr = new ItemInformation().ShowDialog();
+
+                //Stash the item if we are said to stash it from the pop up
+                if (dr == DialogResult.OK)
+                {
+                    GlobalMethods.SaveStash(GlobalMethods.LeagueId);
+                    if (Properties.Settings.Default.StashPopUpMode != 0)
+                        new PopUpStashed().ShowDialog();
+                }
+            }
         }
 
         private void League_SelectedIndexChanged(object sender, EventArgs e)
