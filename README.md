@@ -37,4 +37,4 @@ Known Issues:
 
 - Characters don't do anything yet;
 - Flasks, Quivers and Unqiues aren't parsed but flasks and uniques can now be stashed;
-- IIR doesn't work properly because it can be a prefix AND a suffix :(
+- IIR might still cause problems but I fixed it for some items.
