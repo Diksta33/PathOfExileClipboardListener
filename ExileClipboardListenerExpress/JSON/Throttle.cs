@@ -1,4 +1,13 @@
-﻿using System;
+﻿//  
+//  Project: SOAPI
+//  http://soapics.codeplex.com
+//  http://stackapps.com/questions/386
+//  
+//  Copyright 2010, Sky Sanders
+//  Licensed under the GPL Version 2 license.
+//  http://soapi.codeplex.com/license
+//  
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
@@ -6,20 +15,39 @@ using System.Threading;
 
 namespace ExileClipboardListener.JSON
 {
-    public delegate void ThottledEventHandler(object sender, ThottledEventArgs e);
-    public class ThottledEventArgs : EventArgs
+    /// <summary>
+    ///   This is a fully configurable, thread-safe web request throttle that fully complies with the 
+    ///   published usage guidelines. In addition to compliance with the letter of the law, testing
+    ///   has exposed further limitations that are compensated. See code comments for more detail.
+    /// 
+    ///   Simply route all WebRequest.Create calls through RequestThrottle.Instance.Create();
+    /// 
+    ///   Upon completion of an issued request, regardless of status, you must call 
+    ///   RequestThrottle.Instance.Complete() to decrement the outstanding request count.
+    /// 
+    ///   NOTE: you can use this as a global throttle using WebRequest.RegisterPrefix
+    ///   http://msdn.microsoft.com/en-us/library/system.net.webrequest.registerprefix.aspx
+    ///   but this is not a viable option for silverlight so in Soapi, where requests
+    ///   are created in one place, we just call it explicitly.
+    /// </summary>
+    /// <remarks>
+    /// Throttling conversation here: http://stackapps.com/questions/1143/request-throttling-limits
+    /// </remarks>
+    public delegate void ThrottledEventHandler(object sender, ThrottledEventArgs e);
+    
+    public class ThrottledEventArgs : EventArgs
     {
         public TimeSpan WaitTime { get; private set; }
-        public ThottledEventArgs(TimeSpan waitTime)
+        public ThrottledEventArgs(TimeSpan waitTime)
         {
             WaitTime = waitTime;
         }
     }
     public sealed class RequestThrottle
     {
+        private int _outstandingRequests;
         private readonly Queue<DateTime> _requestTimes = new Queue<DateTime>();
-
-        public event ThottledEventHandler Throttled;
+        public event ThrottledEventHandler Throttled;
 
         private RequestThrottle()
         {
@@ -49,11 +77,6 @@ namespace ExileClipboardListener.JSON
         public int MaxPendingRequests { get; set; }
 
         /// <summary>
-        ///   If you are interested in monitoring
-        /// </summary>
-        public int OutstandingRequests { get; private set; }
-
-        /// <summary>
         ///   The quantitive portion (xxx) of the of 30 requests per 5 seconds
         ///   Defaults to published guidelines of 5 seconds
         /// </summary>
@@ -64,7 +87,6 @@ namespace ExileClipboardListener.JSON
         ///   Defaults to the published guidelines of 30
         /// </summary>
         public TimeSpan ThrottleWindowTime { get; set; }
-
 
         /// <summary>
         ///   This decrements the outstanding request count.
@@ -78,7 +100,7 @@ namespace ExileClipboardListener.JSON
         /// </summary>
         public void Complete()
         {
-            OutstandingRequests--;
+            _outstandingRequests--;
         }
 
         /// <summary>
@@ -95,13 +117,12 @@ namespace ExileClipboardListener.JSON
                 // note: we could use a list of WeakReferences and 
                 // may do so at a later date, but for now, this
                 // works just fine as long as you call .Complete
-                OutstandingRequests++;
+                _outstandingRequests++;
 
-                while (OutstandingRequests > MaxPendingRequests)
+                while (_outstandingRequests > MaxPendingRequests)
                 {
                     using (var throttleGate = new AutoResetEvent(false))
                     {
-                        Debug.WriteLine("Max number requests reached, waiting");
                         throttleGate.WaitOne(100);
                     }
                 }
@@ -121,9 +142,7 @@ namespace ExileClipboardListener.JSON
                         using (var throttleGate = new AutoResetEvent(false))
                         {
                             if (Throttled != null)
-                                Throttled(this, new ThottledEventArgs(waitTime));
-
-                            Debug.WriteLine("Approaching Threshold, Just Chillin like a Villain on Penicillin " + waitTime.TotalSeconds);
+                                Throttled(this, new ThrottledEventArgs(waitTime));
                             throttleGate.WaitOne(waitTime);
                         }
                     }
@@ -135,12 +154,21 @@ namespace ExileClipboardListener.JSON
             }
         }
 
-
+        /// <summary>
+        ///   Create a WebRequest. This method will block if too many
+        ///   outstanding requests are pending or the throttle window
+        ///   threshold has been reached.
+        /// </summary>
+        /// <param name = "url"></param>
+        /// <returns></returns>
         public WebRequest Create(string url)
         {
             return Create(new Uri(url));
         }
 
+        /// <summary>
+        ///   lock handle
+        /// </summary>
         private class ThrottleLock
         {
         }

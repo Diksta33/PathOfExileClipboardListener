@@ -9,6 +9,13 @@ namespace ExileClipboardListener.Classes
 {
     public static class ParseItem
     {
+        public static bool ParseGem(string gem)
+        {
+            GlobalMethods.ClearGem();
+            GlobalMethods.StashGem.OriginalText = gem;
+            return true;
+        }
+
         public static bool ParseStash(string item)
         {
             //There are a number of sections in the entity that vary depending on rarity and item type

@@ -20,8 +20,20 @@ namespace ExileClipboardListener.WinForms
             InitializeComponent();
         }
 
+        private void Throttled(object sender, ThrottledEventArgs e)
+        {
+            if (e.WaitTime.TotalSeconds > 5)
+            {
+                toolStripStatusLabel1.Text = "Server request limit has been hit, stalling for " + e.WaitTime.TotalSeconds + " seconds...";
+                Application.DoEvents();
+            }
+        }
+
         private void Logon_Click(object sender, EventArgs e)
         {
+            //Add an event handler for throttling
+            POEWeb.ThrottledEvent += Throttled;
+
             if (Properties.Settings.Default.Username == Properties.Settings.Default.PropertyValues["Username"].Property.DefaultValue.ToString())
             {
                 MessageBox.Show("You need to enter your username/ password in the Settings before you can use this feature!");
@@ -85,7 +97,7 @@ namespace ExileClipboardListener.WinForms
             //Get the text description
             int index = ItemList.SelectedIndex;
             DataContracts.JSONItem i = _stashType == "Stash" ? _stash.Items[index] : _inventory.Items[index];
-            string item = Parser.ParseItem(i);
+            string item = Parser.ScriptItem(i);
             ItemScript.Text = item;
 
             //Get the icon image
@@ -101,9 +113,17 @@ namespace ExileClipboardListener.WinForms
             {
                 toolStripStatusLabel1.Text = "Parsing " + (_stashType == "Stash" ? _stash.Items[i].TypeLine : _inventory.Items[i].TypeLine) + "... " + ((i * 100) / ItemList.Items.Count) + "%";
                 Application.DoEvents();
-                string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[i] : _inventory.Items[i]);
-                if (ParseItem.ParseStash(itemText))
-                    GlobalMethods.SaveStash(_leagueId);
+                string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[i] : _inventory.Items[i]);
+                if (itemText.Contains("Rarity:"))
+                {
+                    if (ParseItem.ParseStash(itemText))
+                        GlobalMethods.SaveStash(_leagueId);
+                }
+                else
+                {
+                    if (ParseItem.ParseGem(itemText))
+                        GlobalMethods.SaveGem(_leagueId);
+                }
             }
             toolStripStatusLabel1.Text = "Ready";
         }
@@ -112,14 +132,28 @@ namespace ExileClipboardListener.WinForms
         {
             if (ItemList.SelectedIndex == -1)
                 return;
-            string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
-            if (ParseItem.ParseStash(itemText))
+            string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
+
+            //Determine the type
+            if (itemText.Contains("Rarity:"))
             {
-                GlobalMethods.SaveStash(_leagueId);
-                MessageBox.Show("Stashed!");
+                if (ParseItem.ParseStash(itemText))
+                {
+                    GlobalMethods.SaveStash(_leagueId);
+                    MessageBox.Show("Stashed!");
+                    return;
+                }
             }
             else
-                MessageBox.Show("Failed!");
+            {
+                if (ParseItem.ParseGem(itemText))
+                {
+                    GlobalMethods.SaveGem(_leagueId);
+                    MessageBox.Show("Stashed!");
+                    return;
+                }
+            }
+            MessageBox.Show("Failed!");
         }
 
         private void GrabStashTabs()
@@ -186,7 +220,9 @@ namespace ExileClipboardListener.WinForms
         {
             if (ItemList.SelectedIndex == -1)
                 return;
-            string itemText = Parser.ParseItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
+            string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
+            if (!itemText.Contains("Rarity:"))
+                return;
             if (ParseItem.ParseStash(itemText))
             {
                 var dr = new ItemInformation().ShowDialog();
@@ -243,9 +279,17 @@ namespace ExileClipboardListener.WinForms
                 {
                     toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
                     Application.DoEvents();
-                    string itemText = Parser.ParseItem(i);
-                    if (ParseItem.ParseStash(itemText))
-                        GlobalMethods.SaveStash(_leagueId);
+                    string itemText = Parser.ScriptItem(i);
+                    if (itemText.Contains("Rarity:"))
+                    {
+                        if (ParseItem.ParseStash(itemText))
+                            GlobalMethods.SaveStash(_leagueId);
+                    }
+                    else
+                    {
+                        if (ParseItem.ParseGem(itemText))
+                            GlobalMethods.SaveGem(_leagueId);
+                    }
                 }
             }
 
@@ -258,9 +302,17 @@ namespace ExileClipboardListener.WinForms
                 {
                     toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
                     Application.DoEvents();
-                    string itemText = Parser.ParseItem(i);
-                    if (ParseItem.ParseStash(itemText))
-                        GlobalMethods.SaveStash(_leagueId);
+                    string itemText = Parser.ScriptItem(i);
+                    if (itemText.Contains("Rarity:"))
+                    {
+                        if (ParseItem.ParseStash(itemText))
+                            GlobalMethods.SaveStash(_leagueId);
+                    }
+                    else
+                    {
+                        if (ParseItem.ParseGem(itemText))
+                            GlobalMethods.SaveGem(_leagueId);
+                    }
                 }
             }
             toolStripStatusLabel1.Text = "Ready";

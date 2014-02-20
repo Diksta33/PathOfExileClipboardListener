@@ -105,18 +105,40 @@ namespace ExileClipboardListener.Classes
             public static decimal AttacksPerSecond;
             public static decimal BaseDamagePerSecond;
             public static decimal DamagePerSecond;
+            //ReSharper disable InconsistentNaming
             public static decimal eDPS;
             public static decimal pDPS;
             public static decimal tDPS;
+            //ReSharper restore InconsistentNaming
             public static decimal CriticalStrikeChance;
             public static string Sockets;
             public static Mod[] Mod = new Mod[20];
             public static Affix[] Affix = new Affix[7]; //0 = Implicit, 1-3 - Prefix, 4-6 = Suffix
         }
 
+        //Gem Class
+        public static class StashGem
+        {
+            public static string OriginalText;
+            public static string GemName;
+            public static string GemType;
+            public static bool Support;
+            public static int Level;
+            public static int Quality;
+            public static int ReqLevel;
+            public static int ReqStr;
+            public static int ReqDex;
+            public static int ReqInt;
+            public static int ManaCost;
+            public static int ManaMultiplier;
+            public static string[] ImplicitMod = new string[10];
+        }
+
         //Storage for filter results
         public static List<object[]> BISResults = new List<object[]>();
+        //ReSharper disable InconsistentNaming
         public static List<object[]> ILevelResults = new List<object[]>();
+        //ReSharper restore InconsistentNaming
         public static List<object[]> CLevelResults = new List<object[]>();
         public static List<object[]> ItemResults = new List<object[]>();
 
@@ -165,6 +187,23 @@ namespace ExileClipboardListener.Classes
             StashItem.OriginalText = "";
         }
 
+        public static void ClearGem()
+        {
+            StashGem.GemName = "";
+            StashGem.Level = 0;
+            StashGem.Quality = 0;
+            StashGem.ReqLevel = 0;
+            StashGem.ReqStr = 0;
+            StashGem.ReqDex = 0;
+            StashGem.ReqInt = 0;
+            StashGem.ManaCost = 0;
+            StashGem.ManaMultiplier = 0;
+            StashGem.Support = false;
+            for (int im = 0; im < 10; im++)
+                StashGem.ImplicitMod[im] = "";
+            StashGem.OriginalText = "";
+        }
+
         public static void LoadCache()
         {
             //Loads data from the system into memory to reduce unnecessary database access
@@ -188,7 +227,9 @@ namespace ExileClipboardListener.Classes
                         {
                             while (dr.Read())
                             {
+                                //ReSharper disable UseObjectOrCollectionInitializer
                                 var affix = new Affix();
+                                //ReSharper restore UseObjectOrCollectionInitializer
                                 affix.AffixId = dr["PrefixId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["PrefixId"]);
                                 affix.AffixType = "Prefix";
                                 affix.Name = dr["Name"].ToString();
@@ -217,7 +258,9 @@ namespace ExileClipboardListener.Classes
                         {
                             while (dr.Read())
                             {
+                                //ReSharper disable UseObjectOrCollectionInitializer
                                 var affix = new Affix();
+                                //ReSharper restore UseObjectOrCollectionInitializer
                                 affix.AffixId = dr["SuffixId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["SuffixId"]);
                                 affix.AffixType = "Suffix";
                                 affix.Name = dr["Name"].ToString();
@@ -246,7 +289,9 @@ namespace ExileClipboardListener.Classes
                         {
                             while (dr.Read())
                             {
+                                //ReSharper disable UseObjectOrCollectionInitializer
                                 var mod = new Mod();
+                                //ReSharper restore UseObjectOrCollectionInitializer
                                 mod.Id = dr["ModId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["ModId"]);
                                 mod.Name = dr["ModName"].ToString();
                                 mod.RealName = dr["ModRealName"].ToString();
@@ -717,12 +762,40 @@ namespace ExileClipboardListener.Classes
             }
         }
 
+        public static void SaveGem(int leagueId)
+        {
+            string sql = "INSERT INTO GemStash(LeagueId, Name, Level, Quality, ReqLevel, ReqStr, ReqDex, ReqInt, Type, ManaCost, ManaMultiplier, OriginalText) VALUES (";
+
+            //League
+            sql += leagueId + ",";
+
+            //Basic Details
+            sql += "'" + StashGem.GemName.Replace("'", "''") + "',";
+            sql += StashGem.Level + ",";
+            sql += StashGem.Quality + ",";
+            sql += StashGem.ReqLevel + ",";
+            sql += StashGem.ReqStr + ",";
+            sql += StashGem.ReqDex + ",";
+            sql += StashGem.ReqInt + ",";
+
+            //Other stuff
+            sql += "'" + StashGem.GemType + "',";
+            sql += StashGem.ManaCost + ",";
+            sql += StashGem.ManaMultiplier + ",";
+
+            //Original Text
+            sql += "'" + StashGem.OriginalText.Replace("'", "''") + "')";
+
+            //Stash this item
+            RunQuery(sql);
+        }
+
         public static void SaveStash(int leagueId)
         {
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
             sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, OriginalText)";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, OriginalText)";
             sql += " VALUES(";
 
             //League
@@ -756,6 +829,21 @@ namespace ExileClipboardListener.Classes
             sql += (StashItem.Affix[0].Mod1.Value == 0 ? "NULL" : StashItem.Affix[0].Mod1.Value.ToString()) + ",";
             sql += (StashItem.Affix[0].Mod2.Id == 0 ? "NULL" : StashItem.Affix[0].Mod2.Id.ToString()) + ",";
             sql += (StashItem.Affix[0].Mod2.Value == 0 ? "NULL" : StashItem.Affix[0].Mod2.Value.ToString()) + ",";
+
+            //Sockets
+            //Socket Count
+            sql += StashItem.Sockets.Replace("-", "").Replace(" ", "").Length + ",";
+
+            //Max Socket Link
+            var chains = StashItem.Sockets.Split(' ');
+            int maxChain = 0;
+            foreach (var chain in chains)
+            {
+                int chainLength = chain.Replace("-", "").Length;
+                if (chainLength > maxChain)
+                    maxChain = chainLength;
+            }
+            sql += maxChain + ",";
 
             //Original Text
             sql += "'" + StashItem.OriginalText.Replace("'", "''") + "')";

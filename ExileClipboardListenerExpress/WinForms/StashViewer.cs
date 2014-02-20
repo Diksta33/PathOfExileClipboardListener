@@ -97,7 +97,9 @@ namespace ExileClipboardListener.WinForms
                     CAST(MAX(s.TotalDPS) AS NUMERIC(18,2)) AS [tDPS],
 	                CAST(MAX(s.Armour) AS INTEGER) AS [Armour], 
 	                CAST(MAX(s.Evasion) AS INTEGER) AS [Evasion], 
-	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield]";
+	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield],
+	                CAST(MAX(s.SocketCount) AS INTEGER) AS [Sockets],
+	                CAST(MAX(s.SocketMaxLink) AS VARCHAR(1)) || 'L' AS [Max Links]";
             if (!CompactView.Checked)
                 sql += @",
 	                CAST(MAX(IFNULL(b.DamagePhysicalMin, 0)) AS INTEGER) AS [Base Damage Physical Min],

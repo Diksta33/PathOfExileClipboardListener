@@ -8,9 +8,50 @@ namespace ExileClipboardListener.JSON
 {
     public static class Parser
     {
-        public static string ParseItem(DataContracts.JSONItem i)
+        public static string ScriptItem(DataContracts.JSONItem i)
         {
+            string item;
 
+            //See if this is a gem
+            if (i.FrameType == 4)
+            {
+                //Basic Details
+                item = i.TypeLine + Environment.NewLine;
+                //if (i.DescrText!= null)
+                //    item += i.DescrText + Environment.NewLine;
+                if (i.SecDescrText != null)
+                    item += i.SecDescrText + Environment.NewLine;
+
+                //Properties
+                foreach (var p in i.Properties)
+                    item += p.Name + (p.Values.Count >= 1 && p.Name != "" ? ": " : "") + (p.Values.Count >= 1 ? ((object[])p.Values[0])[0] : "") + (p.Values.Count >= 2 ? ", " + ((object[])p.Values[1])[0] : "") + Environment.NewLine;
+                //if (i.Color == "S")
+                //    item += "Colour: Red" + Environment.NewLine;
+                //if (i.Color == "D")
+                //    item += "Colour: Green" + Environment.NewLine;
+                //if (i.Color == "I")
+                //    item += "Colour: Blue" + Environment.NewLine;
+                //Item Type
+                item += "--------" + Environment.NewLine;
+                item += (i.Support ? "Support Gem" : "Gem") + Environment.NewLine;
+                
+                //Requirements
+                item += "--------" + Environment.NewLine;
+                item += "Requirements:" + Environment.NewLine;
+                foreach (var r in i.Requirements)
+                    item += r.Name + ": " + ((object[])r.Value[0])[0] + Environment.NewLine;
+                
+                //Mods
+                if (i.ImplicitMods != null)
+                {
+                    item += "--------" + Environment.NewLine;
+                    foreach (var im in i.ImplicitMods)
+                        item += im + Environment.NewLine;
+                }
+                return item;
+            }
+
+            //Otherwise we assume it's an item
             string rarity = "Normal";
             if (i.FrameType == 1)
                 rarity = "Magic";
@@ -18,7 +59,7 @@ namespace ExileClipboardListener.JSON
                 rarity = "Rare";
             else if (i.FrameType == 3)
                 rarity = "Unique";
-            string item = "Rarity: " + rarity + Environment.NewLine;
+            item = "Rarity: " + rarity + Environment.NewLine;
             if ((i.Name ?? "") != "")
                 item += i.Name + Environment.NewLine;
             if (i.TypeLine != null)
@@ -61,8 +102,11 @@ namespace ExileClipboardListener.JSON
                         first = false;
                     }
                 }
-                item += "--------" + Environment.NewLine;
-                item += sockets + Environment.NewLine;
+                if (sockets != "")
+                {
+                    item += "--------" + Environment.NewLine;
+                    item += "Sockets: " + sockets + Environment.NewLine;
+                }
             }
 
             //Socketed Items contains the gems that are currently socketed in this item (if there are any)

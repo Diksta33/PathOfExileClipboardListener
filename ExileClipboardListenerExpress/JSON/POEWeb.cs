@@ -17,6 +17,7 @@ namespace ExileClipboardListener.JSON
         private const string InventoryUrl = @"http://www.pathofexile.com/character-window/get-items?character={0}";
         private const string HashRegEx = "name=\\\"hash\\\" value=\\\"(?<hash>[a-zA-Z0-9]{1,})\\\"";
         private static CookieContainer _credentialCookies;
+        public static event ThrottledEventHandler ThrottledEvent;
 
         public static bool Authenticate()
         {
