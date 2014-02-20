@@ -80,6 +80,8 @@ namespace ExileClipboardListener.WinForms
             string sql = "SELECT s.StashId AS [Stash Id],";
             if (scored)
                 sql += "MAX(ss.Score) AS [Filter Score],";
+            if (League.Text == "(All)")
+                sql += "MAX(l.LeagueName) AS [League],";
             sql += @"
 	                MAX(i.ItemTypeName) AS [Item Type],
 	                MAX(i2.ItemSubTypeName) AS [Item Sub Type],
@@ -136,7 +138,8 @@ namespace ExileClipboardListener.WinForms
                     CAST(MAX(CASE WHEN sm.StashModId = 12 THEN sm.ModValue ELSE 0 END) AS INTEGER) AS [Mod 12 Value]";
             sql += @"
                 FROM 
-	                Stash s 
+	                Stash s
+                    INNER JOIN League l ON l.LeagueId = s.LeagueId
 	                INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId 
                     INNER JOIN ItemType i ON i.ItemTypeId = b.ItemTypeId 
 	                INNER JOIN ItemSubType i2 ON i2.ItemTypeId = b.ItemTypeId AND i2.ItemSubTypeId = b.ItemSubTypeId 
