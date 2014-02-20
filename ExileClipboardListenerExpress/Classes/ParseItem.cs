@@ -353,6 +353,49 @@ namespace ExileClipboardListener.Classes
                     }
                 }
 
+                //For 2h weapons we need to scan again but allow 1h affixes
+                if (itemSubTypeName.Contains("Two") || itemSubTypeName.Contains("Staff"))
+                {
+                    foreach (var f in GlobalMethods.AffixCache)
+                    {
+                        if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
+                            continue;
+                        int matched = 0;
+                        var mpMod1 = new GlobalMethods.Mod();
+                        var mpMod2 = new GlobalMethods.Mod();
+                        foreach (var mp in mods)
+                        {
+                            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                            {
+                                mpMod1 = mp;
+                                matched++;
+                            }
+                            if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax && f.Level <= si.ItemLevel)
+                            {
+                                mpMod2 = mp;
+                                matched++;
+                            }
+                        }
+                        if (matched == 2)
+                        {
+                            //We got a hit
+                            var affix = f;
+                            affix.Mod1 = mpMod1;
+                            affix.Mod1.ValueMin = f.Mod1.ValueMin;
+                            affix.Mod1.ValueMax = f.Mod1.ValueMax;
+                            affix.Mod2 = mpMod2;
+                            affix.Mod2.ValueMin = f.Mod2.ValueMin;
+                            affix.Mod2.ValueMax = f.Mod2.ValueMax;
+                            if (f.AffixType == "Prefix")
+                                prefixes.Add(affix);
+                            else
+                                suffixes.Add(affix);
+                            mods.Remove(mpMod1);
+                            mods.Remove(mpMod2);
+                        }
+                    }
+                }
+
                 //Find affixes with one mod
                 //TODO: Refactor this into a method
                 foreach (var f in GlobalMethods.AffixCache)
@@ -387,6 +430,39 @@ namespace ExileClipboardListener.Classes
                         else
                             suffixes.Add(affix);
                         mods.Remove(mpMod);
+                    }
+                }
+
+                //For 2h weapons we need to scan again but allow 1h affixes
+                if (itemSubTypeName.Contains("Two") || itemSubTypeName.Contains("Staff"))
+                {
+                    foreach (var f in GlobalMethods.AffixCache)
+                    {
+                        if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
+                            continue;
+                        int matched = 0;
+                        var mpMod = new GlobalMethods.Mod();
+                        foreach (var mp in mods)
+                        {
+                            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                            {
+                                //We got a hit
+                                mpMod = mp;
+                                matched++;
+                            }
+                        }
+                        if (matched == 1)
+                        {
+                            var affix = f;
+                            affix.Mod1 = mpMod;
+                            affix.Mod1.ValueMin = f.Mod1.ValueMin;
+                            affix.Mod1.ValueMax = f.Mod1.ValueMax;
+                            if (f.AffixType == "Prefix")
+                                prefixes.Add(affix);
+                            else
+                                suffixes.Add(affix);
+                            mods.Remove(mpMod);
+                        }
                     }
                 }
 
@@ -576,13 +652,17 @@ namespace ExileClipboardListener.Classes
                                 //If we are dealing with spell damage/ mana we have an extra problem, we need to know if this is 1-handed or 2-handed
                                 //For now I will hardcode these values for "simplicty"
                                 if (primaryMod.Name == "Spell Damage +%" && si.ItemSubTypeName == "Staff")
-                                    affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "Staff Spell Damage" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
+                                    affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "Staff Spell Damage and Mana" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
                                 else if (primaryMod.Name == "Spell Damage +%")
                                     affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "One Hand Spell Damage and Mana" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
                                 else
                                     affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
 
-                                //if we got no match then give up
+                                //If we got no match and this is a staff then try again but allow 1h affixes
+                                //if (affixDoubleMod.AffixId == 0 && si.ItemSubTypeName == "Staff")
+                                //    affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "One Hand Spell Damage and Mana" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
+
+                                //If we still don't get a match give up
                                 if (affixDoubleMod.AffixId == 0)
                                 {
                                     //MessageBox.Show("Urrghh!");
@@ -738,7 +818,101 @@ namespace ExileClipboardListener.Classes
                     }
                 }
 
-                //Check again
+                ////Check again
+                //allAssigned = true;
+                //if (mods.Count() != 0)
+                //{
+                //    foreach (var mod in mods)
+                //    {
+                //        if (!mod.Implicit)
+                //        {
+                //            //TODO: this needs improving!
+                //            if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
+                //                continue;
+                //            allAssigned = false; 
+                //            break;
+                //        }
+                //    }
+                //}
+
+                ////If we get here we relax the rules on 2h weapons needing 2h affixes, it seems that a 1h affix can roll on a 2h weapon but not the other way around
+                ////Make one last effort to match the mods
+                ////Find affixes with two mods
+                //if (!allAssigned && (itemSubTypeName.Contains("Two") || itemSubTypeName.Contains("Staff")))
+                //{
+                //    foreach (var f in GlobalMethods.AffixCache)
+                //    {
+                //        if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
+                //            continue;
+                //        int matched = 0;
+                //        var mpMod1 = new GlobalMethods.Mod();
+                //        var mpMod2 = new GlobalMethods.Mod();
+                //        foreach (var mp in mods)
+                //        {
+                //            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                //            {
+                //                mpMod1 = mp;
+                //                matched++;
+                //            }
+                //            if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax && f.Level <= si.ItemLevel)
+                //            {
+                //                mpMod2 = mp;
+                //                matched++;
+                //            }
+                //        }
+                //        if (matched == 2)
+                //        {
+                //            //We got a hit
+                //            var affix = f;
+                //            affix.Mod1 = mpMod1;
+                //            affix.Mod1.ValueMin = f.Mod1.ValueMin;
+                //            affix.Mod1.ValueMax = f.Mod1.ValueMax;
+                //            affix.Mod2 = mpMod2;
+                //            affix.Mod2.ValueMin = f.Mod2.ValueMin;
+                //            affix.Mod2.ValueMax = f.Mod2.ValueMax;
+                //            if (f.AffixType == "Prefix")
+                //                prefixes.Add(affix);
+                //            else
+                //                suffixes.Add(affix);
+                //            mods.Remove(mpMod1);
+                //            mods.Remove(mpMod2);
+                //        }
+                //    }
+
+                //    //Find affixes with one mod
+                //    //TODO: Refactor this into a method
+                //    foreach (var f in GlobalMethods.AffixCache)
+                //    {
+                //        if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
+                //            continue;
+                //        int matched = 0;
+                //        var mpMod = new GlobalMethods.Mod();
+                //        foreach (var mp in mods)
+                //        {
+                //            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
+                //            {
+                //                //We got a hit
+                //                mpMod = mp;
+                //                matched++;
+                //            }
+                //        }
+                //        if (matched == 1)
+                //        {
+                //            var affix = f;
+                //            affix.Mod1 = mpMod;
+                //            affix.Mod1.ValueMin = f.Mod1.ValueMin;
+                //            affix.Mod1.ValueMax = f.Mod1.ValueMax;
+                //            if (f.AffixType == "Prefix")
+                //                prefixes.Add(affix);
+                //            else
+                //                suffixes.Add(affix);
+                //            mods.Remove(mpMod);
+                //        }
+                //    }
+                //}
+
+                //Check one last time to see if there are any mods unparsed
+                allAssigned = true;
                 if (mods.Count() != 0)
                 {
                     foreach (var mod in mods)
@@ -748,11 +922,13 @@ namespace ExileClipboardListener.Classes
                             //TODO: this needs improving!
                             if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
                                 continue;
-                            MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(");
+                            allAssigned = false;
                             break;
                         }
                     }
                 }
+                if (!allAssigned)
+                    MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(");
 
                 //Pop off the prefixes and suffixes into the StashItem class
                 //TODO: check we haven't got too many prefixes/ suffixes

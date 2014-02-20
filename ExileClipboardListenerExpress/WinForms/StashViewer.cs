@@ -306,5 +306,15 @@ namespace ExileClipboardListener.WinForms
             GlobalMethods.RunQuery("DELETE FROM Stash WHERE StashId = " + stashId);
             RefreshGrid();
         }
+
+        private void ViewScriptClick(object sender, EventArgs e)
+        {
+            if (StashGrid.CurrentRow == null)
+                return;
+            string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM [Stash] WHERE StashId = " + StashGrid.CurrentRow.Cells[0].Value + ";");
+            var sv = new ScriptViewer();
+            sv.ItemScript.Text = item;
+            sv.ShowDialog();
+        }
     }
 }

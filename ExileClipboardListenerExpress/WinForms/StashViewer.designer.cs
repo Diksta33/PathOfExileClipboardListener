@@ -54,6 +54,7 @@
             this.MaxReqLevel = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.MinReqLevel = new System.Windows.Forms.NumericUpDown();
+            this.ViewScript = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).BeginInit();
@@ -287,7 +288,7 @@
             // 
             // DeleteItem
             // 
-            this.DeleteItem.Location = new System.Drawing.Point(216, 601);
+            this.DeleteItem.Location = new System.Drawing.Point(564, 601);
             this.DeleteItem.Name = "DeleteItem";
             this.DeleteItem.Size = new System.Drawing.Size(96, 23);
             this.DeleteItem.TabIndex = 19;
@@ -350,11 +351,22 @@
             0,
             0});
             // 
+            // ViewScript
+            // 
+            this.ViewScript.Location = new System.Drawing.Point(216, 601);
+            this.ViewScript.Name = "ViewScript";
+            this.ViewScript.Size = new System.Drawing.Size(96, 23);
+            this.ViewScript.TabIndex = 24;
+            this.ViewScript.Text = "View Script";
+            this.ViewScript.UseVisualStyleBackColor = true;
+            this.ViewScript.Click += new System.EventHandler(this.ViewScriptClick);
+            // 
             // StashViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1373, 636);
+            this.Controls.Add(this.ViewScript);
             this.Controls.Add(this.MaxReqLevel);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.MinReqLevel);
@@ -423,5 +435,6 @@
         private System.Windows.Forms.NumericUpDown MaxReqLevel;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown MinReqLevel;
+        private System.Windows.Forms.Button ViewScript;
     }
 }
