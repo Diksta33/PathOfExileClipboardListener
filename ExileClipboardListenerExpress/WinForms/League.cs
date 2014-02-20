@@ -26,7 +26,7 @@ namespace ExileClipboardListener.WinForms
             int currentRow = 0;
             if (LeagueGrid.CurrentRow != null)
                 currentRow = LeagueGrid.CurrentRow.Index;
-            GlobalMethods.StuffGrid("SELECT l.LeagueName AS [League Name], pl.LeagueName AS [Parent League Name], COUNT(s.StashId) AS [Stashed Items] FROM League l LEFT JOIN League pl ON pl.LeagueId = l.LeagueParentId LEFT JOIN Stash s ON s.LeagueId = l.LeagueId GROUP BY l.LeagueName, pl.LeagueName;", LeagueGrid);
+            GlobalMethods.StuffGrid("SELECT l.LeagueName AS [League Name], pl.LeagueName AS [Parent League Name], sc.StashCount AS [Stashed Items], gc.GemCount AS [Stashed Gems] FROM League l LEFT JOIN League pl ON pl.LeagueId = l.LeagueParentId LEFT JOIN (SELECT LeagueId, COUNT(*) AS StashCount FROM Stash s Group BY LeagueId) sc ON sc.LeagueId = l.LeagueId LEFT JOIN (SELECT LeagueId, COUNT(*) AS GemCount FROM GemStash g GROUP BY LeagueId) gc ON gc.LeagueId = l.LeagueId;", LeagueGrid);
             if (currentRow != 0)
             {
                 if (currentRow >= LeagueGrid.Rows.Count)
@@ -115,6 +115,7 @@ namespace ExileClipboardListener.WinForms
                 return;
             GlobalMethods.RunQuery("DELETE FROM StashMod WHERE EXISTS (SELECT * FROM Stash s WHERE s.LeagueId = " + _leagueId + " AND s.StashId = StashMod.StashId);");
             GlobalMethods.RunQuery("DELETE FROM Stash WHERE LeagueId = " + _leagueId + ";");
+            GlobalMethods.RunQuery("DELETE FROM GemStash WHERE LeagueId = " + _leagueId + ";");
             RefreshLeagueGrid();
         }
 
@@ -129,6 +130,7 @@ namespace ExileClipboardListener.WinForms
             if (MessageBox.Show("Are you sure?", "Confirm Merge", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return;
             GlobalMethods.RunQuery("UPDATE Stash SET LeagueId = " + parentId + " WHERE LeagueId = " + _leagueId + ";");
+            GlobalMethods.RunQuery("UPDATE GemStash SET LeagueId = " + parentId + " WHERE LeagueId = " + _leagueId + ";");
             RefreshLeagueGrid();
         }
     }

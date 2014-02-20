@@ -20,71 +20,85 @@ namespace ExileClipboardListener.WinForms
             InitializeComponent();
         }
 
-        private void Throttled(object sender, ThrottledEventArgs e)
+        public void SetStatus(string text)
         {
-            if (e.WaitTime.TotalSeconds > 5)
-            {
-                toolStripStatusLabel1.Text = "Server request limit has been hit, stalling for " + e.WaitTime.TotalSeconds + " seconds...";
-                Application.DoEvents();
-            }
+            toolStripStatusLabel1.Text = text;
+            Application.DoEvents();
         }
 
         private void Logon_Click(object sender, EventArgs e)
         {
-            //Add an event handler for throttling
-            POEWeb.ThrottledEvent += Throttled;
-
-            if (Properties.Settings.Default.Username == Properties.Settings.Default.PropertyValues["Username"].Property.DefaultValue.ToString())
+            try
             {
-                MessageBox.Show("You need to enter your username/ password in the Settings before you can use this feature!");
-                return;
-            }
-            Cursor.Current = Cursors.WaitCursor;
-            if (POEWeb.Authenticate())
-            {
-                Logon.Enabled = false;
-                ItemList.Items.Clear();
-                _characters = POEWeb.GetCharacters();
-                var checkList = new List<string>();
-                foreach (var c in _characters)
+                if (Properties.Settings.Default.Username == Properties.Settings.Default.PropertyValues["Username"].Property.DefaultValue.ToString())
                 {
-                    if (!checkList.Contains(c.League))
+                    MessageBox.Show("You need to enter your username/ password in the Settings before you can use this feature!");
+                    return;
+                }
+                Cursor.Current = Cursors.WaitCursor;
+                if (POEWeb.Authenticate())
+                {
+                    Logon.Enabled = false;
+                    ItemList.Items.Clear();
+                    _characters = POEWeb.GetCharacters();
+                    var checkList = new List<string>();
+                    foreach (var c in _characters)
                     {
-                        checkList.Add(c.League);
-                        League.Items.Add(c.League);
+                        if (!checkList.Contains(c.League))
+                        {
+                            checkList.Add(c.League);
+                            League.Items.Add(c.League);
+                        }
+                    }
+
+                    //If we have leagues let the stash grabbing commence
+                    if (League.Items.Count > 0)
+                    {
+                        League.Enabled = true;
+                        StashLeague.Enabled = true;
+                        StashAllInventories.Enabled = true;
+                        League.SelectedIndex = 0;
                     }
                 }
-
-                //If we have leagues let the stash grabbing commence
-                if (League.Items.Count > 0)
-                {
-                    League.Enabled = true;
-                    StashLeague.Enabled = true;
-                    League.SelectedIndex = 0;
-                }
             }
-            Cursor.Current = Cursors.Default;
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
         }
 
         private void GrabStash_Click(object sender, EventArgs e)
         {
-            GetCurrentLeague();
-            ItemList.Items.Clear();
-            ItemScript.Text = "";
+            try
+            {
+                GetCurrentLeague();
+                ItemList.Items.Clear();
+                ItemScript.Text = "";
 
-            //Determine the tab number
-            string tabNumber = StashTab.Text.Split('[')[1].Split(']')[0];
-            while (tabNumber.Length > 1 && tabNumber.Substring(0, 1) == "0")
-                tabNumber = tabNumber.Substring(1, tabNumber.Length - 1);
-            Cursor.Current = Cursors.WaitCursor;
-            _stash = POEWeb.GetStash(League.Text, tabNumber);
-            Cursor.Current = Cursors.Default;
-            foreach (var i in _stash.Items)
-                ItemList.Items.Add(i.TypeLine);
-            StashAll.Enabled = true;
-            AddStash.Enabled = true;
-            ViewItem.Enabled = true;
-            _stashType = "Stash";
+                //Determine the tab number
+                string tabNumber = StashTab.Text.Split('[')[1].Split(']')[0];
+                while (tabNumber.Length > 1 && tabNumber.Substring(0, 1) == "0")
+                    tabNumber = tabNumber.Substring(1, tabNumber.Length - 1);
+                Cursor.Current = Cursors.WaitCursor;
+                _stash = POEWeb.GetStash(League.Text, tabNumber);
+                Cursor.Current = Cursors.Default;
+                foreach (var i in _stash.Items)
+                    ItemList.Items.Add(i.TypeLine);
+                StashAll.Enabled = true;
+                AddStash.Enabled = true;
+                ViewItem.Enabled = true;
+                _stashType = "Stash";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
         }
 
         private void JSONReader_Load(object sender, EventArgs e)
@@ -108,52 +122,94 @@ namespace ExileClipboardListener.WinForms
 
         private void StashAll_Click(object sender, EventArgs e)
         {
-            //Parse each item in the list, add them one at a time to the stash for the current league
-            for (int i = 0; i < ItemList.Items.Count; i++)
+            try
             {
-                toolStripStatusLabel1.Text = "Parsing " + (_stashType == "Stash" ? _stash.Items[i].TypeLine : _inventory.Items[i].TypeLine) + "... " + ((i * 100) / ItemList.Items.Count) + "%";
-                Application.DoEvents();
-                string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[i] : _inventory.Items[i]);
-                if (itemText.Contains("Rarity:"))
+                //Parse each item in the list, add them one at a time to the stash for the current league
+                for (int i = 0; i < ItemList.Items.Count; i++)
                 {
-                    if (ParseItem.ParseStash(itemText))
-                        GlobalMethods.SaveStash(_leagueId);
+                    toolStripStatusLabel1.Text = "Parsing " + (_stashType == "Stash" ? _stash.Items[i].TypeLine : _inventory.Items[i].TypeLine) + "... " + ((i * 100) / ItemList.Items.Count) + "%";
+                    Application.DoEvents();
+                    var item = _stashType == "Stash" ? _stash.Items[i] : _inventory.Items[i];
+                    string itemText = Parser.ScriptItem(item);
+                    if (itemText.Contains("Rarity: Gem"))
+                    {
+                        if (ParseItem.ParseGem(itemText))
+                            GlobalMethods.SaveGem(_leagueId);
+                    }
+                    else
+                    {
+                        if (ParseItem.ParseStash(itemText))
+                            GlobalMethods.SaveStash(_leagueId);
+                        if (item.SocketedItems != null)
+                        {
+                            foreach (var si in item.SocketedItems)
+                            {
+                                toolStripStatusLabel1.Text = "Parsing " + si.TypeLine + "... ";
+                                Application.DoEvents();
+                                itemText = Parser.ScriptItem(si);
+                                if (ParseItem.ParseGem(itemText))
+                                    GlobalMethods.SaveGem(_leagueId);
+                            }
+                            toolStripStatusLabel1.Text = "Ready";
+                        }
+                    }
                 }
-                else
-                {
-                    if (ParseItem.ParseGem(itemText))
-                        GlobalMethods.SaveGem(_leagueId);
-                }
+                toolStripStatusLabel1.Text = "Ready";
             }
-            toolStripStatusLabel1.Text = "Ready";
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
         }
 
         private void AddStash_Click(object sender, EventArgs e)
         {
-            if (ItemList.SelectedIndex == -1)
-                return;
-            string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
+            try
+            {
+                if (ItemList.SelectedIndex == -1)
+                    return;
+                var i = _stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex];
+                string itemText = Parser.ScriptItem(i);
 
-            //Determine the type
-            if (itemText.Contains("Rarity:"))
-            {
-                if (ParseItem.ParseStash(itemText))
+                //Determine the type
+                if (itemText.Contains("Rarity: Gem"))
                 {
-                    GlobalMethods.SaveStash(_leagueId);
-                    MessageBox.Show("Stashed!");
-                    return;
+                    if (ParseItem.ParseGem(itemText))
+                    {
+                        GlobalMethods.SaveGem(_leagueId);
+                        MessageBox.Show("Stashed!");
+                        return;
+                    }
                 }
-            }
-            else
-            {
-                if (ParseItem.ParseGem(itemText))
+                else
                 {
-                    GlobalMethods.SaveGem(_leagueId);
-                    MessageBox.Show("Stashed!");
-                    return;
+                    if (ParseItem.ParseStash(itemText))
+                    {
+                        GlobalMethods.SaveStash(_leagueId);
+                        if (i.SocketedItems != null)
+                        {
+                            foreach (var si in i.SocketedItems)
+                            {
+                                toolStripStatusLabel1.Text = "Parsing " + si.TypeLine + "... ";
+                                Application.DoEvents();
+                                itemText = Parser.ScriptItem(si);
+                                if (ParseItem.ParseGem(itemText))
+                                    GlobalMethods.SaveGem(_leagueId);
+                            }
+                            toolStripStatusLabel1.Text = "Ready";
+                        }
+                        MessageBox.Show("Stashed!");
+                        return;
+                    }
                 }
+                MessageBox.Show("Failed!");
             }
-            MessageBox.Show("Failed!");
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
         }
 
         private void GrabStashTabs()
@@ -192,21 +248,29 @@ namespace ExileClipboardListener.WinForms
 
         private void GrabInventory_Click(object sender, EventArgs e)
         {
-            GetCurrentLeague();
-            ItemList.Items.Clear();
-            ItemScript.Text = "";
-            if (CharacterGrid.CurrentRow == null)
+            try
+            {
+                GetCurrentLeague();
+                ItemList.Items.Clear();
+                ItemScript.Text = "";
+                if (CharacterGrid.CurrentRow == null)
+                    return;
+                string character = CharacterGrid.CurrentRow.Cells[CharacterGridNameColumn.Index].Value.ToString();
+                Cursor.Current = Cursors.WaitCursor;
+                _inventory = POEWeb.GetInventory(character);
+                Cursor.Current = Cursors.Default;
+                foreach (var i in _inventory.Items)
+                    ItemList.Items.Add(i.TypeLine);
+                StashAll.Enabled = true;
+                AddStash.Enabled = true;
+                ViewItem.Enabled = true;
+                _stashType = "Inventory";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
                 return;
-            string character = CharacterGrid.CurrentRow.Cells[CharacterGridNameColumn.Index].Value.ToString();
-            Cursor.Current = Cursors.WaitCursor;
-            _inventory = POEWeb.GetInventory(character);
-            Cursor.Current = Cursors.Default;
-            foreach (var i in _inventory.Items)
-                ItemList.Items.Add(i.TypeLine);
-            StashAll.Enabled = true;
-            AddStash.Enabled = true;
-            ViewItem.Enabled = true;
-            _stashType = "Inventory";
+            }
         }
 
         private void CharacterGrid_SelectionChanged(object sender, EventArgs e)
@@ -218,105 +282,204 @@ namespace ExileClipboardListener.WinForms
 
         private void ViewItem_Click(object sender, EventArgs e)
         {
-            if (ItemList.SelectedIndex == -1)
-                return;
-            string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
-            if (!itemText.Contains("Rarity:"))
-                return;
-            if (ParseItem.ParseStash(itemText))
+            try
             {
-                var dr = new ItemInformation().ShowDialog();
-
-                //Stash the item if we are said to stash it from the pop up
-                if (dr == DialogResult.OK)
+                if (ItemList.SelectedIndex == -1)
+                    return;
+                string itemText = Parser.ScriptItem(_stashType == "Stash" ? _stash.Items[ItemList.SelectedIndex] : _inventory.Items[ItemList.SelectedIndex]);
+                if (!itemText.Contains("Rarity:"))
+                    return;
+                if (itemText.Contains("Rarity: Gem"))
                 {
-                    GlobalMethods.SaveStash(GlobalMethods.LeagueId);
-                    if (Properties.Settings.Default.StashPopUpMode != 0)
-                        new PopUpStashed().ShowDialog();
                 }
+                else
+                {
+                    if (ParseItem.ParseStash(itemText))
+                    {
+                        var dr = new ItemInformation().ShowDialog();
+
+                        //Stash the item if we are said to stash it from the pop up
+                        if (dr == DialogResult.OK)
+                        {
+                            GlobalMethods.SaveStash(GlobalMethods.LeagueId);
+                            if (Properties.Settings.Default.StashPopUpMode != 0)
+                                new PopUpStashed().ShowDialog();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
             }
         }
 
         private void League_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GetCurrentLeague();
-            CharacterGrid.Rows.Clear();
-            foreach (var c in _characters)
+            try
             {
-                if (c.League == League.Text)
+                GetCurrentLeague();
+                CharacterGrid.Rows.Clear();
+                foreach (var c in _characters)
                 {
-                    var row = new object[4];
-                    row[0] = c.Level;
-                    row[1] = c.Class;
-                    row[2] = c.Name;
-                    row[3] = c.League;
-                    CharacterGrid.Rows.Add(row);
+                    if (c.League == League.Text)
+                    {
+                        var row = new object[4];
+                        row[0] = c.Level;
+                        row[1] = c.Class;
+                        row[2] = c.Name;
+                        row[3] = c.League;
+                        CharacterGrid.Rows.Add(row);
+                    }
                 }
+                if (CharacterGrid.Rows.Count > 0)
+                {
+                    CharacterGrid_SelectionChanged(null, null);
+                    GrabInventory.Enabled = true;
+                }
+                GrabStashTabs();
+                ItemList.Items.Clear();
+                ItemScript.Text = "";
             }
-            if (CharacterGrid.Rows.Count > 0)
+            catch (Exception ex)
             {
-                CharacterGrid_SelectionChanged(null, null);
-                GrabInventory.Enabled = true;
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
             }
-            GrabStashTabs();
-            ItemList.Items.Clear();
-            ItemScript.Text = "";
         }
 
         private void StashLeague_Click(object sender, EventArgs e)
         {
-            ItemList.Items.Clear();
-            ItemScript.Text = "";
-            Cursor.Current = Cursors.WaitCursor;
-            GetCurrentLeague();
-
-            //Stash all character inventories
-            for (int row = 0; row < CharacterGrid.Rows.Count; row++)
+            try
             {
-                string character = CharacterGrid.Rows[row].Cells[CharacterGridNameColumn.Index].Value.ToString();
-                _inventory = POEWeb.GetInventory(character);
-                foreach (var i in _inventory.Items)
+                ItemList.Items.Clear();
+                ItemScript.Text = "";
+                Cursor.Current = Cursors.WaitCursor;
+                GetCurrentLeague();
+
+                //Stash all character inventories
+                for (int row = 0; row < CharacterGrid.Rows.Count; row++)
                 {
-                    toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
-                    Application.DoEvents();
-                    string itemText = Parser.ScriptItem(i);
-                    if (itemText.Contains("Rarity:"))
+                    string character = CharacterGrid.Rows[row].Cells[CharacterGridNameColumn.Index].Value.ToString();
+                    _inventory = POEWeb.GetInventory(character);
+                    foreach (var i in _inventory.Items)
                     {
-                        if (ParseItem.ParseStash(itemText))
-                            GlobalMethods.SaveStash(_leagueId);
+                        toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
+                        Application.DoEvents();
+                        string itemText = Parser.ScriptItem(i);
+                        if (itemText.Contains("Rarity: Gem"))
+                        {
+                            if (ParseItem.ParseGem(itemText))
+                                GlobalMethods.SaveGem(_leagueId);
+                        }
+                        else
+                        {
+                            if (ParseItem.ParseStash(itemText))
+                                GlobalMethods.SaveStash(_leagueId);
+                        }
+                        if (i.SocketedItems != null)
+                        {
+                            foreach (var si in i.SocketedItems)
+                            {
+                                toolStripStatusLabel1.Text = "Parsing " + si.TypeLine + "... ";
+                                Application.DoEvents();
+                                itemText = Parser.ScriptItem(si);
+                                if (ParseItem.ParseGem(itemText))
+                                    GlobalMethods.SaveGem(_leagueId);
+                            }
+                        }
                     }
-                    else
+                }
+
+                //Stash all stash tabs
+                for (int tab = 0; tab < _stash.NumTabs; tab++)
+                {
+                    string tabNumber = tab.ToString();
+                    _stash = POEWeb.GetStash(League.Text, tabNumber);
+                    foreach (var i in _stash.Items)
                     {
-                        if (ParseItem.ParseGem(itemText))
-                            GlobalMethods.SaveGem(_leagueId);
+                        toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
+                        Application.DoEvents();
+                        string itemText = Parser.ScriptItem(i);
+                        if (itemText.Contains("Rarity: Gem"))
+                        {
+                            if (ParseItem.ParseGem(itemText))
+                                GlobalMethods.SaveGem(_leagueId);
+                        }
+                        else
+                        {
+                            if (ParseItem.ParseStash(itemText))
+                                GlobalMethods.SaveStash(_leagueId);
+                        }
+                    }
+                }
+                toolStripStatusLabel1.Text = "Ready";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void StashAllInventories_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ItemList.Items.Clear();
+                ItemScript.Text = "";
+                Cursor.Current = Cursors.WaitCursor;
+                GetCurrentLeague();
+
+                //Stash all character inventories
+                for (int row = 0; row < CharacterGrid.Rows.Count; row++)
+                {
+                    string character = CharacterGrid.Rows[row].Cells[CharacterGridNameColumn.Index].Value.ToString();
+                    _inventory = POEWeb.GetInventory(character);
+                    foreach (var i in _inventory.Items)
+                    {
+                        toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
+                        Application.DoEvents();
+                        string itemText = Parser.ScriptItem(i);
+                        if (itemText.Contains("Rarity: Gem"))
+                        {
+                            if (ParseItem.ParseGem(itemText))
+                                GlobalMethods.SaveGem(_leagueId);
+                        }
+                        else
+                        {
+                            if (ParseItem.ParseStash(itemText))
+                                GlobalMethods.SaveStash(_leagueId);
+                        }
+                        if (i.SocketedItems != null)
+                        {
+                            foreach (var si in i.SocketedItems)
+                            {
+                                toolStripStatusLabel1.Text = "Parsing " + si.TypeLine + "... ";
+                                Application.DoEvents();
+                                itemText = Parser.ScriptItem(si);
+                                if (ParseItem.ParseGem(itemText))
+                                    GlobalMethods.SaveGem(_leagueId);
+                            }
+                        }
                     }
                 }
             }
-
-            //Stash all stash tabs
-            for (int tab = 0; tab < _stash.NumTabs; tab++)
+            catch (Exception ex)
             {
-                string tabNumber = tab.ToString();
-                _stash = POEWeb.GetStash(League.Text, tabNumber);
-                foreach (var i in _stash.Items)
-                {
-                    toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
-                    Application.DoEvents();
-                    string itemText = Parser.ScriptItem(i);
-                    if (itemText.Contains("Rarity:"))
-                    {
-                        if (ParseItem.ParseStash(itemText))
-                            GlobalMethods.SaveStash(_leagueId);
-                    }
-                    else
-                    {
-                        if (ParseItem.ParseGem(itemText))
-                            GlobalMethods.SaveGem(_leagueId);
-                    }
-                }
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return;
             }
-            toolStripStatusLabel1.Text = "Ready";
-            Cursor.Current = Cursors.Default;
+            finally
+            {
+                toolStripStatusLabel1.Text = "Ready";
+                Cursor.Current = Cursors.Default;
+            }
         }
     }
 }

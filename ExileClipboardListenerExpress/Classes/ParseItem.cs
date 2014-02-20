@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
+using gi = ExileClipboardListener.Classes.GlobalMethods.StashGem;
 
 namespace ExileClipboardListener.Classes
 {
@@ -13,6 +14,56 @@ namespace ExileClipboardListener.Classes
         {
             GlobalMethods.ClearGem();
             GlobalMethods.StashGem.OriginalText = gem;
+
+            //Parse the details
+            var entity = gem.Split(new[] { "\n" }, StringSplitOptions.None);
+            for (int i = 0; i < entity.Count(); i++)
+            {
+                entity[i] = entity[i].Replace("\n", "");
+                entity[i] = entity[i].Replace("\r", "");
+            }
+
+            //The first section is always the basic details
+            if (entity.Count() < 2)
+            {
+                MessageBox.Show("Couldn't split item did you lose the carriage-returns somehow?");
+                return false;
+            }
+            gi.GemName = entity[1];
+            gi.Quality = FindAnyValue<int>(entity, "Quality");
+            RemoveSection(ref entity);
+
+            //Next comes the types as a list
+            gi.GemType = entity[3];
+
+            //And other properties
+            gi.Level = FindAnyValue<int>(entity, "Level");
+            gi.ManaCost = FindAnyValue<int>(entity, "Mana Cost");
+            gi.ManaMultiplier = FindAnyValue<int>(entity, "Mana Multiplier");
+            gi.ManaReserved = FindAnyValue<int>(entity, "Mana Reserved");
+            if (gem.Contains("Experience:"))
+                gi.Experience = FindAnyValue<string>(entity, "Experience");
+            RemoveSection(ref entity);
+
+            //Then the requirements
+            gi.ReqLevel = FindAnyValue<int>(entity, "Level");
+            gi.ReqStr = FindAnyValue<int>(entity, "Str");
+            gi.ReqDex = FindAnyValue<int>(entity, "Dex");
+            gi.ReqInt = FindAnyValue<int>(entity, "Int");
+
+            //Some items have no requirements so be careful
+            if (gi.ReqLevel != 0 || gem.Contains("Requirements:"))
+                RemoveSection(ref entity);
+
+            //Finally the modifiers
+            int mi = 0;
+            foreach (var mod in entity)
+            {
+                if (mod == "--------")
+                    break;
+                if (mod != "")
+                    gi.ExplicitMod[mi++] = mod;
+            }
             return true;
         }
 
@@ -992,6 +1043,7 @@ namespace ExileClipboardListener.Classes
                             valueString = valueString.Replace(" (augmented)", "");
                             valueString = valueString.Replace(" (gem)", "");
                             valueString = valueString.Replace(" (unmet)", "");
+                            valueString = valueString.Replace(" (Max)", "");
                             valueString = valueString.Trim();
                             if (valueString.Contains("-") && pair != -1)
                             {

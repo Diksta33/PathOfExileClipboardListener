@@ -16,38 +16,38 @@ namespace ExileClipboardListener.JSON
             if (i.FrameType == 4)
             {
                 //Basic Details
-                item = i.TypeLine + Environment.NewLine;
-                //if (i.DescrText!= null)
-                //    item += i.DescrText + Environment.NewLine;
-                if (i.SecDescrText != null)
-                    item += i.SecDescrText + Environment.NewLine;
+                item = "Rarity: Gem" + Environment.NewLine;
+                item += i.TypeLine + Environment.NewLine;
+                item += "--------" + Environment.NewLine;
 
                 //Properties
-                foreach (var p in i.Properties)
-                    item += p.Name + (p.Values.Count >= 1 && p.Name != "" ? ": " : "") + (p.Values.Count >= 1 ? ((object[])p.Values[0])[0] : "") + (p.Values.Count >= 2 ? ", " + ((object[])p.Values[1])[0] : "") + Environment.NewLine;
-                //if (i.Color == "S")
-                //    item += "Colour: Red" + Environment.NewLine;
-                //if (i.Color == "D")
-                //    item += "Colour: Green" + Environment.NewLine;
-                //if (i.Color == "I")
-                //    item += "Colour: Blue" + Environment.NewLine;
-                //Item Type
-                item += "--------" + Environment.NewLine;
-                item += (i.Support ? "Support Gem" : "Gem") + Environment.NewLine;
-                
+                if (i.Properties != null)
+                    foreach (var p in i.Properties)
+                        item += p.Name + (p.Values.Count >= 1 && p.Name != "" ? ": " : "") + (p.Values.Count >= 1 ? ((object[])p.Values[0])[0] : "") + (p.Values.Count >= 2 ? ", " + ((object[])p.Values[1])[0] : "") + Environment.NewLine;
+
+                //Experience
+                if (i.AdditionalProperties != null)
+                    item += "Experience: " + i.AdditionalProperties[0].Values[0][0] + Environment.NewLine;
+
                 //Requirements
                 item += "--------" + Environment.NewLine;
                 item += "Requirements:" + Environment.NewLine;
                 foreach (var r in i.Requirements)
                     item += r.Name + ": " + ((object[])r.Value[0])[0] + Environment.NewLine;
-                
+
                 //Mods
-                if (i.ImplicitMods != null)
+                if (i.ExplicitMods != null)
                 {
                     item += "--------" + Environment.NewLine;
-                    foreach (var im in i.ImplicitMods)
+                    foreach (var im in i.ExplicitMods)
                         item += im + Environment.NewLine;
                 }
+
+                //Instructions
+                item += "--------" + Environment.NewLine;
+                if (i.DescrText != null)
+                    item += i.DescrText + Environment.NewLine;
+
                 return item;
             }
 

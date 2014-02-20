@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Logon = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StashTab = new System.Windows.Forms.ComboBox();
@@ -52,6 +52,7 @@
             this.GrabInventory = new System.Windows.Forms.Button();
             this.ViewItem = new System.Windows.Forms.Button();
             this.StashLeague = new System.Windows.Forms.Button();
+            this.StashAllInventories = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ItemIcon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CharacterGrid)).BeginInit();
@@ -195,8 +196,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle2.Format = "N0";
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Format = "N0";
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle4;
             this.Column1.HeaderText = "Level";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -277,7 +278,7 @@
             // StashLeague
             // 
             this.StashLeague.Enabled = false;
-            this.StashLeague.Location = new System.Drawing.Point(691, 70);
+            this.StashLeague.Location = new System.Drawing.Point(691, 177);
             this.StashLeague.Name = "StashLeague";
             this.StashLeague.Size = new System.Drawing.Size(117, 23);
             this.StashLeague.TabIndex = 26;
@@ -285,11 +286,23 @@
             this.StashLeague.UseVisualStyleBackColor = true;
             this.StashLeague.Click += new System.EventHandler(this.StashLeague_Click);
             // 
+            // StashAllInventories
+            // 
+            this.StashAllInventories.Enabled = false;
+            this.StashAllInventories.Location = new System.Drawing.Point(691, 148);
+            this.StashAllInventories.Name = "StashAllInventories";
+            this.StashAllInventories.Size = new System.Drawing.Size(117, 23);
+            this.StashAllInventories.TabIndex = 27;
+            this.StashAllInventories.Text = "Stash All Inventories";
+            this.StashAllInventories.UseVisualStyleBackColor = true;
+            this.StashAllInventories.Click += new System.EventHandler(this.StashAllInventories_Click);
+            // 
             // JSONReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 628);
+            this.Controls.Add(this.StashAllInventories);
             this.Controls.Add(this.StashLeague);
             this.Controls.Add(this.ViewItem);
             this.Controls.Add(this.GrabInventory);
@@ -335,8 +348,6 @@
         private System.Windows.Forms.ListBox ItemList;
         private System.Windows.Forms.Button GrabStash;
         private System.Windows.Forms.Button StashAll;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.DataGridView CharacterGrid;
         private System.Windows.Forms.Button AddStash;
         private System.Windows.Forms.Label label3;
@@ -348,5 +359,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn CharacterGridLeagueColumn;
         private System.Windows.Forms.Button ViewItem;
         private System.Windows.Forms.Button StashLeague;
+        private System.Windows.Forms.Button StashAllInventories;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

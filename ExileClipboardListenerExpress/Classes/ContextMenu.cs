@@ -10,6 +10,7 @@ namespace ExileClipboardListener.Classes
         private bool _characterLoaded;
         private bool _leagueLoaded;
         private bool _stashLoaded;
+        private bool _gemsLoaded;
         private bool _filtersLoaded;
         private bool _settingsLoaded;
         private bool _downloadStashLoaded;
@@ -59,6 +60,11 @@ namespace ExileClipboardListener.Classes
             //View Stash
             item = new ToolStripMenuItem { Text = "View Stash" };
             item.Click += ViewStashClick;
+            Menu.Items.Add(item);
+
+            //View Gems
+            item = new ToolStripMenuItem { Text = "View Gems" };
+            item.Click += ViewGemsClick;
             Menu.Items.Add(item);
 
             //Separator
@@ -125,6 +131,16 @@ namespace ExileClipboardListener.Classes
                 _stashLoaded = true;
                 new StashViewer().ShowDialog();
                 _stashLoaded = false;
+            }
+        }
+
+        private void ViewGemsClick(object sender, EventArgs e)
+        {
+            if (!_gemsLoaded)
+            {
+                _gemsLoaded = true;
+                new GemViewer().ShowDialog();
+                _gemsLoaded = false;
             }
         }
 

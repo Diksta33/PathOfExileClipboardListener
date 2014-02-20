@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>27</ApplicationRevision>
+    <ApplicationRevision>28</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -124,6 +124,12 @@
     <Compile Include="WinForms\Character.Designer.cs">
       <DependentUpon>Character.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms\GemViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\GemViewer.Designer.cs">
+      <DependentUpon>GemViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms\ItemInformation.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +206,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\Character.resx">
       <DependentUpon>Character.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\GemViewer.resx">
+      <DependentUpon>GemViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\ItemInformation.resx">
       <DependentUpon>ItemInformation.cs</DependentUpon>

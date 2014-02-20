@@ -122,7 +122,7 @@ namespace ExileClipboardListener.Classes
             public static string OriginalText;
             public static string GemName;
             public static string GemType;
-            public static bool Support;
+            public static string Experience;
             public static int Level;
             public static int Quality;
             public static int ReqLevel;
@@ -131,7 +131,8 @@ namespace ExileClipboardListener.Classes
             public static int ReqInt;
             public static int ManaCost;
             public static int ManaMultiplier;
-            public static string[] ImplicitMod = new string[10];
+            public static int ManaReserved;
+            public static string[] ExplicitMod = new string[10];
         }
 
         //Storage for filter results
@@ -198,9 +199,10 @@ namespace ExileClipboardListener.Classes
             StashGem.ReqInt = 0;
             StashGem.ManaCost = 0;
             StashGem.ManaMultiplier = 0;
-            StashGem.Support = false;
+            StashGem.ManaReserved = 0;
+            StashGem.Experience = "";
             for (int im = 0; im < 10; im++)
-                StashGem.ImplicitMod[im] = "";
+                StashGem.ExplicitMod[im] = "";
             StashGem.OriginalText = "";
         }
 
@@ -762,9 +764,49 @@ namespace ExileClipboardListener.Classes
             }
         }
 
+        public static void GetGemTypes(ComboBox GemType)
+        {
+            try
+            {
+                GemType.Items.Clear();
+                var gemTypes = new List<string>();
+                GemType.Items.Add("(All)");
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+                        com.CommandText = "SELECT DISTINCT Type FROM GemStash;";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            //Now process the results set
+                            while (dr.Read())
+                            {
+                                var types = dr[0].ToString().Replace(", ", ",").Split(',');
+                                foreach (var gemType in types)
+                                {
+                                    if (!gemTypes.Contains(gemType))
+                                        gemTypes.Add(gemType);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Add the gem types to the list
+                foreach (var gemType in gemTypes)
+                    GemType.Items.Add(gemType);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+            }
+        }
+
         public static void SaveGem(int leagueId)
         {
-            string sql = "INSERT INTO GemStash(LeagueId, Name, Level, Quality, ReqLevel, ReqStr, ReqDex, ReqInt, Type, ManaCost, ManaMultiplier, OriginalText) VALUES (";
+            string sql = "INSERT INTO GemStash(LeagueId, Name, Level, Quality, ReqLevel, ReqStr, ReqDex, ReqInt, Type, ManaCost, ManaMultiplier, ManaReserved, ExplicitMod1, ExplicitMod2, ExplicitMod3, ExplicitMod4, ExplicitMod5, ExplicitMod6, ExplicitMod7, ExplicitMod8, ExplicitMod9, OriginalText) VALUES (";
 
             //League
             sql += leagueId + ",";
@@ -779,9 +821,23 @@ namespace ExileClipboardListener.Classes
             sql += StashGem.ReqInt + ",";
 
             //Other stuff
-            sql += "'" + StashGem.GemType + "',";
+            sql += "'" + StashGem.GemType.Replace("'", "''") + "',";
             sql += StashGem.ManaCost + ",";
             sql += StashGem.ManaMultiplier + ",";
+            sql += StashGem.ManaReserved + ",";
+
+            //Explicit Mods
+            sql += "'" + StashGem.ExplicitMod[0].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[1].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[2].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[3].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[4].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[5].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[6].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[7].Replace("'", "''") + "',";
+            sql += "'" + StashGem.ExplicitMod[8].Replace("'", "''") + "',";
+            if (StashGem.ExplicitMod[9] != "")
+                MessageBox.Show("No room at the inn!");
 
             //Original Text
             sql += "'" + StashGem.OriginalText.Replace("'", "''") + "')";

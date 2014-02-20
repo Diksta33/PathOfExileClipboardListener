@@ -40,7 +40,25 @@ namespace ExileClipboardListener.Classes
 
                 //If we get here then something is going to end up being messed up if we already have the pop up form open
                 _loaded = true;
-                if (ParseItem.ParseStash(item))
+                if (item.Contains("Rarity: Gem"))
+                {
+                    if (ParseItem.ParseGem(item))
+                    {
+                        //If we are in collection mode pop up a window
+                        //DialogResult dr = DialogResult.None;
+                        //if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
+                        //    dr = new ItemInformation().ShowDialog();
+
+                        //Stash the item if we are in stash mode or said to stash it from the pop up
+                        if (GlobalMethods.Mode == GlobalMethods.STASH_MODE)// || dr == DialogResult.OK)
+                        {
+                            GlobalMethods.SaveGem(GlobalMethods.LeagueId);
+                            if (Properties.Settings.Default.StashPopUpMode != 0)
+                                new PopUpStashed().ShowDialog();
+                        }
+                    }
+                }
+                else if (ParseItem.ParseStash(item))
                 {
                     //If we are in collection mode pop up a window
                     DialogResult dr = DialogResult.None;

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
+using ExileClipboardListener.WinForms;//Horrid, must find a better way
 
 namespace ExileClipboardListener.JSON
 {
@@ -33,21 +34,24 @@ namespace ExileClipboardListener.JSON
     /// <remarks>
     /// Throttling conversation here: http://stackapps.com/questions/1143/request-throttling-limits
     /// </remarks>
-    public delegate void ThrottledEventHandler(object sender, ThrottledEventArgs e);
-    
-    public class ThrottledEventArgs : EventArgs
-    {
-        public TimeSpan WaitTime { get; private set; }
-        public ThrottledEventArgs(TimeSpan waitTime)
-        {
-            WaitTime = waitTime;
-        }
-    }
+    //public delegate void ThrottledEventHandler(object sender, ThrottledEventArgs e);
+
+    //public class ThrottledEventArgs : EventArgs
+    //{
+    //    public TimeSpan WaitTime { get; private set; }
+    //    public ThrottledEventArgs(TimeSpan waitTime)
+    //    {
+    //        WaitTime = waitTime;
+    //    }
+    //}
+
     public sealed class RequestThrottle
     {
+        //public event ThrottledEventHandler ThrottledEvent;
+
         private int _outstandingRequests;
         private readonly Queue<DateTime> _requestTimes = new Queue<DateTime>();
-        public event ThrottledEventHandler Throttled;
+        //public event ThrottledEventHandler Throttled;
 
         private RequestThrottle()
         {
@@ -141,8 +145,8 @@ namespace ExileClipboardListener.JSON
                         Trace.WriteLine("waiting:\t" + waitTime + "\t" + uri.AbsoluteUri);
                         using (var throttleGate = new AutoResetEvent(false))
                         {
-                            if (Throttled != null)
-                                Throttled(this, new ThrottledEventArgs(waitTime));
+                            //if (Throttled != null)
+                            //    Throttled(this, new ThrottledEventArgs(waitTime));
                             throttleGate.WaitOne(waitTime);
                         }
                     }

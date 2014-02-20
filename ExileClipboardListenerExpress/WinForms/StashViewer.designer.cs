@@ -198,9 +198,9 @@
             this.ItemCount.AutoSize = true;
             this.ItemCount.Location = new System.Drawing.Point(1256, 606);
             this.ItemCount.Name = "ItemCount";
-            this.ItemCount.Size = new System.Drawing.Size(32, 13);
+            this.ItemCount.Size = new System.Drawing.Size(31, 13);
             this.ItemCount.TabIndex = 12;
-            this.ItemCount.Text = "Items";
+            this.ItemCount.Text = "items";
             // 
             // MinItemLevel
             // 
