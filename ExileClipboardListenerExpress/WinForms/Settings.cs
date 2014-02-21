@@ -19,6 +19,7 @@ namespace ExileClipboardListener.WinForms
             DefaultTab.Items.Add("Filter Results");
 
             //Show the current settings
+            CompactMode.Checked = Properties.Settings.Default.StashMode == GlobalMethods.COMPACT_MODE;
             CollectionMode.Checked = Properties.Settings.Default.StashMode == GlobalMethods.COLLECTION_MODE;
             DuplicatesYes.Checked = Properties.Settings.Default.StashDuplicates;
             DuplicatesNo.Checked = !Properties.Settings.Default.StashDuplicates;
@@ -55,7 +56,7 @@ namespace ExileClipboardListener.WinForms
 
         private void Save_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.StashMode = StashMode.Checked ? GlobalMethods.STASH_MODE : GlobalMethods.COLLECTION_MODE;
+            Properties.Settings.Default.StashMode = StashMode.Checked ? GlobalMethods.STASH_MODE : (CompactMode.Checked ? GlobalMethods.COMPACT_MODE : GlobalMethods.COLLECTION_MODE);
             Properties.Settings.Default.TolerancePoorTo = (int)TolerancePoorTo.Value;
             Properties.Settings.Default.ToleranceAverageFrom = (int)ToleranceAverageFrom.Value;
             Properties.Settings.Default.ToleranceAverageTo = (int)ToleranceAverageTo.Value;

@@ -69,10 +69,11 @@
             this.CollectionPopUpPerm = new System.Windows.Forms.RadioButton();
             this.CollectionPopUpTimed = new System.Windows.Forms.RadioButton();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.Username = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.Password = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.Username = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.CompactMode = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StashPopUpSeconds)).BeginInit();
@@ -93,11 +94,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.CompactMode);
             this.groupBox1.Controls.Add(this.CollectionMode);
             this.groupBox1.Controls.Add(this.StashMode);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(209, 72);
+            this.groupBox1.Size = new System.Drawing.Size(209, 93);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Mode on Startup";
@@ -131,7 +133,7 @@
             this.groupBox2.Controls.Add(this.StashPopUpPerm);
             this.groupBox2.Controls.Add(this.StashPopUpTimed);
             this.groupBox2.Controls.Add(this.StashNoPopUp);
-            this.groupBox2.Location = new System.Drawing.Point(12, 90);
+            this.groupBox2.Location = new System.Drawing.Point(12, 111);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(209, 100);
             this.groupBox2.TabIndex = 1;
@@ -225,7 +227,7 @@
             // 
             this.groupBox4.Controls.Add(this.CompareLevel);
             this.groupBox4.Controls.Add(this.CompareBest);
-            this.groupBox4.Location = new System.Drawing.Point(12, 267);
+            this.groupBox4.Location = new System.Drawing.Point(12, 288);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(209, 72);
             this.groupBox4.TabIndex = 3;
@@ -536,7 +538,7 @@
             this.groupBox7.Controls.Add(this.CollectionPopUpSeconds);
             this.groupBox7.Controls.Add(this.CollectionPopUpPerm);
             this.groupBox7.Controls.Add(this.CollectionPopUpTimed);
-            this.groupBox7.Location = new System.Drawing.Point(12, 196);
+            this.groupBox7.Location = new System.Drawing.Point(12, 217);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(209, 65);
             this.groupBox7.TabIndex = 8;
@@ -609,21 +611,13 @@
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Security (Optional)";
             // 
-            // label12
+            // Password
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 23);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(55, 13);
-            this.label12.TabIndex = 0;
-            this.label12.Text = "Username";
-            // 
-            // Username
-            // 
-            this.Username.Location = new System.Drawing.Point(70, 20);
-            this.Username.Name = "Username";
-            this.Username.Size = new System.Drawing.Size(133, 20);
-            this.Username.TabIndex = 1;
+            this.Password.Location = new System.Drawing.Point(70, 46);
+            this.Password.Name = "Password";
+            this.Password.PasswordChar = '*';
+            this.Password.Size = new System.Drawing.Size(133, 20);
+            this.Password.TabIndex = 3;
             // 
             // label13
             // 
@@ -634,13 +628,32 @@
             this.label13.TabIndex = 2;
             this.label13.Text = "Password";
             // 
-            // Password
+            // Username
             // 
-            this.Password.Location = new System.Drawing.Point(70, 46);
-            this.Password.Name = "Password";
-            this.Password.PasswordChar = '*';
-            this.Password.Size = new System.Drawing.Size(133, 20);
-            this.Password.TabIndex = 3;
+            this.Username.Location = new System.Drawing.Point(70, 20);
+            this.Username.Name = "Username";
+            this.Username.Size = new System.Drawing.Size(133, 20);
+            this.Username.TabIndex = 1;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 23);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(55, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Username";
+            // 
+            // CompactMode
+            // 
+            this.CompactMode.AutoSize = true;
+            this.CompactMode.Location = new System.Drawing.Point(6, 65);
+            this.CompactMode.Name = "CompactMode";
+            this.CompactMode.Size = new System.Drawing.Size(97, 17);
+            this.CompactMode.TabIndex = 2;
+            this.CompactMode.TabStop = true;
+            this.CompactMode.Text = "Compact Mode";
+            this.CompactMode.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -738,5 +751,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox Username;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.RadioButton CompactMode;
     }
 }

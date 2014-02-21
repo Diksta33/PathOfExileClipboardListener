@@ -96,7 +96,7 @@ namespace ExileClipboardListener.Classes
                 item = item.Replace("Removes ", "");
 
                 //Parse the details
-                var entity = item.Split(new[] { "\n" }, StringSplitOptions.None);
+                var entity = item.Split(new[] {"\n"}, StringSplitOptions.None);
                 for (int i = 0; i < entity.Count(); i++)
                 {
                     entity[i] = entity[i].Replace("\n", "");
@@ -135,7 +135,7 @@ namespace ExileClipboardListener.Classes
                     string name = si.ItemName;
 
                     //Remove any suffix
-                    name = name.Split(new[] { " of " }, StringSplitOptions.None)[0];
+                    name = name.Split(new[] {" of "}, StringSplitOptions.None)[0];
                     si.BaseItemId = GlobalMethods.GetScalarInt("SELECT BaseItemId FROM BaseItem WHERE ItemName = '" + name.Replace("'", "''") + "';");
 
                     //We might also need to remove the prefix
@@ -239,8 +239,8 @@ namespace ExileClipboardListener.Classes
                 //Work out the pDPS and eDPS
                 if (si.AttacksPerSecond != 0)
                 {
-                    si.pDPS = Convert.ToDecimal((si.PhysicalDamageMax + si.PhysicalDamageMin) / 2) * si.AttacksPerSecond;
-                    si.eDPS = Convert.ToDecimal((si.ElementalDamageMax + si.ElementalDamageMin) / 2) * si.AttacksPerSecond;
+                    si.pDPS = Convert.ToDecimal((si.PhysicalDamageMax + si.PhysicalDamageMin)/2)*si.AttacksPerSecond;
+                    si.eDPS = Convert.ToDecimal((si.ElementalDamageMax + si.ElementalDamageMin)/2)*si.AttacksPerSecond;
                     si.tDPS = si.pDPS + si.eDPS;
                 }
 
@@ -323,13 +323,13 @@ namespace ExileClipboardListener.Classes
 
                             //Life Regen is a pain because it needs multiplying up to get a value we can use
                             if (modName == "Life Regenerated per second")
-                                match.Value = Convert.ToInt32(Convert.ToDecimal(modValue) * 60);
+                                match.Value = Convert.ToInt32(Convert.ToDecimal(modValue)*60);
                             else
                             {
                                 if (modValue == "No")
                                     match.Value = 0;
                                 else
-                                    match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
+                                    match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] {"-"}, StringSplitOptions.None)[0]) : Convert.ToInt32(modValue);
                             }
                             mods.Add(match);
 
@@ -338,7 +338,7 @@ namespace ExileClipboardListener.Classes
                             match = GlobalMethods.FindMod(modName, 2, itemTypeName, itemSubTypeName);
                             if (match.Id != 0)
                             {
-                                match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] { "-" }, StringSplitOptions.None)[1]) : 0;
+                                match.Value = modValue.Contains("-") ? Convert.ToInt32(modValue.Split(new[] {"-"}, StringSplitOptions.None)[1]) : 0;
                                 mods.Add(match);
                             }
                         }
@@ -533,7 +533,7 @@ namespace ExileClipboardListener.Classes
                 {
                     var iir = iirMod.Value;
                     mods.Remove(iirMod);
-                    iirMod.Value = iirMod.Value / 2;
+                    iirMod.Value = iirMod.Value/2;
                     mods.Add(iirMod);
                     var newMod = iirMod;
                     newMod.Value = iir - iirMod.Value;
@@ -599,7 +599,7 @@ namespace ExileClipboardListener.Classes
                 //We need to guess the "shared" amount for the mod that is common to both
                 if (!allAssigned)
                 {
-                    int maxTries = mods.Count * 2 + 1;
+                    int maxTries = mods.Count*2 + 1;
                     for (int tries = 0; mods.Count > 0 && tries < maxTries; tries++)
                     {
                         var mod = mods[0];
@@ -618,19 +618,19 @@ namespace ExileClipboardListener.Classes
                                 //Armour only
                                 if (si.Armour != 0 && si.Evasion == 0 && si.EnergyShield == 0)
                                     affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
-                                //Evasion only
+                                    //Evasion only
                                 else if (si.Armour == 0 && si.Evasion != 0 && si.EnergyShield == 0)
                                     affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
-                                //Energy Shield only
+                                    //Energy Shield only
                                 else if (si.Armour == 0 && si.Evasion == 0 && si.EnergyShield != 0)
                                     affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Energy Shield") && !a.Mod1.RealName.Contains("and"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
-                                //Armour/ Evasion only
+                                    //Armour/ Evasion only
                                 else if (si.Armour != 0 && si.Evasion != 0 && si.EnergyShield == 0)
                                     affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Evasion"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
-                                //Armour/ Energy Shield only
+                                    //Armour/ Energy Shield only
                                 else if (si.Armour != 0 && si.Evasion == 0 && si.EnergyShield != 0)
                                     affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Armour and Energy Shield"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
-                                //Evasion/ Energy Shield only
+                                    //Evasion/ Energy Shield only
                                 else if (si.Armour == 0 && si.Evasion != 0 && si.EnergyShield != 0)
                                     affix = GlobalMethods.AffixCache.Where(a => a.Mod1.Class != "Defense" || (a.Mod1.RealName.Contains("Evasion and Energy Shield"))).FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || a.Mod2.Id == mod.Id);
                                 else
@@ -760,7 +760,7 @@ namespace ExileClipboardListener.Classes
                                 if (affixSingleMod.AffixId != 0)
                                     break;
                             }
-                            
+
                             //We should get two affixes out of this
                             if (affixDoubleMod.AffixId == 0 || affixSingleMod.AffixId == 0)
                             {
@@ -823,7 +823,7 @@ namespace ExileClipboardListener.Classes
                                 suffixes.Add(affixSingleMod);
 
                             //Now remove any mods we touched from our list
-                            for (int i = mods.Count -1 ; i >= 0; i--)
+                            for (int i = mods.Count - 1; i >= 0; i--)
                             {
                                 if (mods[i].Id == primaryMod.Id || mods[i].Id == secondaryMod.Id)
                                     mods.RemoveAt(i);
@@ -998,6 +998,16 @@ namespace ExileClipboardListener.Classes
                 {
                     si.Affix[suffix + 4] = suffixes[suffix];
                 }
+
+                //Finally, now everything has been parsed we need to pull out some key statistics
+                si.Life = GetModValues("Life");
+                si.Mana = GetModValues("Mana");
+                si.FireRes = GetModValues("Fire Resistance");
+                si.ColdRes = GetModValues("Cold Resistance");
+                si.LightRes = GetModValues("Lightning Resistance");
+                si.ChaosRes = GetModValues("Chaos Resistance");
+                si.EleRes = si.LightRes + si.FireRes + si.ColdRes;
+                si.TotalRes = si.EleRes + si.ChaosRes;
             }
             catch (Exception ex)
             {
@@ -1007,7 +1017,17 @@ namespace ExileClipboardListener.Classes
             return true;
         }
 
-       private static void RemoveSection(ref string[] entity)
+        private static int GetModValues(string modText)
+        {
+            int retVal = 0;
+            foreach (var mod in si.Mod)
+                if (mod.Name != null)
+                if (mod.Name.Contains(modText))
+                    retVal += mod.Value;
+            return retVal;
+        }
+
+        private static void RemoveSection(ref string[] entity)
         {
             //Scans the item, removing anything up to and including the first seperator or the end of the item
             for (int i = 0; i < entity.Count(); i++)

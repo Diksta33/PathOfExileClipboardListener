@@ -197,6 +197,12 @@
     <Compile Include="WinForms\StashViewer.designer.cs">
       <DependentUpon>StashViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms\CompactInformation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\CompactInformation.Designer.cs">
+      <DependentUpon>CompactInformation.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="WinForms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -254,6 +260,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\StashViewer.resx">
       <DependentUpon>StashViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\CompactInformation.resx">
+      <DependentUpon>CompactInformation.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">

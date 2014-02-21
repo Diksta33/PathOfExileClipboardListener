@@ -13,6 +13,7 @@ namespace ExileClipboardListener.Classes
         //ReSharper disable InconsistentNaming
         public const int STASH_MODE = 0;
         public const int COLLECTION_MODE = 1;
+        public const int COMPACT_MODE = 2;
         //ReSharper restore InconsistentNaming
         public static int Mode = STASH_MODE;
         public static string Connection = "Data Source=ExileStash.s3db;Version=3;";
@@ -110,6 +111,14 @@ namespace ExileClipboardListener.Classes
             public static decimal pDPS;
             public static decimal tDPS;
             //ReSharper restore InconsistentNaming
+            public static int Life;
+            public static int Mana;
+            public static int FireRes;
+            public static int ColdRes;
+            public static int LightRes;
+            public static int EleRes;
+            public static int ChaosRes;
+            public static int TotalRes;
             public static decimal CriticalStrikeChance;
             public static string Sockets;
             public static Mod[] Mod = new Mod[20];

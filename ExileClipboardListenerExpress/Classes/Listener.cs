@@ -64,6 +64,8 @@ namespace ExileClipboardListener.Classes
                     DialogResult dr = DialogResult.None;
                     if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
                         dr = new ItemInformation().ShowDialog();
+                    if (GlobalMethods.Mode == GlobalMethods.COMPACT_MODE)
+                        dr = new CompactInformation().ShowDialog();
 
                     //Stash the item if we are in stash mode or said to stash it from the pop up
                     if (GlobalMethods.Mode == GlobalMethods.STASH_MODE || dr == DialogResult.OK)
