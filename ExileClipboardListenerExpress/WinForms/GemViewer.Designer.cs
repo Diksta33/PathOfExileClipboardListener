@@ -129,7 +129,7 @@
             // GemCount
             // 
             this.GemCount.AutoSize = true;
-            this.GemCount.Location = new System.Drawing.Point(1126, 460);
+            this.GemCount.Location = new System.Drawing.Point(1105, 460);
             this.GemCount.Name = "GemCount";
             this.GemCount.Size = new System.Drawing.Size(32, 13);
             this.GemCount.TabIndex = 26;

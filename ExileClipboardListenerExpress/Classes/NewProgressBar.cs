@@ -7,8 +7,6 @@ namespace ExileClipboardListener.Classes
 {
     class NewProgressBar : ProgressBar
     {
-        //public int RangeLow;
-        //public int RangeHigh;
         public class Tuple
         {
             public int RangeLow;
@@ -28,10 +26,7 @@ namespace ExileClipboardListener.Classes
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            //A single inset value to control the sizing of the inner rect
-            const int inset = 2;
-
-            //Determine the "theme", i.e. what colour scheme to use for this control
+             //Determine the "theme", i.e. what colour scheme to use for this control
             Color backColor;
             Color foreColor;
             if (Value < Properties.Settings.Default.ToleranceAverageFrom)
@@ -41,8 +36,8 @@ namespace ExileClipboardListener.Classes
             }
             else if (Value < Properties.Settings.Default.ToleranceGoodFrom)
             {
-                backColor = Color.Yellow;
-                foreColor = Color.Orange;
+                backColor = Color.Orange;
+                foreColor = Color.Brown;
             }
             else
             {
@@ -61,28 +56,30 @@ namespace ExileClipboardListener.Classes
                     //We draw a rectangle to show the threshold ranges
                     foreach (var threshold in Thresholds)
                     {
-                        //Paint the range if it is selected
-                        if (Value >= threshold.RangeLow && Value <= threshold.RangeHigh)
-                        {
-                            var rectFill = new Rectangle(0, 0, Width, Height);
-                            rectFill.Inflate(new Size(-inset, -inset));
-                            rectFill.Width = (int)(rectFill.Width * ((double)(threshold.RangeHigh - threshold.RangeLow) / Maximum));
-                            var brushFillRange = new LinearGradientBrush(rectFill, BackColor, backColor, LinearGradientMode.Vertical);
-                            offscreen.FillRectangle(brushFillRange, Width * ((float)threshold.RangeLow / Maximum) + inset, inset, rectFill.Width, rectFill.Height);
-                        }
+                        //Paint the range
+                        var rectFill = new Rectangle(0, 0, Width - 1, Height);
+                        rectFill.Inflate(new Size(-2, -1));
+                        rectFill.Width = (int)(rectFill.Width * ((double)(threshold.RangeHigh - threshold.RangeLow) / Maximum));
+                        var brushFillRange = new LinearGradientBrush(rectFill, BackColor,  (Value >= threshold.RangeLow && Value <= threshold.RangeHigh) ? backColor : Color.Gray, LinearGradientMode.Vertical);
+                        offscreen.FillRectangle(brushFillRange, (Width - 1) * ((float)threshold.RangeLow / Maximum) + 1, 2, rectFill.Width, rectFill.Height);
 
                         //Paint the boundaries
-                        var rectBoundary = new Rectangle(0, 0, 1, Height);
+                        var rectBoundary = new Rectangle(0, 0, 1, Height - 2);
                         var brushRange = new LinearGradientBrush(rectBoundary, BackColor, Color.Black, LinearGradientMode.Vertical);
-                        offscreen.FillRectangle(brushRange, Width * ((float)threshold.RangeLow / Maximum), 0, rectBoundary.Width, rectBoundary.Height);
-                        offscreen.FillRectangle(brushRange, Width * ((float)threshold.RangeHigh / Maximum), 0, rectBoundary.Width, rectBoundary.Height);
+                        offscreen.FillRectangle(brushRange, (Width - 1) * ((float)threshold.RangeLow / Maximum), 2, rectBoundary.Width, rectBoundary.Height);
+                        offscreen.FillRectangle(brushRange, (Width - 1) * ((float)threshold.RangeHigh / Maximum), 2, rectBoundary.Width, rectBoundary.Height);
                     }
 
                     //Then a thin rectangle to show the value
-                    var rectValue = new Rectangle(0, 0, 3, Height);
-                    rectValue.Inflate(new Size(0, -inset));
+                    var rectValue = new Rectangle(0, 0, 3, Height - 2);
+                    //rectValue.Inflate(new Size(0, -1));
                     var brushValue = new LinearGradientBrush(rect, BackColor, foreColor, LinearGradientMode.Vertical);
-                    offscreen.FillRectangle(brushValue, Width * ((float)Value / Maximum) + inset, inset, rectValue.Width, rectValue.Height);
+                    var x = (Width - 1) * ((float)Value / Maximum) + 1;
+                    if (x < 0)
+                        x = 0;
+                    if (x > Width - 4)
+                        x = Width - 4;
+                    offscreen.FillRectangle(brushValue, x, 2, rectValue.Width, rectValue.Height);
                     e.Graphics.DrawImage(offscreenImage, 0, 0);
                     offscreenImage.Dispose();
                 }

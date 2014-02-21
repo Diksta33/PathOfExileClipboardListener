@@ -71,6 +71,7 @@ namespace ExileClipboardListener.WinForms
             Properties.Settings.Default.Username = Username.Text;
             Properties.Settings.Default.Password = JSON.StringCipher.Encrypt(Password.Text);
             Properties.Settings.Default.Save();
+            GlobalMethods.Mode = Properties.Settings.Default.StashMode;
             Hide();
         }
 

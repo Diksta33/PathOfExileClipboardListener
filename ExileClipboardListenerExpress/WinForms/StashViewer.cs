@@ -99,7 +99,15 @@ namespace ExileClipboardListener.WinForms
 	                CAST(MAX(s.Evasion) AS INTEGER) AS [Evasion], 
 	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield],
 	                CAST(MAX(s.SocketCount) AS INTEGER) AS [Sockets],
-	                CAST(MAX(s.SocketMaxLink) AS VARCHAR(1)) || 'L' AS [Max Links]";
+	                CASE WHEN MAX(s.SocketMaxLink) = 0 THEN NULL ELSE CAST(MAX(s.SocketMaxLink) AS VARCHAR(1)) || 'L' END AS [Max Links],
+	                CAST(MAX(s.Life) AS INTEGER) AS [Life],
+	                CAST(MAX(s.Mana) AS INTEGER) AS [Mana],
+	                CAST(MAX(s.FireRes) AS INTEGER) AS [Fire Res],
+	                CAST(MAX(s.ColdRes) AS INTEGER) AS [Cold Res],
+	                CAST(MAX(s.LightningRes) AS INTEGER) AS [Lig Res],
+	                CAST(MAX(s.FireRes) + MAX(s.ColdRes) + MAX(s.LightningRes) AS INTEGER) AS [Elem Res],
+	                CAST(MAX(s.ChaosRes) AS INTEGER) AS [Chaos Res],
+	                CAST(MAX(s.FireRes) + MAX(s.ColdRes) + MAX(s.LightningRes) + MAX(s.ChaosRes) AS INTEGER) AS [Total Res]";
             if (!CompactView.Checked)
                 sql += @",
 	                CAST(MAX(IFNULL(b.DamagePhysicalMin, 0)) AS INTEGER) AS [Base Damage Physical Min],
@@ -215,10 +223,14 @@ namespace ExileClipboardListener.WinForms
 
             //Hide the StashId, it's just a number
             StashGrid.Columns[0].Visible = false;
+
+            //Select the first row
+            if (StashGrid.Rows.Count > 0)
+                StashGrid.Rows[0].Cells[1].Selected = true;
             Cursor.Current = Cursors.Default;
         }
 
-        private void ItemType_SelectedIndexChanged(object sender, EventArgs e)
+         private void ItemType_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Determine the ItemType
             _itemTypeId = ItemType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text + "';");
@@ -286,7 +298,12 @@ namespace ExileClipboardListener.WinForms
                 return;
             string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM [Stash] WHERE StashId = " + StashGrid.CurrentRow.Cells[0].Value + ";");
             if (ParseItem.ParseStash(item))
-                new ItemInformation { AllowStash = false }.ShowDialog();
+            {
+                if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
+                    new ItemInformation { AllowStash = false }.ShowDialog();
+                else
+                    new CompactInformation { AllowStash = false }.ShowDialog();
+            }
         }
 
         private void MaxItemLevel_ValueChanged(object sender, EventArgs e)
@@ -320,6 +337,22 @@ namespace ExileClipboardListener.WinForms
             var sv = new ScriptViewer();
             sv.ItemScript.Text = item;
             sv.ShowDialog();
+        }
+
+        private void ReparseStash_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Are you sure?", "Confirm Re-Parse ENTIRE Stash", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                return;
+            var items = GlobalMethods.StuffStringList("SELECT OriginalText FROM Stash;");
+            int c = 0;
+            foreach (var item in items)
+            {
+                ReparseLabel.Text = "Parsing item " + ++c + "...";
+                Application.DoEvents();
+                ParseItem.ParseStash(item);
+            }
+            MessageBox.Show("Reparse Complete");
+            ReparseLabel.Text = "Ready";
         }
     }
 }

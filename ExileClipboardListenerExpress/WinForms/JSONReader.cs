@@ -296,7 +296,11 @@ namespace ExileClipboardListener.WinForms
                 {
                     if (ParseItem.ParseStash(itemText))
                     {
-                        var dr = new ItemInformation().ShowDialog();
+                        var dr = DialogResult.None;
+                        if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
+                            dr = new ItemInformation().ShowDialog();
+                        else
+                            dr = new CompactInformation().ShowDialog();
 
                         //Stash the item if we are said to stash it from the pop up
                         if (dr == DialogResult.OK)

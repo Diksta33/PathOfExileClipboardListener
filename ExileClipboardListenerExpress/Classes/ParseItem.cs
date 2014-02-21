@@ -460,6 +460,8 @@ namespace ExileClipboardListener.Classes
                 {
                     int matched = 0;
                     var mpMod = new GlobalMethods.Mod();
+                    if (f.Mod2.Id != 0)
+                        continue;
                     foreach (var mp in mods)
                     {
                         if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
@@ -497,6 +499,8 @@ namespace ExileClipboardListener.Classes
                     foreach (var f in GlobalMethods.AffixCache)
                     {
                         if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
+                            continue;
+                        if (f.Mod2.Id != 0)
                             continue;
                         int matched = 0;
                         var mpMod = new GlobalMethods.Mod();
@@ -639,6 +643,19 @@ namespace ExileClipboardListener.Classes
                             else
                                 affix = GlobalMethods.AffixCache.FirstOrDefault(a => (a.Mod1.Id == mod.Id && a.Mod2.Id != 0) || (a.Mod1.Id != 0 && a.Mod2.Id == mod.Id));
 
+                            //There is a messy case here for light radius where we get the wrong affix because there are two choices, so we tip the balance back in our favour
+                            if (affix.ModCategoryName == "Accuracy")
+                            {
+                                //Find out what sort of accuracy we have, if it's the "wrong sort" swap it
+                                if (si.Mod.FirstOrDefault(m => m.Id == 54).Id == 54)
+                                {
+                                    if (affix.AffixId == 10)
+                                        affix = GlobalMethods.AffixCache.Find(a => a.AffixType == "Suffix" && a.AffixId == 221);
+                                    if (affix.AffixId == 11)
+                                        affix = GlobalMethods.AffixCache.Find(a => a.AffixType == "Suffix" && a.AffixId == 222);
+                                }
+                            }
+
                             //Now work out the "other" mod that appears on the affix
                             GlobalMethods.Mod modPartner;
                             modPartner.Id = 0;
@@ -771,12 +788,12 @@ namespace ExileClipboardListener.Classes
                             //Now we have both mods we need to remove any affix that we already collected that reference them
                             for (int i = prefixes.Count - 1; i >= 0; i--)
                             {
-                                if (prefixes[i].Mod1.Id == primaryMod.Id || prefixes[i].Mod2.Id == secondaryMod.Id)
+                                if (prefixes[i].Mod1.Id == primaryMod.Id || prefixes[i].Mod2.Id == secondaryMod.Id || prefixes[i].Mod1.Id == secondaryMod.Id)
                                     prefixes.Remove(prefixes[i]);
                             }
                             for (int i = suffixes.Count - 1; i >= 0; i--)
                             {
-                                if (suffixes[i].Mod1.Id == primaryMod.Id || suffixes[i].Mod2.Id == secondaryMod.Id)
+                                if (suffixes[i].Mod1.Id == primaryMod.Id || suffixes[i].Mod2.Id == secondaryMod.Id || suffixes[i].Mod1.Id == secondaryMod.Id)
                                     suffixes.Remove(suffixes[i]);
                             }
 
@@ -876,99 +893,6 @@ namespace ExileClipboardListener.Classes
                     }
                 }
 
-                ////Check again
-                //allAssigned = true;
-                //if (mods.Count() != 0)
-                //{
-                //    foreach (var mod in mods)
-                //    {
-                //        if (!mod.Implicit)
-                //        {
-                //            //TODO: this needs improving!
-                //            if ((mod.Id == 17 || mod.Id == 18) && si.BaseItemId == 17)
-                //                continue;
-                //            allAssigned = false; 
-                //            break;
-                //        }
-                //    }
-                //}
-
-                ////If we get here we relax the rules on 2h weapons needing 2h affixes, it seems that a 1h affix can roll on a 2h weapon but not the other way around
-                ////Make one last effort to match the mods
-                ////Find affixes with two mods
-                //if (!allAssigned && (itemSubTypeName.Contains("Two") || itemSubTypeName.Contains("Staff")))
-                //{
-                //    foreach (var f in GlobalMethods.AffixCache)
-                //    {
-                //        if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
-                //            continue;
-                //        int matched = 0;
-                //        var mpMod1 = new GlobalMethods.Mod();
-                //        var mpMod2 = new GlobalMethods.Mod();
-                //        foreach (var mp in mods)
-                //        {
-                //            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
-                //            {
-                //                mpMod1 = mp;
-                //                matched++;
-                //            }
-                //            if (mp.Id == f.Mod2.Id && mp.Value >= f.Mod2.ValueMin && mp.Value <= f.Mod2.ValueMax && f.Level <= si.ItemLevel)
-                //            {
-                //                mpMod2 = mp;
-                //                matched++;
-                //            }
-                //        }
-                //        if (matched == 2)
-                //        {
-                //            //We got a hit
-                //            var affix = f;
-                //            affix.Mod1 = mpMod1;
-                //            affix.Mod1.ValueMin = f.Mod1.ValueMin;
-                //            affix.Mod1.ValueMax = f.Mod1.ValueMax;
-                //            affix.Mod2 = mpMod2;
-                //            affix.Mod2.ValueMin = f.Mod2.ValueMin;
-                //            affix.Mod2.ValueMax = f.Mod2.ValueMax;
-                //            if (f.AffixType == "Prefix")
-                //                prefixes.Add(affix);
-                //            else
-                //                suffixes.Add(affix);
-                //            mods.Remove(mpMod1);
-                //            mods.Remove(mpMod2);
-                //        }
-                //    }
-
-                //    //Find affixes with one mod
-                //    //TODO: Refactor this into a method
-                //    foreach (var f in GlobalMethods.AffixCache)
-                //    {
-                //        if (f.AffixId == 0 || !f.ModCategoryName.Contains("One"))
-                //            continue;
-                //        int matched = 0;
-                //        var mpMod = new GlobalMethods.Mod();
-                //        foreach (var mp in mods)
-                //        {
-                //            if (mp.Id == f.Mod1.Id && mp.Value >= f.Mod1.ValueMin && mp.Value <= f.Mod1.ValueMax && f.Level <= si.ItemLevel)
-                //            {
-                //                //We got a hit
-                //                mpMod = mp;
-                //                matched++;
-                //            }
-                //        }
-                //        if (matched == 1)
-                //        {
-                //            var affix = f;
-                //            affix.Mod1 = mpMod;
-                //            affix.Mod1.ValueMin = f.Mod1.ValueMin;
-                //            affix.Mod1.ValueMax = f.Mod1.ValueMax;
-                //            if (f.AffixType == "Prefix")
-                //                prefixes.Add(affix);
-                //            else
-                //                suffixes.Add(affix);
-                //            mods.Remove(mpMod);
-                //        }
-                //    }
-                //}
-
                 //Check one last time to see if there are any mods unparsed
                 allAssigned = true;
                 if (mods.Count() != 0)
@@ -986,7 +910,12 @@ namespace ExileClipboardListener.Classes
                     }
                 }
                 if (!allAssigned)
-                    MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(");
+                {
+                    MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(  Here is the item that failed, copy and paste the results as an issue to https://github.com/Diksta33/PathOfExileClipboardListener/issues?state=open.");
+                    var sv = new ExileClipboardListener.WinForms.ScriptViewer();
+                    sv.ItemScript.Text = item;
+                    sv.ShowDialog();
+                }
 
                 //Pop off the prefixes and suffixes into the StashItem class
                 //TODO: check we haven't got too many prefixes/ suffixes
@@ -1000,13 +929,14 @@ namespace ExileClipboardListener.Classes
                 }
 
                 //Finally, now everything has been parsed we need to pull out some key statistics
-                si.Life = GetModValues("Life");
-                si.Mana = GetModValues("Mana");
-                si.FireRes = GetModValues("Fire Resistance");
-                si.ColdRes = GetModValues("Cold Resistance");
-                si.LightRes = GetModValues("Lightning Resistance");
-                si.ChaosRes = GetModValues("Chaos Resistance");
-                si.EleRes = si.LightRes + si.FireRes + si.ColdRes;
+                //We ignore % increases for life/ mana at the moment as they are a pain
+                si.Life = GetModValues("to maximum Life");
+                si.Mana = GetModValues("to maximum Mana");
+                si.FireRes = GetModValues("to Fire Resistance");
+                si.ColdRes = GetModValues("to Cold Resistance");
+                si.LightningRes = GetModValues("to Lightning Resistance");
+                si.ChaosRes = GetModValues("to Chaos Resistance");
+                si.EleRes = si.LightningRes + si.FireRes + si.ColdRes;
                 si.TotalRes = si.EleRes + si.ChaosRes;
             }
             catch (Exception ex)
@@ -1022,7 +952,7 @@ namespace ExileClipboardListener.Classes
             int retVal = 0;
             foreach (var mod in si.Mod)
                 if (mod.Name != null)
-                if (mod.Name.Contains(modText))
+                if (mod.RealName.Contains(modText))
                     retVal += mod.Value;
             return retVal;
         }

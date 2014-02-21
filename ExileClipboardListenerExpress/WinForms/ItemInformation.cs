@@ -17,7 +17,7 @@ namespace ExileClipboardListener.WinForms
         private int _filterId;
         private int _itemTypeId;
         private int _itemSubTypeId;
-        private readonly List<int> _filters = new List<int>();
+        private List<int> _filters = new List<int>();
 
         public ItemInformation()
         {
@@ -183,7 +183,7 @@ namespace ExileClipboardListener.WinForms
 
             //Make a list of matching filters
             _filters.Clear();
-            GlobalMethods.StuffIntList("SELECT FilterId FROM FilterHeader WHERE (ItemTypeId = 0 OR ItemTypeId = " + _itemTypeId + ") AND (ItemSubTypeId = 0 OR ItemSubTypeId = " + _itemSubTypeId + ");", _filters);
+            _filters = GlobalMethods.StuffIntList("SELECT FilterId FROM FilterHeader WHERE (ItemTypeId = 0 OR ItemTypeId = " + _itemTypeId + ") AND (ItemSubTypeId = 0 OR ItemSubTypeId = " + _itemSubTypeId + ");");
 
             //Now score each filter and add it to the results
             AverageScoreColumn.DefaultCellStyle.Format = "0\\%";
@@ -237,7 +237,6 @@ namespace ExileClipboardListener.WinForms
                 //Otherwise we have to work out which mods the item could have based on the mod class
                 else
                 {
-                    var match = new List<int>();
                     string sql = "SELECT m.ModId FROM Mod m WHERE m.ModClass = '" + modClass + "'";
 
                     //We filter by the current item type
@@ -272,7 +271,7 @@ namespace ExileClipboardListener.WinForms
                     }
                     sql += " AND IFNULL(m.ModPair, 2) = 2";
                     sql += " AND EXISTS (SELECT * FROM " + affixType + " a WHERE a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId);";
-                    GlobalMethods.StuffIntList(sql, match);
+                    var match = GlobalMethods.StuffIntList(sql);
                     foreach (int id in match)
                         mods.Add(new GlobalMethods.Mod { Id = id });
                 }

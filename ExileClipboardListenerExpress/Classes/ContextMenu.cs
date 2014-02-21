@@ -21,39 +21,21 @@ namespace ExileClipboardListener.Classes
         {
             //Add the default menu options
             //Stash Mode
-            var item = new ToolStripMenuItem {Text = "Stash Mode"};
-            item.Click += StashModeClick;
-            item.Checked = GlobalMethods.Mode == GlobalMethods.STASH_MODE;
-            item.Tag = "Stash";
-            Menu.Items.Add(item);
+            //var item = new ToolStripMenuItem {Text = "Stash Mode"};
+            //item.Click += StashModeClick;
+            //item.Checked = GlobalMethods.Mode == GlobalMethods.STASH_MODE;
+            //item.Tag = "Stash";
+            //Menu.Items.Add(item);
 
-            //Collection Mode
-            item = new ToolStripMenuItem {Text = "Collection Mode"};
-            item.Click += CollectionModeClick;
-            item.Checked = GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE;
-            item.Tag = "Collection";
-            Menu.Items.Add(item);
-
-            //Separator
-            var sep = new ToolStripSeparator();
-            Menu.Items.Add(sep);
-
-            //Character Manager
-            item = new ToolStripMenuItem { Text = "Character Manager" };
-            item.Click += CharacterClick;
-            Menu.Items.Add(item);
-
-            //League Manager
-            item = new ToolStripMenuItem { Text = "League Manager" };
-            item.Click += LeagueClick;
-            Menu.Items.Add(item);
-
-            //Separator
-            sep = new ToolStripSeparator();
-            Menu.Items.Add(sep);
+            ////Collection Mode
+            //item = new ToolStripMenuItem {Text = "Collection Mode"};
+            //item.Click += CollectionModeClick;
+            //item.Checked = GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE;
+            //item.Tag = "Collection";
+            //Menu.Items.Add(item);
 
             //Download Stash
-            item = new ToolStripMenuItem { Text = "Download Stash" };
+            var item = new ToolStripMenuItem { Text = "Download Stash" };
             item.Click += DownloadStashClick;
             Menu.Items.Add(item);
 
@@ -65,6 +47,20 @@ namespace ExileClipboardListener.Classes
             //View Gems
             item = new ToolStripMenuItem { Text = "View Gems" };
             item.Click += ViewGemsClick;
+            Menu.Items.Add(item);
+
+            //Separator
+            var sep = new ToolStripSeparator();
+            Menu.Items.Add(sep);
+
+            //League Manager
+            item = new ToolStripMenuItem { Text = "League Manager" };
+            item.Click += LeagueClick;
+            Menu.Items.Add(item);
+
+            //Character Manager
+            item = new ToolStripMenuItem { Text = "Character Manager" };
+            item.Click += CharacterClick;
             Menu.Items.Add(item);
 
             //Separator
@@ -144,19 +140,19 @@ namespace ExileClipboardListener.Classes
             }
         }
 
-        private void StashModeClick(object sender, EventArgs e)
-        {
-            GlobalMethods.Mode = GlobalMethods.STASH_MODE;
-            ((ToolStripMenuItem)Menu.Items[0]).Checked = true;
-            ((ToolStripMenuItem)Menu.Items[1]).Checked = false;
-        }
+        //private void StashModeClick(object sender, EventArgs e)
+        //{
+        //    GlobalMethods.Mode = GlobalMethods.STASH_MODE;
+        //    ((ToolStripMenuItem)Menu.Items[0]).Checked = true;
+        //    ((ToolStripMenuItem)Menu.Items[1]).Checked = false;
+        //}
 
-        private void CollectionModeClick(object sender, EventArgs e)
-        {
-            GlobalMethods.Mode = GlobalMethods.COLLECTION_MODE;
-            ((ToolStripMenuItem)Menu.Items[0]).Checked = false;
-            ((ToolStripMenuItem)Menu.Items[1]).Checked = true;
-        }
+        //private void CollectionModeClick(object sender, EventArgs e)
+        //{
+        //    GlobalMethods.Mode = GlobalMethods.COLLECTION_MODE;
+        //    ((ToolStripMenuItem)Menu.Items[0]).Checked = false;
+        //    ((ToolStripMenuItem)Menu.Items[1]).Checked = true;
+        //}
 
         private void FiltersClick(object sender, EventArgs e)
         {

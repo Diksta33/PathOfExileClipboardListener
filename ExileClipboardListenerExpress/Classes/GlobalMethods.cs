@@ -115,7 +115,7 @@ namespace ExileClipboardListener.Classes
             public static int Mana;
             public static int FireRes;
             public static int ColdRes;
-            public static int LightRes;
+            public static int LightningRes;
             public static int EleRes;
             public static int ChaosRes;
             public static int TotalRes;
@@ -182,6 +182,7 @@ namespace ExileClipboardListener.Classes
             StashItem.Sockets = "";
             for (int affix = 0; affix < 7; affix++)
             {
+                StashItem.Affix[affix].AffixId = 0;
                 StashItem.Affix[affix].Mod1.Id = 0;
                 StashItem.Affix[affix].Mod1.Value = 0;
                 StashItem.Affix[affix].Mod2.Id = 0;
@@ -745,10 +746,11 @@ namespace ExileClipboardListener.Classes
             return;
         }
 
-        public static void StuffIntList(string sql, List<int> target)
+        public static List<int> StuffIntList(string sql)
         {
             try
             {
+                var target = new List<int>();
                 using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
@@ -766,10 +768,44 @@ namespace ExileClipboardListener.Classes
                         }
                     }
                 }
+                return target;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unhandled exception: " + ex.Message);
+                return null;
+            }
+        }
+
+        //Should make this generic, but it's only two types
+        public static List<string> StuffStringList(string sql)
+        {
+            try
+            {
+                var target = new List<string>();
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+                        com.CommandText = sql;
+                        using (var dr = com.ExecuteReader())
+                        {
+                            //Now process the results set
+                            while (dr.Read())
+                            {
+                                target.Add(dr[0].ToString());
+                            }
+                        }
+                    }
+                }
+                return target;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+                return null;
             }
         }
 
@@ -860,7 +896,7 @@ namespace ExileClipboardListener.Classes
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
             sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, OriginalText)";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, ChaosRes, OriginalText)";
             sql += " VALUES(";
 
             //League
@@ -909,6 +945,16 @@ namespace ExileClipboardListener.Classes
                     maxChain = chainLength;
             }
             sql += maxChain + ",";
+
+            //Life, Mana
+            sql += StashItem.Life + ",";
+            sql += StashItem.Mana + ",";
+
+            //Resistances
+            sql += StashItem.FireRes + ",";
+            sql += StashItem.ColdRes + ",";
+            sql += StashItem.LightningRes + ",";
+            sql += StashItem.ChaosRes + ",";
 
             //Original Text
             sql += "'" + StashItem.OriginalText.Replace("'", "''") + "')";

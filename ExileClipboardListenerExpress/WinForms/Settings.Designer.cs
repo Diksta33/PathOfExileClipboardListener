@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.CompactMode = new System.Windows.Forms.RadioButton();
             this.CollectionMode = new System.Windows.Forms.RadioButton();
             this.StashMode = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -73,7 +74,6 @@
             this.label13 = new System.Windows.Forms.Label();
             this.Username = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.CompactMode = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.StashPopUpSeconds)).BeginInit();
@@ -102,17 +102,28 @@
             this.groupBox1.Size = new System.Drawing.Size(209, 93);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Mode on Startup";
+            this.groupBox1.Text = "Action on Ctrl-C";
+            // 
+            // CompactMode
+            // 
+            this.CompactMode.AutoSize = true;
+            this.CompactMode.Location = new System.Drawing.Point(6, 65);
+            this.CompactMode.Name = "CompactMode";
+            this.CompactMode.Size = new System.Drawing.Size(152, 17);
+            this.CompactMode.TabIndex = 2;
+            this.CompactMode.TabStop = true;
+            this.CompactMode.Text = "Show Compact Information";
+            this.CompactMode.UseVisualStyleBackColor = true;
             // 
             // CollectionMode
             // 
             this.CollectionMode.AutoSize = true;
             this.CollectionMode.Location = new System.Drawing.Point(6, 42);
             this.CollectionMode.Name = "CollectionMode";
-            this.CollectionMode.Size = new System.Drawing.Size(101, 17);
+            this.CollectionMode.Size = new System.Drawing.Size(130, 17);
             this.CollectionMode.TabIndex = 1;
             this.CollectionMode.TabStop = true;
-            this.CollectionMode.Text = "Collection Mode";
+            this.CollectionMode.Text = "Show Item Information";
             this.CollectionMode.UseVisualStyleBackColor = true;
             // 
             // StashMode
@@ -120,10 +131,10 @@
             this.StashMode.AutoSize = true;
             this.StashMode.Location = new System.Drawing.Point(6, 19);
             this.StashMode.Name = "StashMode";
-            this.StashMode.Size = new System.Drawing.Size(82, 17);
+            this.StashMode.Size = new System.Drawing.Size(75, 17);
             this.StashMode.TabIndex = 0;
             this.StashMode.TabStop = true;
-            this.StashMode.Text = "Stash Mode";
+            this.StashMode.Text = "Stash Item";
             this.StashMode.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -643,17 +654,6 @@
             this.label12.Size = new System.Drawing.Size(55, 13);
             this.label12.TabIndex = 0;
             this.label12.Text = "Username";
-            // 
-            // CompactMode
-            // 
-            this.CompactMode.AutoSize = true;
-            this.CompactMode.Location = new System.Drawing.Point(6, 65);
-            this.CompactMode.Name = "CompactMode";
-            this.CompactMode.Size = new System.Drawing.Size(97, 17);
-            this.CompactMode.TabIndex = 2;
-            this.CompactMode.TabStop = true;
-            this.CompactMode.Text = "Compact Mode";
-            this.CompactMode.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 

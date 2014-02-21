@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StashViewer));
             this.StashGrid = new System.Windows.Forms.DataGridView();
             this.ItemType = new System.Windows.Forms.ComboBox();
@@ -55,6 +56,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.MinReqLevel = new System.Windows.Forms.NumericUpDown();
             this.ViewScript = new System.Windows.Forms.Button();
+            this.ReparseStash = new System.Windows.Forms.Button();
+            this.ReparseLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).BeginInit();
@@ -66,10 +69,18 @@
             // 
             this.StashGrid.AllowUserToAddRows = false;
             this.StashGrid.AllowUserToDeleteRows = false;
+            this.StashGrid.AllowUserToOrderColumns = true;
             this.StashGrid.AllowUserToResizeColumns = false;
             this.StashGrid.AllowUserToResizeRows = false;
             this.StashGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.StashGrid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.StashGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.StashGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.StashGrid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.StashGrid.Location = new System.Drawing.Point(12, 52);
@@ -78,7 +89,7 @@
             this.StashGrid.ReadOnly = true;
             this.StashGrid.RowHeadersVisible = false;
             this.StashGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.StashGrid.Size = new System.Drawing.Size(1349, 543);
+            this.StashGrid.Size = new System.Drawing.Size(1590, 543);
             this.StashGrid.TabIndex = 0;
             // 
             // ItemType
@@ -196,7 +207,7 @@
             // ItemCount
             // 
             this.ItemCount.AutoSize = true;
-            this.ItemCount.Location = new System.Drawing.Point(1256, 606);
+            this.ItemCount.Location = new System.Drawing.Point(1525, 605);
             this.ItemCount.Name = "ItemCount";
             this.ItemCount.Size = new System.Drawing.Size(31, 13);
             this.ItemCount.TabIndex = 12;
@@ -204,7 +215,7 @@
             // 
             // MinItemLevel
             // 
-            this.MinItemLevel.Location = new System.Drawing.Point(1128, 614);
+            this.MinItemLevel.Location = new System.Drawing.Point(1397, 613);
             this.MinItemLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -232,7 +243,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(1125, 598);
+            this.label6.Location = new System.Drawing.Point(1394, 597);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(105, 13);
             this.label6.TabIndex = 14;
@@ -250,7 +261,7 @@
             // 
             // Filter
             // 
-            this.Filter.Location = new System.Drawing.Point(1286, 22);
+            this.Filter.Location = new System.Drawing.Point(1527, 23);
             this.Filter.Name = "Filter";
             this.Filter.Size = new System.Drawing.Size(75, 23);
             this.Filter.TabIndex = 16;
@@ -260,7 +271,7 @@
             // 
             // MaxItemLevel
             // 
-            this.MaxItemLevel.Location = new System.Drawing.Point(1181, 614);
+            this.MaxItemLevel.Location = new System.Drawing.Point(1450, 613);
             this.MaxItemLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -301,7 +312,7 @@
             this.CompactView.AutoSize = true;
             this.CompactView.Checked = true;
             this.CompactView.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CompactView.Location = new System.Drawing.Point(1136, 5);
+            this.CompactView.Location = new System.Drawing.Point(1427, 27);
             this.CompactView.Name = "CompactView";
             this.CompactView.Size = new System.Drawing.Size(94, 17);
             this.CompactView.TabIndex = 20;
@@ -310,7 +321,7 @@
             // 
             // MaxReqLevel
             // 
-            this.MaxReqLevel.Location = new System.Drawing.Point(1028, 614);
+            this.MaxReqLevel.Location = new System.Drawing.Point(1297, 613);
             this.MaxReqLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -328,7 +339,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(972, 598);
+            this.label7.Location = new System.Drawing.Point(1241, 597);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(105, 13);
             this.label7.TabIndex = 22;
@@ -336,7 +347,7 @@
             // 
             // MinReqLevel
             // 
-            this.MinReqLevel.Location = new System.Drawing.Point(975, 614);
+            this.MinReqLevel.Location = new System.Drawing.Point(1244, 613);
             this.MinReqLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -361,11 +372,32 @@
             this.ViewScript.UseVisualStyleBackColor = true;
             this.ViewScript.Click += new System.EventHandler(this.ViewScriptClick);
             // 
+            // ReparseStash
+            // 
+            this.ReparseStash.Location = new System.Drawing.Point(666, 600);
+            this.ReparseStash.Name = "ReparseStash";
+            this.ReparseStash.Size = new System.Drawing.Size(96, 23);
+            this.ReparseStash.TabIndex = 25;
+            this.ReparseStash.Text = "Reparse Stash";
+            this.ReparseStash.UseVisualStyleBackColor = true;
+            this.ReparseStash.Click += new System.EventHandler(this.ReparseStash_Click);
+            // 
+            // ReparseLabel
+            // 
+            this.ReparseLabel.AutoSize = true;
+            this.ReparseLabel.Location = new System.Drawing.Point(768, 605);
+            this.ReparseLabel.Name = "ReparseLabel";
+            this.ReparseLabel.Size = new System.Drawing.Size(38, 13);
+            this.ReparseLabel.TabIndex = 26;
+            this.ReparseLabel.Text = "Ready";
+            // 
             // StashViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1373, 636);
+            this.ClientSize = new System.Drawing.Size(1614, 636);
+            this.Controls.Add(this.ReparseLabel);
+            this.Controls.Add(this.ReparseStash);
             this.Controls.Add(this.ViewScript);
             this.Controls.Add(this.MaxReqLevel);
             this.Controls.Add(this.label7);
@@ -436,5 +468,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown MinReqLevel;
         private System.Windows.Forms.Button ViewScript;
+        private System.Windows.Forms.Button ReparseStash;
+        private System.Windows.Forms.Label ReparseLabel;
     }
 }

@@ -45,7 +45,7 @@ namespace ExileClipboardListener.Classes
 
         private static void LoadSettings()
         {
-            GlobalMethods.Mode = Properties.Settings.Default.StashMode == 0 ? GlobalMethods.STASH_MODE : GlobalMethods.COLLECTION_MODE;
+            GlobalMethods.Mode = Properties.Settings.Default.StashMode == 0 ? GlobalMethods.STASH_MODE : (Properties.Settings.Default.StashMode == 1 ? GlobalMethods.COLLECTION_MODE : GlobalMethods.COMPACT_MODE);
         }
 
         public void Dispose()
