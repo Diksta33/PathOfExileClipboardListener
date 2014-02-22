@@ -309,6 +309,17 @@ namespace ExileClipboardListener.Classes
                         //We also need to check if the mod is allowed on this item type
                         //We sometimes have implict mods that have the same name as affix mods so we try to pick the correct one
                         var match = GlobalMethods.FindMod(modName, 1, itemTypeName, itemSubTypeName);
+
+                        //One flask mod needs a kick to put it in the right place
+                        if (modName == "reduced Amount Recovered" && si.ItemSubTypeName == "Health Flask")
+                        {
+                            //Nothing, it already gets put in the right place
+                        }
+                        if (modName == "reduced Amount Recovered" && si.ItemSubTypeName == "Mana Flask")
+                        {
+                            match = GlobalMethods.ModCache.FirstOrDefault(m => m.Id == 105);
+                        }
+
                         if (match.Id == 0)
                         {
                             if (si.RarityId != 4)

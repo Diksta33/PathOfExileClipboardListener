@@ -72,18 +72,28 @@ namespace ExileClipboardListener.WinForms
                     //We need a list of thresholds
                     int rangeMod1Low = GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
                     int rangeMod1High = GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
+                    if (rangeMod1High == rangeMod1Low)
+                    {
+                        rangeMod1Low = rangeMod1Low > 1 ? rangeMod1Low - 1 : 1;
+                        rangeMod1High = rangeMod1High < maxMod1Value ? maxMod1Value : rangeMod1High + 1; ;
+                    }
                     int rangeMod2Low = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
                     int rangeMod2High = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
-                    int rangeMod1ScoreLow = 100 * (rangeMod1Low - minMod1Value) / (maxMod1Value - minMod1Value);
-                    int rangeMod1ScoreHigh = 100 * (rangeMod1High - minMod1Value) / (maxMod1Value - minMod1Value);
-                    int rangeMod2ScoreLow = mod2 == 0 ? 0 : 100 * (rangeMod2Low - minMod2Value) / (maxMod2Value - minMod2Value);
-                    int rangeMod2ScoreHigh = mod2 == 0 ? 0 : 100 * (rangeMod2High - minMod2Value) / (maxMod2Value - minMod2Value);
+                    if (rangeMod2High == rangeMod2Low && rangeMod2High != 0)
+                    {
+                        rangeMod2Low = rangeMod2Low > 1 ? rangeMod2Low - 1 : 1;
+                        rangeMod2High = rangeMod2High < maxMod2Value ? maxMod2Value : rangeMod2High + 1; 
+                    }
+                    int rangeMod1ScoreLow = 100 * (rangeMod1Low - minMod1Value) / (maxMod1Value == minMod1Value ? 1 : maxMod1Value - minMod1Value);
+                    int rangeMod1ScoreHigh = 100 * (rangeMod1High - minMod1Value) / (maxMod1Value == minMod1Value ? 1 : maxMod1Value - minMod1Value);
+                    int rangeMod2ScoreLow = mod2 == 0 ? 0 : 100 * (rangeMod2Low - minMod2Value) / (maxMod2Value == minMod2Value ? 1 : maxMod2Value - minMod2Value);
+                    int rangeMod2ScoreHigh = mod2 == 0 ? 0 : 100 * (rangeMod2High - minMod2Value) / (maxMod2Value == minMod2Value ? 1 : maxMod2Value - minMod2Value);
                     int rangeScoreLow = (rangeMod1ScoreLow + rangeMod2ScoreLow) / (mod2 == 0 ? 1 : 2);
                     int rangeScoreHigh = (rangeMod1ScoreHigh + rangeMod2ScoreHigh) / (mod2 == 0 ? 1 : 2);
                     progressBar.Thresholds.Add(new NewProgressBar.Tuple { RangeLow = rangeScoreLow, RangeHigh = rangeScoreHigh });
                 }
-                double mod1Score = ((double)si.Affix[i].Mod1.Value - minMod1Value) / (maxMod1Value - minMod1Value);
-                double mod2Score = mod2 == 0 ? 0 : ((double)si.Affix[i].Mod2.Value - minMod2Value) / (maxMod2Value - minMod2Value);
+                double mod1Score = ((double)si.Affix[i].Mod1.Value - minMod1Value) / (maxMod1Value == minMod1Value ? 1 : maxMod1Value - minMod1Value);
+                double mod2Score = mod2 == 0 ? 0 : ((double)si.Affix[i].Mod2.Value - minMod2Value) / (maxMod2Value == minMod2Value ? 1 : maxMod2Value - minMod2Value);
                 progressBar.Value = (int)(100 * (mod1Score + mod2Score) / (mod2 == 0 ? 1 : 2));
                 label.Text = "[" + progressBar.Value + "%] " + label.Text;
             }
