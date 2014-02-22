@@ -90,16 +90,23 @@ namespace ExileClipboardListener.WinForms
 	                MAX(r.RarityName) AS [Rarity], 
 	                CAST(MAX(s.Quality) AS INTEGER) AS [Quality], 
 	                CAST(MAX(s.ItemLevel) AS INTEGER) AS [Item Level], 
-	                CAST(MAX(b.ReqLevel) AS INTEGER) AS [Req Level],
+	                CAST(MAX(b.ReqLevel) AS INTEGER) AS [Req Level],";
+            if (ItemType.Text == "(All)" || ItemType.Text == "Weapon")
+                sql+=@"
                     CAST(MAX(s.AttackSpeed) AS NUMERIC(18,2)) AS [APS],
                     CAST(MAX(s.PhysicalDPS) AS NUMERIC(18,2)) AS [pDPS],
                     CAST(MAX(s.ElementalDPS) AS NUMERIC(18,2)) AS [eDPS],
-                    CAST(MAX(s.TotalDPS) AS NUMERIC(18,2)) AS [tDPS],
-	                CAST(MAX(s.Armour) AS INTEGER) AS [Armour], 
+                    CAST(MAX(s.TotalDPS) AS NUMERIC(18,2)) AS [tDPS],";
+            if (ItemType.Text == "(All)" || ItemType.Text == "Armour")
+                sql += @"
+                    CAST(MAX(s.Armour) AS INTEGER) AS [Armour], 
 	                CAST(MAX(s.Evasion) AS INTEGER) AS [Evasion], 
-	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield],
+	                CAST(MAX(s.EnergyShield) AS INTEGER) AS [Energy Shield],";
+            if (ItemType.Text == "(All)" || ItemType.Text == "Weapon" || ItemType.Text == "Armour")
+                sql += @"            
 	                CAST(MAX(s.SocketCount) AS INTEGER) AS [Sockets],
-	                CASE WHEN MAX(s.SocketMaxLink) = 0 THEN NULL ELSE CAST(MAX(s.SocketMaxLink) AS VARCHAR(1)) || 'L' END AS [Max Links],
+	                CASE WHEN MAX(s.SocketMaxLink) = 0 THEN NULL ELSE CAST(MAX(s.SocketMaxLink) AS VARCHAR(1)) || 'L' END AS [Max Links],";
+            sql += @"
 	                CAST(MAX(s.Life) AS INTEGER) AS [Life],
 	                CAST(MAX(s.Mana) AS INTEGER) AS [Mana],
 	                CAST(MAX(s.FireRes) AS INTEGER) AS [Fire Res],

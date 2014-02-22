@@ -51,6 +51,35 @@ namespace ExileClipboardListener.JSON
                 return item;
             }
 
+            //See if this is a currency item
+            if (i.FrameType == 5)
+            {
+                //Basic Details
+                item = "Rarity: Currency" + Environment.NewLine;
+                item += i.TypeLine + Environment.NewLine;
+                item += "--------" + Environment.NewLine;
+
+                //Properties
+                if (i.Properties != null)
+                    foreach (var p in i.Properties)
+                        item += p.Name + (p.Values.Count >= 1 && p.Name != "" ? ": " : "") + (p.Values.Count >= 1 ? ((object[])p.Values[0])[0] : "") + (p.Values.Count >= 2 ? ", " + ((object[])p.Values[1])[0] : "") + Environment.NewLine;
+
+                //Mods
+                if (i.ExplicitMods != null)
+                {
+                    item += "--------" + Environment.NewLine;
+                    foreach (var im in i.ExplicitMods)
+                        item += im + Environment.NewLine;
+                }
+
+                //Instructions
+                item += "--------" + Environment.NewLine;
+                if (i.DescrText != null)
+                    item += i.DescrText + Environment.NewLine;
+
+                return item;
+            }
+
             //Otherwise we assume it's an item
             string rarity = "Normal";
             if (i.FrameType == 1)

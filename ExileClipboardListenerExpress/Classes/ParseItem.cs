@@ -2,14 +2,73 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 using bi = ExileClipboardListener.Classes.GlobalMethods.BaseItem;
+using si = ExileClipboardListener.Classes.GlobalMethods.StashItem;
 using gi = ExileClipboardListener.Classes.GlobalMethods.StashGem;
+using ci = ExileClipboardListener.Classes.GlobalMethods.StashCurrency;
+using mi = ExileClipboardListener.Classes.GlobalMethods.StashMap;
 
 namespace ExileClipboardListener.Classes
 {
     public static class ParseItem
     {
+        public static bool ParseMap(string map)
+        {
+            GlobalMethods.ClearMap();
+            GlobalMethods.StashMap.OriginalText = map;
+
+            //Parse the details
+            var entity = map.Split(new[] { "\n" }, StringSplitOptions.None);
+            for (int i = 0; i < entity.Count(); i++)
+            {
+                entity[i] = entity[i].Replace("\n", "");
+                entity[i] = entity[i].Replace("\r", "");
+            }
+
+            //The first section is always the basic details
+            if (entity.Count() < 2)
+            {
+                MessageBox.Show("Couldn't split item did you lose the carriage-returns somehow?");
+                return false;
+            }
+            mi.Name = entity[1];
+            mi.RarityId = GlobalMethods.GetScalarInt("SELECT RarityId FROM Rarity WHERE RarityName = '" + entity[0].Split(':')[1].Trim() + "';");
+            RemoveSection(ref entity);
+            mi.MapLevel = FindAnyValue<int>(entity, "Map Level");
+            mi.Quality = FindAnyValue<int>(entity, "Quality");
+            mi.ItemQuantity = FindAnyValue<int>(entity, "Item Quantity");
+            RemoveSection(ref entity);
+
+            //Item Level
+            mi.ItemLevel = FindAnyValue<int>(entity, "Itemlevel");
+            return true;
+        }
+
+        public static bool ParseCurrency(string currency)
+        {
+            //Parse the details
+            var entity = currency.Split(new[] { "\n" }, StringSplitOptions.None);
+            for (int i = 0; i < entity.Count(); i++)
+            {
+                entity[i] = entity[i].Replace("\n", "");
+                entity[i] = entity[i].Replace("\r", "");
+            }
+
+            //The first section is always the basic details
+            if (entity.Count() < 2)
+            {
+                MessageBox.Show("Couldn't split item did you lose the carriage-returns somehow?");
+                return false;
+            }
+
+            ci.Name = entity[1];
+            RemoveSection(ref entity);
+            ci.StackSize = FindAnyValue<int>(entity, "Stack Size");
+            ci.CurrencyItemId = GlobalMethods.CurrencyCache.FirstOrDefault(c => c.Name == ci.Name).CurrencyItemId;
+            return true;     
+        }
+
+
         public static bool ParseGem(string gem)
         {
             GlobalMethods.ClearGem();
@@ -1006,6 +1065,8 @@ namespace ExileClipboardListener.Classes
                             valueString = valueString.Replace(" (unmet)", "");
                             valueString = valueString.Replace(" (Max)", "");
                             valueString = valueString.Trim();
+                            if (valueString.Contains("/"))
+                                valueString = valueString.Split('/')[0];
                             if (valueString.Contains("-") && pair != -1)
                             {
                                 //We need to cope with two sorts of ranges

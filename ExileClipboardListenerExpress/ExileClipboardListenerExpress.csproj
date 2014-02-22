@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>30</ApplicationRevision>
+    <ApplicationRevision>31</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -101,6 +101,11 @@
     <Compile Include="JSON\Parser.cs" />
     <Compile Include="JSON\POEWeb.cs" />
     <Compile Include="JSON\Throttle.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="WinForms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +128,12 @@
     </Compile>
     <Compile Include="WinForms\Character.Designer.cs">
       <DependentUpon>Character.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\CurrencyViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\CurrencyViewer.Designer.cs">
+      <DependentUpon>CurrencyViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\GemViewer.cs">
       <SubType>Form</SubType>
@@ -153,6 +164,12 @@
     </Compile>
     <Compile Include="WinForms\League.Designer.cs">
       <DependentUpon>League.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WinForms\MapViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\MapViewer.Designer.cs">
+      <DependentUpon>MapViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="WinForms\ModDetails.cs">
       <SubType>Form</SubType>
@@ -213,6 +230,9 @@
     <EmbeddedResource Include="WinForms\Character.resx">
       <DependentUpon>Character.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\CurrencyViewer.resx">
+      <DependentUpon>CurrencyViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms\GemViewer.resx">
       <DependentUpon>GemViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -229,6 +249,9 @@
     <EmbeddedResource Include="WinForms\League.resx">
       <DependentUpon>League.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\MapViewer.resx">
+      <DependentUpon>MapViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WinForms\ModDetails.resx">
       <DependentUpon>ModDetails.cs</DependentUpon>
     </EmbeddedResource>
@@ -241,14 +264,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="WinForms\RollDetails.resx">
       <DependentUpon>RollDetails.cs</DependentUpon>
     </EmbeddedResource>
@@ -280,6 +298,30 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="PathOfExile.ico" />
+    <None Include="Resources\Regret.png" />
+    <None Include="Resources\Fusing.png" />
+    <None Include="Resources\Regal.png" />
+    <None Include="Resources\Scouring.png" />
+    <None Include="Resources\Transmutation.png" />
+    <None Include="Resources\Wisdom.png" />
+    <None Include="Resources\Portal.png" />
+    <None Include="Resources\Augmentation.png" />
+    <None Include="Resources\Chance.png" />
+    <None Include="Resources\Alteration.png" />
+    <None Include="Resources\Alchemy.png" />
+    <None Include="Resources\Jewellers.png" />
+    <None Include="Resources\Mirror.png" />
+    <None Include="Resources\Glassblowers.png" />
+    <None Include="Resources\Gemcutters.png" />
+    <None Include="Resources\Exalted.png" />
+    <None Include="Resources\Eternal.png" />
+    <None Include="Resources\Chromatic.png" />
+    <None Include="Resources\Chaos.png" />
+    <None Include="Resources\Cartographers.png" />
+    <None Include="Resources\Blessed.png" />
+    <None Include="Resources\Blacksmiths.png" />
+    <None Include="Resources\Divine.png" />
+    <None Include="Resources\Armourers.png" />
     <None Include="Resources\PoEGraphic.png" />
   </ItemGroup>
   <ItemGroup>

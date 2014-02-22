@@ -58,6 +58,19 @@ namespace ExileClipboardListener.Classes
                         }
                     }
                 }
+                else if (item.Contains(" Map"))
+                {
+                    if (ParseItem.ParseMap(item))
+                    {
+                        //Stash the item if we are in stash mode 
+                        if (GlobalMethods.Mode == GlobalMethods.STASH_MODE)
+                        {
+                            GlobalMethods.SaveMap(GlobalMethods.LeagueId);
+                            if (Properties.Settings.Default.StashPopUpMode != 0)
+                                new PopUpStashed().ShowDialog();
+                        }
+                    }
+                }
                 else if (ParseItem.ParseStash(item))
                 {
                     //If we are in collection mode pop up a window

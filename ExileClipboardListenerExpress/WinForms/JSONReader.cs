@@ -136,6 +136,16 @@ namespace ExileClipboardListener.WinForms
                         if (ParseItem.ParseGem(itemText))
                             GlobalMethods.SaveGem(_leagueId);
                     }
+                    else if (itemText.Contains("Rarity: Currency"))
+                    {
+                        if (ParseItem.ParseCurrency(itemText))
+                            GlobalMethods.SaveCurrency(_leagueId);
+                    }
+                    else if (itemText.Contains(" Map"))
+                    {
+                        if (ParseItem.ParseMap(itemText))
+                            GlobalMethods.SaveMap(_leagueId);
+                    }
                     else
                     {
                         if (ParseItem.ParseStash(itemText))
@@ -178,6 +188,24 @@ namespace ExileClipboardListener.WinForms
                     if (ParseItem.ParseGem(itemText))
                     {
                         GlobalMethods.SaveGem(_leagueId);
+                        MessageBox.Show("Stashed!");
+                        return;
+                    }
+                }
+                else if (itemText.Contains("Rarity: Currency"))
+                {
+                    if (ParseItem.ParseCurrency(itemText))
+                    {
+                        GlobalMethods.SaveCurrency(_leagueId);
+                        MessageBox.Show("Stashed!");
+                        return;
+                    }
+                }
+                else if (itemText.Contains(" Map"))
+                {
+                    if (ParseItem.ParseMap(itemText))
+                    {
+                        GlobalMethods.SaveMap(_leagueId);
                         MessageBox.Show("Stashed!");
                         return;
                     }
@@ -292,6 +320,12 @@ namespace ExileClipboardListener.WinForms
                 if (itemText.Contains("Rarity: Gem"))
                 {
                 }
+                else if (itemText.Contains("Rarity: Currency"))
+                {
+                }
+                else if (itemText.Contains(" Map"))
+                {
+                }
                 else
                 {
                     if (ParseItem.ParseStash(itemText))
@@ -377,6 +411,16 @@ namespace ExileClipboardListener.WinForms
                             if (ParseItem.ParseGem(itemText))
                                 GlobalMethods.SaveGem(_leagueId);
                         }
+                        else if (itemText.Contains("Rarity: Currency"))
+                        {
+                            if (ParseItem.ParseCurrency(itemText))
+                                GlobalMethods.SaveCurrency(_leagueId);
+                        }
+                        else if (itemText.Contains(" Map"))
+                        {
+                            if (ParseItem.ParseMap(itemText))
+                                GlobalMethods.SaveMap(_leagueId);
+                        }
                         else
                         {
                             if (ParseItem.ParseStash(itemText))
@@ -410,6 +454,16 @@ namespace ExileClipboardListener.WinForms
                         {
                             if (ParseItem.ParseGem(itemText))
                                 GlobalMethods.SaveGem(_leagueId);
+                        }
+                        else if (itemText.Contains("Rarity: Currency"))
+                        {
+                            if (ParseItem.ParseCurrency(itemText))
+                                GlobalMethods.SaveCurrency(_leagueId);
+                        }
+                        else if (itemText.Contains(" Map"))
+                        {
+                            if (ParseItem.ParseMap(itemText))
+                                GlobalMethods.SaveMap(_leagueId);
                         }
                         else
                         {
@@ -454,6 +508,16 @@ namespace ExileClipboardListener.WinForms
                         {
                             if (ParseItem.ParseGem(itemText))
                                 GlobalMethods.SaveGem(_leagueId);
+                        }
+                        else if (itemText.Contains("Rarity: Currency"))
+                        {
+                            if (ParseItem.ParseCurrency(itemText))
+                                GlobalMethods.SaveCurrency(_leagueId);
+                        }
+                        else if (itemText.Contains(" Map"))
+                        {
+                            if (ParseItem.ParseMap(itemText))
+                                GlobalMethods.SaveMap(_leagueId);
                         }
                         else
                         {

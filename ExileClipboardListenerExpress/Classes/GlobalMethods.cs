@@ -144,6 +144,46 @@ namespace ExileClipboardListener.Classes
             public static string[] ExplicitMod = new string[10];
         }
 
+        //Map Class
+        public static class StashMap
+        {
+            public static string OriginalText;
+            public static string Name;
+            public static int RarityId;
+            public static int MapLevel;
+            public static int ItemLevel;
+            public static int ItemQuantity;
+            public static int Quality;
+        }
+
+        //Currency Class, the current item
+        public static class StashCurrency
+        {
+            public static int CurrencyItemId;
+            public static string Name;
+            public static int StackSize;
+        }
+
+        //Currency Stash Class, a list of items and counts
+        public struct StashCurrencyBase
+        {
+            public int CurrencyItemId;
+            public string Name;
+            public int StackSize;
+        }
+        public static List<StashCurrencyBase> CurrentStashCurrency = new List<StashCurrencyBase>();
+
+        //Currency Cache
+        public struct CurrencyBase
+        {
+            public int CurrencyItemId;
+            public string Name;
+            public int StackSize;
+            public string Description;
+            public Image Icon;
+        }
+        public static List<CurrencyBase> CurrencyCache = new List<CurrencyBase>();
+
         //Storage for filter results
         public static List<object[]> BISResults = new List<object[]>();
         //ReSharper disable InconsistentNaming
@@ -216,12 +256,24 @@ namespace ExileClipboardListener.Classes
             StashGem.OriginalText = "";
         }
 
+        public static void ClearMap()
+        {
+            StashMap.Name = "";
+            StashMap.RarityId = 0;
+            StashMap.MapLevel = 0;
+            StashMap.ItemLevel = 0;
+            StashMap.ItemQuantity = 0;
+            StashMap.Quality = 0;
+            StashMap.OriginalText = "";
+        }
+
         public static void LoadCache()
         {
             //Loads data from the system into memory to reduce unnecessary database access
             try
             {
                 //Load a null affix
+                AffixCache.Clear();
                 var affixDummy = new Affix {AffixId = 0};
                 AffixCache.Add(affixDummy);
 
@@ -295,7 +347,8 @@ namespace ExileClipboardListener.Classes
                             }
                         }
 
-                        //Mods last
+                        //Mods 
+                        ModCache.Clear();
                         com.CommandText = "SELECT * FROM Mod;";
                         using (var dr = com.ExecuteReader())
                         {
@@ -314,6 +367,31 @@ namespace ExileClipboardListener.Classes
                                 mod.Class = dr["ModClass"].ToString();
                                 mod.Implicit = mod.Class == "<implicit>";
                                 ModCache.Add(mod);
+                            }
+                        }
+
+                        //Currency
+                        CurrencyCache.Clear();
+                        com.CommandText = "SELECT * FROM CurrencyItem;";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                //ReSharper disable UseObjectOrCollectionInitializer
+                                var currencyItem = new CurrencyBase();
+                                //ReSharper restore UseObjectOrCollectionInitializer
+                                currencyItem.CurrencyItemId = dr["CurrencyItemId"] == DBNull.Value ? 0 : Convert.ToInt32(dr["CurrencyItemId"]);
+                                currencyItem.Name = dr["Name"].ToString();
+                                currencyItem.StackSize = dr["StackSize"] == DBNull.Value ? 0 : Convert.ToInt32(dr["StackSize"]);
+                                currencyItem.Description = dr["Description"].ToString();
+                                if (dr["Icon"] != DBNull.Value)
+                                {
+                                    var imageBytes = (Byte[])dr["Icon"];
+                                    currencyItem.Icon = ByteArrayToImage(imageBytes);
+                                }
+                                else
+                                    currencyItem.Icon = null;
+                                CurrencyCache.Add(currencyItem);
                             }
                         }
                     }
@@ -849,6 +927,70 @@ namespace ExileClipboardListener.Classes
             }
         }
 
+        public static void GetCurrencyCount(int leagueId)
+        {
+            try
+            {
+                CurrentStashCurrency.Clear();
+                using (var con = new SQLiteConnection(Connection))
+                {
+                    con.Open();
+                    using (var com = con.CreateCommand())
+                    {
+                        com.CommandTimeout = CommandTimeout;
+                        com.CommandText = "SELECT cs.CurrencyItemId, ci.Name, cs.Count FROM CurrencyStash cs INNER JOIN CurrencyItem ci ON ci.CurrencyItemId = cs.CurrencyItemId " + (leagueId == 0 ? "" : " WHERE cs.LeagueId = " + leagueId) +  ";";
+                        using (var dr = com.ExecuteReader())
+                        {
+                            //Now process the results set
+                            while (dr.Read())
+                            {
+                                CurrentStashCurrency.Add(new StashCurrencyBase { CurrencyItemId = Convert.ToInt32(dr["CurrencyItemId"]), Name = dr["Name"].ToString(), StackSize = Convert.ToInt32(dr["Count"]) });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unhandled exception: " + ex.Message);
+            }
+        }
+
+        public static void SaveMap(int leagueId)
+        {
+            if (!Properties.Settings.Default.StashDuplicates)
+            {
+                if (GlobalMethods.GetScalarInt("SELECT COUNT(*) AS Count FROM MapStash WHERE OriginalText = '" + StashMap.OriginalText.Replace("'", "''") + "';") != 0)
+                    return;
+            }
+            string sql = "INSERT INTO MapStash(LeagueId, Name, RarityId, MapLevel, ItemLevel, ItemQuantity, Quality, OriginalText) VALUES(";
+            sql += leagueId + ",";
+            sql += "'" + StashMap.Name.Replace("'", "''") + "',";
+            sql += StashMap.RarityId + ",";
+            sql += StashMap.MapLevel + ",";
+            sql += StashMap.ItemLevel + ",";
+            sql += StashMap.ItemQuantity + ",";
+            sql += StashMap.Quality + ",";
+            sql += "'" + StashMap.OriginalText.Replace("'", "''") + "')";
+            GlobalMethods.RunQuery(sql);
+        }
+
+        public static void SaveCurrency(int leagueId)
+        {
+            string sql = "";
+
+            //Check to see if we have a row for this combination
+            if (GlobalMethods.GetScalarInt("SELECT COUNT(*) FROM CurrencyStash WHERE LeagueId = " + leagueId + " AND CurrencyItemId = " + StashCurrency.CurrencyItemId + ";") == 0)
+            {
+                sql = "INSERT INTO CurrencyStash(LeagueId, CurrencyItemId, Count) VALUES(" + leagueId + ", " + StashCurrency.CurrencyItemId + "," + StashCurrency.StackSize + ");";
+            }
+            else
+                sql = "UPDATE CurrencyStash SET Count = Count + " + StashCurrency.StackSize + " WHERE LeagueId = " + leagueId + " AND CurrencyItemId = " + StashCurrency.CurrencyItemId + ";";
+
+            //Stash this item
+            RunQuery(sql);
+        }
+
         public static void SaveGem(int leagueId)
         {
             string sql = "INSERT INTO GemStash(LeagueId, Name, Level, Quality, ReqLevel, ReqStr, ReqDex, ReqInt, Type, ManaCost, ManaMultiplier, ManaReserved, ExplicitMod1, ExplicitMod2, ExplicitMod3, ExplicitMod4, ExplicitMod5, ExplicitMod6, ExplicitMod7, ExplicitMod8, ExplicitMod9, OriginalText) VALUES (";
@@ -893,6 +1035,13 @@ namespace ExileClipboardListener.Classes
 
         public static void SaveStash(int leagueId)
         {
+            //If we don't allow duplicates then check we don't already have this first
+            if (!Properties.Settings.Default.StashDuplicates)
+            {
+                if (GlobalMethods.GetScalarInt("SELECT COUNT(*) AS Count FROM Stash WHERE OriginalText = '" + StashItem.OriginalText.Replace("'", "''") + "';") != 0)
+                    return;
+            }
+
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
             sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";

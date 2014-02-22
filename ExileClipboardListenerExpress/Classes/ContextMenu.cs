@@ -11,6 +11,8 @@ namespace ExileClipboardListener.Classes
         private bool _leagueLoaded;
         private bool _stashLoaded;
         private bool _gemsLoaded;
+        private bool _currencyLoaded;
+        private bool _mapsLoaded;
         private bool _filtersLoaded;
         private bool _settingsLoaded;
         private bool _downloadStashLoaded;
@@ -39,6 +41,10 @@ namespace ExileClipboardListener.Classes
             item.Click += DownloadStashClick;
             Menu.Items.Add(item);
 
+            //Separator
+            var sep = new ToolStripSeparator();
+            Menu.Items.Add(sep);
+
             //View Stash
             item = new ToolStripMenuItem { Text = "View Stash" };
             item.Click += ViewStashClick;
@@ -49,8 +55,18 @@ namespace ExileClipboardListener.Classes
             item.Click += ViewGemsClick;
             Menu.Items.Add(item);
 
+            //View Maps
+            item = new ToolStripMenuItem { Text = "View Maps" };
+            item.Click += ViewMapsClick;
+            Menu.Items.Add(item);
+            
+            //View Currency
+            item = new ToolStripMenuItem { Text = "View Currency" };
+            item.Click += ViewCurrencyClick;
+            Menu.Items.Add(item);
+
             //Separator
-            var sep = new ToolStripSeparator();
+            sep = new ToolStripSeparator();
             Menu.Items.Add(sep);
 
             //League Manager
@@ -137,6 +153,26 @@ namespace ExileClipboardListener.Classes
                 _gemsLoaded = true;
                 new GemViewer().ShowDialog();
                 _gemsLoaded = false;
+            }
+        }
+
+        private void ViewCurrencyClick(object sender, EventArgs e)
+        {
+            if (!_currencyLoaded)
+            {
+                _currencyLoaded = true;
+                new CurrencyViewer().ShowDialog();
+                _currencyLoaded = false;
+            }
+        }
+
+        private void ViewMapsClick(object sender, EventArgs e)
+        {
+            if (!_mapsLoaded)
+            {
+                _mapsLoaded = true;
+                new MapViewer().ShowDialog();
+                _mapsLoaded = false;
             }
         }
 

@@ -63,6 +63,10 @@ namespace ExileClipboardListener.WinForms
         
             //Hide the StashId, it's just a number
             GemGrid.Columns[0].Visible = false;
+
+            //Select the first row
+            if (GemGrid.Rows.Count > 0)
+                GemGrid.Rows[0].Cells[1].Selected = true;
         }
 
         private void League_SelectedIndexChanged(object sender, EventArgs e)
