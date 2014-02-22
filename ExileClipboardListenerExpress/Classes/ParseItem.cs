@@ -246,7 +246,7 @@ namespace ExileClipboardListener.Classes
                 string itemSubTypeName = bi.ItemSubTypeName;
                 si.ItemTypeName = itemTypeName;
                 si.ItemSubTypeName = itemSubTypeName;
-                if (itemTypeName != "Jewellery" && itemTypeName != "Flask")
+                if (itemTypeName != "Jewellery" && itemTypeName != "Flask" && itemTypeName != "Quiver")
                 {
                     //Armour
                     si.Armour = FindAnyValue<int>(entity, "Armour");
@@ -285,7 +285,7 @@ namespace ExileClipboardListener.Classes
 
                 //Sockets
                 //For now just store them
-                if (itemTypeName != "Jewellery" && itemTypeName != "Flask")
+                if (itemTypeName != "Jewellery" && itemTypeName != "Flask" && itemTypeName != "Quiver")
                 {
                     si.Sockets = FindAnyValue<string>(entity, "Sockets");
                     RemoveSection(ref entity);
@@ -316,7 +316,7 @@ namespace ExileClipboardListener.Classes
                     var implicitMod = GlobalMethods.LookUpMod(bi.Mod1.Id);
 
                     //For primary implicit mods there might be a roll in the item script
-                    implicitMod.Value = FindMod(entity, implicitMod.RealName);
+                    implicitMod.Value = FindMod(entity, implicitMod.RealName, 0);
                     if (implicitMod.Value == 0)
                         implicitMod.Value = bi.Mod1.ValueMin;
                     else
@@ -333,7 +333,7 @@ namespace ExileClipboardListener.Classes
                 if (bi.Mod2.Id != 0)
                 {
                     var implicitMod = GlobalMethods.LookUpMod(bi.Mod2.Id);
-                    implicitMod.Value = FindMod(entity, implicitMod.RealName);
+                    implicitMod.Value = FindMod(entity, implicitMod.RealName, 1);
                     if (implicitMod.Value == 0)
                         implicitMod.Value = bi.Mod2.ValueMin;
                     else
@@ -1104,7 +1104,7 @@ namespace ExileClipboardListener.Classes
             }
         }
 
-        private static int FindMod(IEnumerable<string> entity, string tag)
+        private static int FindMod(IEnumerable<string> entity, string tag, int pair)
         {
             //Look for a tag and if found return the value associated with it as an integer
             foreach (var item in entity)
@@ -1119,6 +1119,8 @@ namespace ExileClipboardListener.Classes
                     valueString = valueString.Replace("%", "");
                     valueString = valueString.Replace("(augmented)", "");
                     valueString = valueString.Trim();
+                    if (valueString.Contains("-"))
+                        valueString = valueString.Split('-')[pair];
                     int value;
                     if (int.TryParse(valueString, out value))
                         return value;

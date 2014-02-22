@@ -60,6 +60,8 @@ namespace ExileClipboardListener.Classes
                         var rectFill = new Rectangle(0, 0, Width - 1, Height);
                         rectFill.Inflate(new Size(-2, -1));
                         rectFill.Width = (int)(rectFill.Width * ((double)(threshold.RangeHigh - threshold.RangeLow) / Maximum));
+                        if (rectFill.Width < 1)
+                            rectFill.Width = 1;
                         var brushFillRange = new LinearGradientBrush(rectFill, BackColor,  (Value >= threshold.RangeLow && Value <= threshold.RangeHigh) ? backColor : Color.Gray, LinearGradientMode.Vertical);
                         offscreen.FillRectangle(brushFillRange, (Width - 1) * ((float)threshold.RangeLow / Maximum) + 1, 2, rectFill.Width, rectFill.Height);
 

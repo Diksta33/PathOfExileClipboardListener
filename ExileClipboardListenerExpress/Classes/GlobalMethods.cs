@@ -524,6 +524,9 @@ namespace ExileClipboardListener.Classes
                 case "Jewellery":
                     mod = ModCache.FirstOrDefault(m => (m.Name == modName || m.RealName == modName) && m.ModPair == modPair && m.Jewellery == 1 && !m.Implicit);
                     break;
+                case "Quiver":
+                    mod = ModCache.FirstOrDefault(m => (m.Name == modName || m.RealName == modName) && m.ModPair == modPair && (m.Armour == 1 || m.Jewellery == 1) && !m.Implicit);
+                    break;
                 default:
                     mod.Id = 0;
                     break;

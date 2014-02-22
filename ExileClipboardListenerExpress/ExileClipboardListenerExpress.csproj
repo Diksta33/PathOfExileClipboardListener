@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>31</ApplicationRevision>
+    <ApplicationRevision>32</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -298,8 +298,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="PathOfExile.ico" />
-    <None Include="Resources\Regret.png" />
-    <None Include="Resources\Fusing.png" />
+    <Content Include="Resources\Fusing.png" />
+    <Content Include="Resources\Regret.png" />
     <None Include="Resources\Regal.png" />
     <None Include="Resources\Scouring.png" />
     <None Include="Resources\Transmutation.png" />

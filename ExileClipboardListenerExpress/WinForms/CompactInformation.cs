@@ -52,7 +52,7 @@ namespace ExileClipboardListener.WinForms
                 }
 
                 //Output the details
-                label.Text = si.Affix[i].ModCategoryName + Environment.NewLine + si.Affix[i].Mod1.Name.Replace("Local ", "").Replace("Base ", "").Replace(" Rating", "").Replace(" Per ", "/ ");
+                label.Text = si.Affix[i].ModCategoryName + Environment.NewLine + si.Affix[i].Mod1.Name.Replace("Local ", "").Replace("Base ", "").Replace(" Rating", "").Replace("Minimum", "").Replace(" Per ", "/ ");
                 label.Text += " [" + si.Affix[i].Mod1.Value + (si.Affix[i].Mod2.Id == 0 ? "" : "," + si.Affix[i].Mod2.Value) + "]";
                 int mod1 = si.Affix[i].Mod1.Id;
                 int mod2 = si.Affix[i].Mod2.Id;
@@ -72,14 +72,14 @@ namespace ExileClipboardListener.WinForms
                     //We need a list of thresholds
                     int rangeMod1Low = GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
                     int rangeMod1High = GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
-                    if (rangeMod1High == rangeMod1Low)
+                    if (rangeMod1High == rangeMod1Low && (rangeMod1High != 1 || levels.Count == 1))
                     {
                         rangeMod1Low = rangeMod1Low > 1 ? rangeMod1Low - 1 : 1;
                         rangeMod1High = rangeMod1High < maxMod1Value ? maxMod1Value : rangeMod1High + 1; ;
                     }
-                    int rangeMod2Low = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod1ValueMin FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
-                    int rangeMod2High = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod1ValueMax FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
-                    if (rangeMod2High == rangeMod2Low && rangeMod2High != 0)
+                    int rangeMod2Low = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
+                    int rangeMod2High = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod2ValueMax FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
+                    if (rangeMod2High == rangeMod2Low && rangeMod2High != 0 && (rangeMod2High > 5 || levels.Count == 1))
                     {
                         rangeMod2Low = rangeMod2Low > 1 ? rangeMod2Low - 1 : 1;
                         rangeMod2High = rangeMod2High < maxMod2Value ? maxMod2Value : rangeMod2High + 1; 

@@ -32,6 +32,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.League = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Item4 = new System.Windows.Forms.TextBox();
+            this.Item10 = new System.Windows.Forms.TextBox();
+            this.Item11 = new System.Windows.Forms.TextBox();
+            this.Item12 = new System.Windows.Forms.TextBox();
+            this.Item2 = new System.Windows.Forms.TextBox();
+            this.Item1 = new System.Windows.Forms.TextBox();
             this.Icon12 = new System.Windows.Forms.PictureBox();
             this.Icon10 = new System.Windows.Forms.PictureBox();
             this.Icon11 = new System.Windows.Forms.PictureBox();
@@ -42,6 +48,21 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Icon19 = new System.Windows.Forms.PictureBox();
             this.Icon18 = new System.Windows.Forms.PictureBox();
+            this.Item19 = new System.Windows.Forms.TextBox();
+            this.Item18 = new System.Windows.Forms.TextBox();
+            this.Item23 = new System.Windows.Forms.TextBox();
+            this.Item20 = new System.Windows.Forms.TextBox();
+            this.Item21 = new System.Windows.Forms.TextBox();
+            this.Item9 = new System.Windows.Forms.TextBox();
+            this.Item8 = new System.Windows.Forms.TextBox();
+            this.Item7 = new System.Windows.Forms.TextBox();
+            this.Item6 = new System.Windows.Forms.TextBox();
+            this.Item5 = new System.Windows.Forms.TextBox();
+            this.Item17 = new System.Windows.Forms.TextBox();
+            this.Item3 = new System.Windows.Forms.TextBox();
+            this.Item16 = new System.Windows.Forms.TextBox();
+            this.Item15 = new System.Windows.Forms.TextBox();
+            this.Item14 = new System.Windows.Forms.TextBox();
             this.Icon23 = new System.Windows.Forms.PictureBox();
             this.Icon20 = new System.Windows.Forms.PictureBox();
             this.Icon21 = new System.Windows.Forms.PictureBox();
@@ -55,34 +76,13 @@
             this.Icon3 = new System.Windows.Forms.PictureBox();
             this.Icon14 = new System.Windows.Forms.PictureBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.Item13 = new System.Windows.Forms.TextBox();
             this.Icon13 = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.Item24 = new System.Windows.Forms.TextBox();
+            this.Item22 = new System.Windows.Forms.TextBox();
             this.Icon24 = new System.Windows.Forms.PictureBox();
             this.Icon22 = new System.Windows.Forms.PictureBox();
-            this.Item1 = new System.Windows.Forms.TextBox();
-            this.Item2 = new System.Windows.Forms.TextBox();
-            this.Item12 = new System.Windows.Forms.TextBox();
-            this.Item11 = new System.Windows.Forms.TextBox();
-            this.Item10 = new System.Windows.Forms.TextBox();
-            this.Item4 = new System.Windows.Forms.TextBox();
-            this.Item14 = new System.Windows.Forms.TextBox();
-            this.Item15 = new System.Windows.Forms.TextBox();
-            this.Item16 = new System.Windows.Forms.TextBox();
-            this.Item3 = new System.Windows.Forms.TextBox();
-            this.Item17 = new System.Windows.Forms.TextBox();
-            this.Item5 = new System.Windows.Forms.TextBox();
-            this.Item6 = new System.Windows.Forms.TextBox();
-            this.Item7 = new System.Windows.Forms.TextBox();
-            this.Item8 = new System.Windows.Forms.TextBox();
-            this.Item9 = new System.Windows.Forms.TextBox();
-            this.Item21 = new System.Windows.Forms.TextBox();
-            this.Item20 = new System.Windows.Forms.TextBox();
-            this.Item23 = new System.Windows.Forms.TextBox();
-            this.Item18 = new System.Windows.Forms.TextBox();
-            this.Item19 = new System.Windows.Forms.TextBox();
-            this.Item22 = new System.Windows.Forms.TextBox();
-            this.Item24 = new System.Windows.Forms.TextBox();
-            this.Item13 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Icon12)).BeginInit();
@@ -159,6 +159,54 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Quality";
             // 
+            // Item4
+            // 
+            this.Item4.Enabled = false;
+            this.Item4.Location = new System.Drawing.Point(67, 359);
+            this.Item4.Name = "Item4";
+            this.Item4.Size = new System.Drawing.Size(66, 20);
+            this.Item4.TabIndex = 12;
+            // 
+            // Item10
+            // 
+            this.Item10.Enabled = false;
+            this.Item10.Location = new System.Drawing.Point(67, 298);
+            this.Item10.Name = "Item10";
+            this.Item10.Size = new System.Drawing.Size(66, 20);
+            this.Item10.TabIndex = 11;
+            // 
+            // Item11
+            // 
+            this.Item11.Enabled = false;
+            this.Item11.Location = new System.Drawing.Point(67, 237);
+            this.Item11.Name = "Item11";
+            this.Item11.Size = new System.Drawing.Size(66, 20);
+            this.Item11.TabIndex = 10;
+            // 
+            // Item12
+            // 
+            this.Item12.Enabled = false;
+            this.Item12.Location = new System.Drawing.Point(67, 176);
+            this.Item12.Name = "Item12";
+            this.Item12.Size = new System.Drawing.Size(66, 20);
+            this.Item12.TabIndex = 9;
+            // 
+            // Item2
+            // 
+            this.Item2.Enabled = false;
+            this.Item2.Location = new System.Drawing.Point(67, 115);
+            this.Item2.Name = "Item2";
+            this.Item2.Size = new System.Drawing.Size(66, 20);
+            this.Item2.TabIndex = 8;
+            // 
+            // Item1
+            // 
+            this.Item1.Enabled = false;
+            this.Item1.Location = new System.Drawing.Point(67, 54);
+            this.Item1.Name = "Item1";
+            this.Item1.Size = new System.Drawing.Size(66, 20);
+            this.Item1.TabIndex = 7;
+            // 
             // Icon12
             // 
             this.Icon12.Image = global::ExileClipboardListener.Properties.Resources.Jewellers;
@@ -224,6 +272,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.Icon19);
+            this.groupBox2.Controls.Add(this.Icon18);
             this.groupBox2.Controls.Add(this.Item19);
             this.groupBox2.Controls.Add(this.Item18);
             this.groupBox2.Controls.Add(this.Item23);
@@ -239,8 +289,6 @@
             this.groupBox2.Controls.Add(this.Item16);
             this.groupBox2.Controls.Add(this.Item15);
             this.groupBox2.Controls.Add(this.Item14);
-            this.groupBox2.Controls.Add(this.Icon19);
-            this.groupBox2.Controls.Add(this.Icon18);
             this.groupBox2.Controls.Add(this.Icon23);
             this.groupBox2.Controls.Add(this.Icon20);
             this.groupBox2.Controls.Add(this.Icon21);
@@ -267,8 +315,7 @@
             this.Icon19.Location = new System.Drawing.Point(272, 141);
             this.Icon19.Name = "Icon19";
             this.Icon19.Size = new System.Drawing.Size(55, 55);
-            this.Icon19.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.Icon19.TabIndex = 16;
+            this.Icon19.TabIndex = 33;
             this.Icon19.TabStop = false;
             // 
             // Icon18
@@ -277,9 +324,128 @@
             this.Icon18.Location = new System.Drawing.Point(272, 80);
             this.Icon18.Name = "Icon18";
             this.Icon18.Size = new System.Drawing.Size(55, 55);
-            this.Icon18.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.Icon18.TabIndex = 15;
+            this.Icon18.TabIndex = 32;
             this.Icon18.TabStop = false;
+            // 
+            // Item19
+            // 
+            this.Item19.Enabled = false;
+            this.Item19.Location = new System.Drawing.Point(333, 176);
+            this.Item19.Name = "Item19";
+            this.Item19.Size = new System.Drawing.Size(66, 20);
+            this.Item19.TabIndex = 31;
+            // 
+            // Item18
+            // 
+            this.Item18.Enabled = false;
+            this.Item18.Location = new System.Drawing.Point(333, 115);
+            this.Item18.Name = "Item18";
+            this.Item18.Size = new System.Drawing.Size(66, 20);
+            this.Item18.TabIndex = 30;
+            // 
+            // Item23
+            // 
+            this.Item23.Enabled = false;
+            this.Item23.Location = new System.Drawing.Point(333, 54);
+            this.Item23.Name = "Item23";
+            this.Item23.Size = new System.Drawing.Size(66, 20);
+            this.Item23.TabIndex = 29;
+            // 
+            // Item20
+            // 
+            this.Item20.Enabled = false;
+            this.Item20.Location = new System.Drawing.Point(200, 359);
+            this.Item20.Name = "Item20";
+            this.Item20.Size = new System.Drawing.Size(66, 20);
+            this.Item20.TabIndex = 28;
+            // 
+            // Item21
+            // 
+            this.Item21.Enabled = false;
+            this.Item21.Location = new System.Drawing.Point(200, 298);
+            this.Item21.Name = "Item21";
+            this.Item21.Size = new System.Drawing.Size(66, 20);
+            this.Item21.TabIndex = 27;
+            // 
+            // Item9
+            // 
+            this.Item9.Enabled = false;
+            this.Item9.Location = new System.Drawing.Point(200, 237);
+            this.Item9.Name = "Item9";
+            this.Item9.Size = new System.Drawing.Size(66, 20);
+            this.Item9.TabIndex = 26;
+            // 
+            // Item8
+            // 
+            this.Item8.Enabled = false;
+            this.Item8.Location = new System.Drawing.Point(200, 176);
+            this.Item8.Name = "Item8";
+            this.Item8.Size = new System.Drawing.Size(66, 20);
+            this.Item8.TabIndex = 25;
+            // 
+            // Item7
+            // 
+            this.Item7.Enabled = false;
+            this.Item7.Location = new System.Drawing.Point(200, 115);
+            this.Item7.Name = "Item7";
+            this.Item7.Size = new System.Drawing.Size(66, 20);
+            this.Item7.TabIndex = 24;
+            // 
+            // Item6
+            // 
+            this.Item6.Enabled = false;
+            this.Item6.Location = new System.Drawing.Point(200, 54);
+            this.Item6.Name = "Item6";
+            this.Item6.Size = new System.Drawing.Size(66, 20);
+            this.Item6.TabIndex = 23;
+            // 
+            // Item5
+            // 
+            this.Item5.Enabled = false;
+            this.Item5.Location = new System.Drawing.Point(67, 359);
+            this.Item5.Name = "Item5";
+            this.Item5.Size = new System.Drawing.Size(66, 20);
+            this.Item5.TabIndex = 22;
+            // 
+            // Item17
+            // 
+            this.Item17.Enabled = false;
+            this.Item17.Location = new System.Drawing.Point(67, 298);
+            this.Item17.Name = "Item17";
+            this.Item17.Size = new System.Drawing.Size(66, 20);
+            this.Item17.TabIndex = 21;
+            // 
+            // Item3
+            // 
+            this.Item3.Enabled = false;
+            this.Item3.Location = new System.Drawing.Point(67, 237);
+            this.Item3.Name = "Item3";
+            this.Item3.Size = new System.Drawing.Size(66, 20);
+            this.Item3.TabIndex = 20;
+            // 
+            // Item16
+            // 
+            this.Item16.Enabled = false;
+            this.Item16.Location = new System.Drawing.Point(67, 176);
+            this.Item16.Name = "Item16";
+            this.Item16.Size = new System.Drawing.Size(66, 20);
+            this.Item16.TabIndex = 19;
+            // 
+            // Item15
+            // 
+            this.Item15.Enabled = false;
+            this.Item15.Location = new System.Drawing.Point(67, 115);
+            this.Item15.Name = "Item15";
+            this.Item15.Size = new System.Drawing.Size(66, 20);
+            this.Item15.TabIndex = 18;
+            // 
+            // Item14
+            // 
+            this.Item14.Enabled = false;
+            this.Item14.Location = new System.Drawing.Point(67, 54);
+            this.Item14.Name = "Item14";
+            this.Item14.Size = new System.Drawing.Size(66, 20);
+            this.Item14.TabIndex = 17;
             // 
             // Icon23
             // 
@@ -400,6 +566,14 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
             // 
+            // Item13
+            // 
+            this.Item13.Enabled = false;
+            this.Item13.Location = new System.Drawing.Point(67, 54);
+            this.Item13.Name = "Item13";
+            this.Item13.Size = new System.Drawing.Size(66, 20);
+            this.Item13.TabIndex = 8;
+            // 
             // Icon13
             // 
             this.Icon13.Image = global::ExileClipboardListener.Properties.Resources.Mirror;
@@ -422,6 +596,22 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Scroll";
             // 
+            // Item24
+            // 
+            this.Item24.Enabled = false;
+            this.Item24.Location = new System.Drawing.Point(67, 115);
+            this.Item24.Name = "Item24";
+            this.Item24.Size = new System.Drawing.Size(66, 20);
+            this.Item24.TabIndex = 9;
+            // 
+            // Item22
+            // 
+            this.Item22.Enabled = false;
+            this.Item22.Location = new System.Drawing.Point(67, 54);
+            this.Item22.Name = "Item22";
+            this.Item22.Size = new System.Drawing.Size(66, 20);
+            this.Item22.TabIndex = 8;
+            // 
             // Icon24
             // 
             this.Icon24.Image = global::ExileClipboardListener.Properties.Resources.Wisdom;
@@ -439,198 +629,6 @@
             this.Icon22.Size = new System.Drawing.Size(55, 55);
             this.Icon22.TabIndex = 0;
             this.Icon22.TabStop = false;
-            // 
-            // Item1
-            // 
-            this.Item1.Enabled = false;
-            this.Item1.Location = new System.Drawing.Point(67, 54);
-            this.Item1.Name = "Item1";
-            this.Item1.Size = new System.Drawing.Size(66, 20);
-            this.Item1.TabIndex = 7;
-            // 
-            // Item2
-            // 
-            this.Item2.Enabled = false;
-            this.Item2.Location = new System.Drawing.Point(67, 115);
-            this.Item2.Name = "Item2";
-            this.Item2.Size = new System.Drawing.Size(66, 20);
-            this.Item2.TabIndex = 8;
-            // 
-            // Item12
-            // 
-            this.Item12.Enabled = false;
-            this.Item12.Location = new System.Drawing.Point(67, 176);
-            this.Item12.Name = "Item12";
-            this.Item12.Size = new System.Drawing.Size(66, 20);
-            this.Item12.TabIndex = 9;
-            // 
-            // Item11
-            // 
-            this.Item11.Enabled = false;
-            this.Item11.Location = new System.Drawing.Point(67, 237);
-            this.Item11.Name = "Item11";
-            this.Item11.Size = new System.Drawing.Size(66, 20);
-            this.Item11.TabIndex = 10;
-            // 
-            // Item10
-            // 
-            this.Item10.Enabled = false;
-            this.Item10.Location = new System.Drawing.Point(67, 298);
-            this.Item10.Name = "Item10";
-            this.Item10.Size = new System.Drawing.Size(66, 20);
-            this.Item10.TabIndex = 11;
-            // 
-            // Item4
-            // 
-            this.Item4.Enabled = false;
-            this.Item4.Location = new System.Drawing.Point(67, 359);
-            this.Item4.Name = "Item4";
-            this.Item4.Size = new System.Drawing.Size(66, 20);
-            this.Item4.TabIndex = 12;
-            // 
-            // Item14
-            // 
-            this.Item14.Enabled = false;
-            this.Item14.Location = new System.Drawing.Point(67, 54);
-            this.Item14.Name = "Item14";
-            this.Item14.Size = new System.Drawing.Size(66, 20);
-            this.Item14.TabIndex = 17;
-            // 
-            // Item15
-            // 
-            this.Item15.Enabled = false;
-            this.Item15.Location = new System.Drawing.Point(67, 115);
-            this.Item15.Name = "Item15";
-            this.Item15.Size = new System.Drawing.Size(66, 20);
-            this.Item15.TabIndex = 18;
-            // 
-            // Item16
-            // 
-            this.Item16.Enabled = false;
-            this.Item16.Location = new System.Drawing.Point(67, 176);
-            this.Item16.Name = "Item16";
-            this.Item16.Size = new System.Drawing.Size(66, 20);
-            this.Item16.TabIndex = 19;
-            // 
-            // Item3
-            // 
-            this.Item3.Enabled = false;
-            this.Item3.Location = new System.Drawing.Point(67, 237);
-            this.Item3.Name = "Item3";
-            this.Item3.Size = new System.Drawing.Size(66, 20);
-            this.Item3.TabIndex = 20;
-            // 
-            // Item17
-            // 
-            this.Item17.Enabled = false;
-            this.Item17.Location = new System.Drawing.Point(67, 298);
-            this.Item17.Name = "Item17";
-            this.Item17.Size = new System.Drawing.Size(66, 20);
-            this.Item17.TabIndex = 21;
-            // 
-            // Item5
-            // 
-            this.Item5.Enabled = false;
-            this.Item5.Location = new System.Drawing.Point(67, 359);
-            this.Item5.Name = "Item5";
-            this.Item5.Size = new System.Drawing.Size(66, 20);
-            this.Item5.TabIndex = 22;
-            // 
-            // Item6
-            // 
-            this.Item6.Enabled = false;
-            this.Item6.Location = new System.Drawing.Point(200, 54);
-            this.Item6.Name = "Item6";
-            this.Item6.Size = new System.Drawing.Size(66, 20);
-            this.Item6.TabIndex = 23;
-            // 
-            // Item7
-            // 
-            this.Item7.Enabled = false;
-            this.Item7.Location = new System.Drawing.Point(200, 115);
-            this.Item7.Name = "Item7";
-            this.Item7.Size = new System.Drawing.Size(66, 20);
-            this.Item7.TabIndex = 24;
-            // 
-            // Item8
-            // 
-            this.Item8.Enabled = false;
-            this.Item8.Location = new System.Drawing.Point(200, 176);
-            this.Item8.Name = "Item8";
-            this.Item8.Size = new System.Drawing.Size(66, 20);
-            this.Item8.TabIndex = 25;
-            // 
-            // Item9
-            // 
-            this.Item9.Enabled = false;
-            this.Item9.Location = new System.Drawing.Point(200, 237);
-            this.Item9.Name = "Item9";
-            this.Item9.Size = new System.Drawing.Size(66, 20);
-            this.Item9.TabIndex = 26;
-            // 
-            // Item21
-            // 
-            this.Item21.Enabled = false;
-            this.Item21.Location = new System.Drawing.Point(200, 298);
-            this.Item21.Name = "Item21";
-            this.Item21.Size = new System.Drawing.Size(66, 20);
-            this.Item21.TabIndex = 27;
-            // 
-            // Item20
-            // 
-            this.Item20.Enabled = false;
-            this.Item20.Location = new System.Drawing.Point(200, 359);
-            this.Item20.Name = "Item20";
-            this.Item20.Size = new System.Drawing.Size(66, 20);
-            this.Item20.TabIndex = 28;
-            // 
-            // Item23
-            // 
-            this.Item23.Enabled = false;
-            this.Item23.Location = new System.Drawing.Point(333, 54);
-            this.Item23.Name = "Item23";
-            this.Item23.Size = new System.Drawing.Size(66, 20);
-            this.Item23.TabIndex = 29;
-            // 
-            // Item18
-            // 
-            this.Item18.Enabled = false;
-            this.Item18.Location = new System.Drawing.Point(333, 115);
-            this.Item18.Name = "Item18";
-            this.Item18.Size = new System.Drawing.Size(66, 20);
-            this.Item18.TabIndex = 30;
-            // 
-            // Item19
-            // 
-            this.Item19.Enabled = false;
-            this.Item19.Location = new System.Drawing.Point(333, 176);
-            this.Item19.Name = "Item19";
-            this.Item19.Size = new System.Drawing.Size(66, 20);
-            this.Item19.TabIndex = 31;
-            // 
-            // Item22
-            // 
-            this.Item22.Enabled = false;
-            this.Item22.Location = new System.Drawing.Point(67, 54);
-            this.Item22.Name = "Item22";
-            this.Item22.Size = new System.Drawing.Size(66, 20);
-            this.Item22.TabIndex = 8;
-            // 
-            // Item24
-            // 
-            this.Item24.Enabled = false;
-            this.Item24.Location = new System.Drawing.Point(67, 115);
-            this.Item24.Name = "Item24";
-            this.Item24.Size = new System.Drawing.Size(66, 20);
-            this.Item24.TabIndex = 9;
-            // 
-            // Item13
-            // 
-            this.Item13.Enabled = false;
-            this.Item13.Location = new System.Drawing.Point(67, 54);
-            this.Item13.Name = "Item13";
-            this.Item13.Size = new System.Drawing.Size(66, 20);
-            this.Item13.TabIndex = 8;
             // 
             // button1
             // 
@@ -728,8 +726,6 @@
         private System.Windows.Forms.PictureBox Icon20;
         private System.Windows.Forms.PictureBox Icon21;
         private System.Windows.Forms.PictureBox Icon23;
-        private System.Windows.Forms.PictureBox Icon19;
-        private System.Windows.Forms.PictureBox Icon18;
         private System.Windows.Forms.TextBox Item4;
         private System.Windows.Forms.TextBox Item10;
         private System.Windows.Forms.TextBox Item11;
@@ -755,5 +751,7 @@
         private System.Windows.Forms.TextBox Item24;
         private System.Windows.Forms.TextBox Item22;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.PictureBox Icon19;
+        private System.Windows.Forms.PictureBox Icon18;
     }
 }
