@@ -22,23 +22,14 @@ namespace ExileClipboardListener.WinForms
             AllLeagues.Checked = Properties.Settings.Default.QuickLeagues == GlobalMethods.ALL_LEAGUES;
             DefaultLeague.Checked = Properties.Settings.Default.QuickLeagues == GlobalMethods.DEFAULT_LEAGUE;
             CurrencyTab1Name.Text = Properties.Settings.Default.CurrencyTab1;
-            CurrencyTab1.Checked = CurrencyTab1Name.Text != "";
             CurrencyTab2Name.Text = Properties.Settings.Default.CurrencyTab2;
-            CurrencyTab2.Checked = CurrencyTab2Name.Text != "";
             CurrencyTab3Name.Text = Properties.Settings.Default.CurrencyTab3;
-            CurrencyTab3.Checked = CurrencyTab3Name.Text != "";
             MapTab1Name.Text = Properties.Settings.Default.MapTab1;
-            MapTab1.Checked = MapTab1Name.Text != "";
             MapTab2Name.Text = Properties.Settings.Default.MapTab2;
-            MapTab2.Checked = MapTab2Name.Text != "";
             MapTab3Name.Text = Properties.Settings.Default.MapTab3;
-            MapTab3.Checked = MapTab3Name.Text != "";
             GemTab1Name.Text = Properties.Settings.Default.GemTab1;
-            GemTab1.Checked = GemTab1Name.Text != "";
             GemTab2Name.Text = Properties.Settings.Default.GemTab2;
-            GemTab2.Checked = GemTab2Name.Text != "";
             GemTab3Name.Text = Properties.Settings.Default.GemTab3;
-            GemTab3.Checked = GemTab3Name.Text != "";
         }
 
         private void Save_Click(object sender, EventArgs e)
