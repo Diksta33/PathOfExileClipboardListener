@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.Logon = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.StashTab = new System.Windows.Forms.ComboBox();
@@ -53,6 +53,8 @@
             this.ViewItem = new System.Windows.Forms.Button();
             this.StashLeague = new System.Windows.Forms.Button();
             this.StashAllInventories = new System.Windows.Forms.Button();
+            this.QuickUpdate = new System.Windows.Forms.Button();
+            this.QuickUpdateSettings = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.ItemIcon)).BeginInit();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CharacterGrid)).BeginInit();
@@ -196,8 +198,8 @@
             // 
             // Column1
             // 
-            dataGridViewCellStyle4.Format = "N0";
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle3.Format = "N0";
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle3;
             this.Column1.HeaderText = "Level";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
@@ -256,7 +258,7 @@
             // GrabInventory
             // 
             this.GrabInventory.Enabled = false;
-            this.GrabInventory.Location = new System.Drawing.Point(691, 41);
+            this.GrabInventory.Location = new System.Drawing.Point(691, 148);
             this.GrabInventory.Name = "GrabInventory";
             this.GrabInventory.Size = new System.Drawing.Size(117, 23);
             this.GrabInventory.TabIndex = 24;
@@ -278,7 +280,7 @@
             // StashLeague
             // 
             this.StashLeague.Enabled = false;
-            this.StashLeague.Location = new System.Drawing.Point(691, 177);
+            this.StashLeague.Location = new System.Drawing.Point(691, 425);
             this.StashLeague.Name = "StashLeague";
             this.StashLeague.Size = new System.Drawing.Size(117, 23);
             this.StashLeague.TabIndex = 26;
@@ -289,7 +291,7 @@
             // StashAllInventories
             // 
             this.StashAllInventories.Enabled = false;
-            this.StashAllInventories.Location = new System.Drawing.Point(691, 148);
+            this.StashAllInventories.Location = new System.Drawing.Point(691, 177);
             this.StashAllInventories.Name = "StashAllInventories";
             this.StashAllInventories.Size = new System.Drawing.Size(117, 23);
             this.StashAllInventories.TabIndex = 27;
@@ -297,11 +299,34 @@
             this.StashAllInventories.UseVisualStyleBackColor = true;
             this.StashAllInventories.Click += new System.EventHandler(this.StashAllInventories_Click);
             // 
+            // QuickUpdate
+            // 
+            this.QuickUpdate.Enabled = false;
+            this.QuickUpdate.Location = new System.Drawing.Point(691, 12);
+            this.QuickUpdate.Name = "QuickUpdate";
+            this.QuickUpdate.Size = new System.Drawing.Size(85, 23);
+            this.QuickUpdate.TabIndex = 28;
+            this.QuickUpdate.Text = "Quick Update";
+            this.QuickUpdate.UseVisualStyleBackColor = true;
+            this.QuickUpdate.Click += new System.EventHandler(this.QuickUpdate_Click);
+            // 
+            // QuickUpdateSettings
+            // 
+            this.QuickUpdateSettings.Location = new System.Drawing.Point(782, 12);
+            this.QuickUpdateSettings.Name = "QuickUpdateSettings";
+            this.QuickUpdateSettings.Size = new System.Drawing.Size(25, 23);
+            this.QuickUpdateSettings.TabIndex = 29;
+            this.QuickUpdateSettings.Text = "...";
+            this.QuickUpdateSettings.UseVisualStyleBackColor = true;
+            this.QuickUpdateSettings.Click += new System.EventHandler(this.QuickUpdateSettings_Click);
+            // 
             // JSONReader
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 628);
+            this.Controls.Add(this.QuickUpdateSettings);
+            this.Controls.Add(this.QuickUpdate);
             this.Controls.Add(this.StashAllInventories);
             this.Controls.Add(this.StashLeague);
             this.Controls.Add(this.ViewItem);
@@ -362,5 +387,7 @@
         private System.Windows.Forms.Button StashAllInventories;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.Button QuickUpdate;
+        private System.Windows.Forms.Button QuickUpdateSettings;
     }
 }

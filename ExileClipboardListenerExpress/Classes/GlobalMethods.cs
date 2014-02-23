@@ -16,6 +16,11 @@ namespace ExileClipboardListener.Classes
         public const int COMPACT_MODE = 2;
         //ReSharper restore InconsistentNaming
         public static int Mode = STASH_MODE;
+
+        //Quick Update Settings
+        public const int ALL_LEAGUES = 0;
+        public const int DEFAULT_LEAGUE = 1;
+
         public static string Connection = "Data Source=ExileStash.s3db;Version=3;";
         public static int CommandTimeout = 600;
 

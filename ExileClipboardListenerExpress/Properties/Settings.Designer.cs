@@ -214,5 +214,125 @@ namespace ExileClipboardListener.Properties {
                 this["Password"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrencyTab1 {
+            get {
+                return ((string)(this["CurrencyTab1"]));
+            }
+            set {
+                this["CurrencyTab1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrencyTab2 {
+            get {
+                return ((string)(this["CurrencyTab2"]));
+            }
+            set {
+                this["CurrencyTab2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrencyTab3 {
+            get {
+                return ((string)(this["CurrencyTab3"]));
+            }
+            set {
+                this["CurrencyTab3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MapTab1 {
+            get {
+                return ((string)(this["MapTab1"]));
+            }
+            set {
+                this["MapTab1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MapTab2 {
+            get {
+                return ((string)(this["MapTab2"]));
+            }
+            set {
+                this["MapTab2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string MapTab3 {
+            get {
+                return ((string)(this["MapTab3"]));
+            }
+            set {
+                this["MapTab3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int QuickLeagues {
+            get {
+                return ((int)(this["QuickLeagues"]));
+            }
+            set {
+                this["QuickLeagues"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GemTab1 {
+            get {
+                return ((string)(this["GemTab1"]));
+            }
+            set {
+                this["GemTab1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GemTab2 {
+            get {
+                return ((string)(this["GemTab2"]));
+            }
+            set {
+                this["GemTab2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string GemTab3 {
+            get {
+                return ((string)(this["GemTab3"]));
+            }
+            set {
+                this["GemTab3"] = value;
+            }
+        }
     }
 }

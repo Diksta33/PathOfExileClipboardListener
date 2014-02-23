@@ -375,6 +375,8 @@ namespace ExileClipboardListener.WinForms
                 {
                     CharacterGrid_SelectionChanged(null, null);
                     GrabInventory.Enabled = true;
+                    QuickUpdate.Enabled = true;
+                    QuickUpdateSettings.Enabled = true;
                 }
                 GrabStashTabs();
                 ItemList.Items.Clear();
@@ -548,6 +550,129 @@ namespace ExileClipboardListener.WinForms
                 toolStripStatusLabel1.Text = "Ready";
                 Cursor.Current = Cursors.Default;
             }
+        }
+
+        private void QuickUpdateSettings_Click(object sender, EventArgs e)
+        {
+            new QuickUpdateSettings().ShowDialog();
+        }
+
+        private void QuickUpdate_Click(object sender, EventArgs e)
+        {
+            //Just update currency and maps
+            int stackItems = 0;
+            for (int l = 0; l < League.Items.Count; l++)
+            {
+                string leagueName = League.Items[l].ToString();
+                int internalLeagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + leagueName + "';");
+                if (Properties.Settings.Default.QuickLeagues == GlobalMethods.DEFAULT_LEAGUE && Properties.Settings.Default.DefaultLeagueId != internalLeagueId)
+                    continue;
+
+                //First clear them down
+                GlobalMethods.RunQuery("DELETE FROM CurrencyStash WHERE LeagueId = " + internalLeagueId + ";");
+                GlobalMethods.RunQuery("DELETE FROM GemStash WHERE LeagueId = " + internalLeagueId + ";");
+                GlobalMethods.RunQuery("DELETE FROM MapStash WHERE LeagueId = " + internalLeagueId + ";");
+
+                //Look in inventories first
+                foreach (var c in _characters)
+                {
+                    if (c.League == leagueName)
+                    {
+                        _inventory = POEWeb.GetInventory(c.Name);
+                        foreach (var i in _inventory.Items)
+                        {
+                            toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
+                            Application.DoEvents();
+                            string itemText = Parser.ScriptItem(i);
+                            if (itemText.Contains("Rarity: Gem"))
+                            {
+                                if (ParseItem.ParseGem(itemText))
+                                    GlobalMethods.SaveGem(_leagueId);
+                                stackItems++;
+                            }
+                            else if (itemText.Contains("Rarity: Currency"))
+                            {
+                                if (ParseItem.ParseCurrency(itemText))
+                                    GlobalMethods.SaveCurrency(_leagueId);
+                                stackItems++;
+                            }
+                            else if (itemText.Contains(" Map"))
+                            {
+                                if (ParseItem.ParseMap(itemText))
+                                    GlobalMethods.SaveMap(_leagueId);
+                                stackItems++;
+                            }
+                            if (i.SocketedItems != null)
+                            {
+                                foreach (var si in i.SocketedItems)
+                                {
+                                    toolStripStatusLabel1.Text = "Parsing " + si.TypeLine + "... ";
+                                    Application.DoEvents();
+                                    itemText = Parser.ScriptItem(si);
+                                    if (ParseItem.ParseGem(itemText))
+                                        GlobalMethods.SaveGem(_leagueId);
+                                    stackItems++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //Then check stash tabs, but only if they match the names on the list
+                Cursor.Current = Cursors.WaitCursor;
+                _stash = POEWeb.GetStash(leagueName, "1");
+                Cursor.Current = Cursors.Default;
+                for (int tab = 0; tab < _stash.NumTabs; tab++)
+                {
+                    if (_stash.Tabs[tab].n == Properties.Settings.Default.CurrencyTab1 || _stash.Tabs[tab].n == Properties.Settings.Default.CurrencyTab2 || _stash.Tabs[tab].n == Properties.Settings.Default.CurrencyTab3
+                        || _stash.Tabs[tab].n == Properties.Settings.Default.MapTab1 || _stash.Tabs[tab].n == Properties.Settings.Default.MapTab2 || _stash.Tabs[tab].n == Properties.Settings.Default.MapTab3
+                        || _stash.Tabs[tab].n == Properties.Settings.Default.GemTab1 || _stash.Tabs[tab].n == Properties.Settings.Default.GemTab2 || _stash.Tabs[tab].n == Properties.Settings.Default.GemTab3)
+                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        _stash = POEWeb.GetStash(League.Text, _stash.Tabs[tab].i.ToString());
+                        Cursor.Current = Cursors.Default;
+                        foreach (var i in _stash.Items)
+                        {
+                            toolStripStatusLabel1.Text = "Parsing " + i.TypeLine + "... ";
+                            Application.DoEvents();
+                            string itemText = Parser.ScriptItem(i);
+                            if (itemText.Contains("Rarity: Gem"))
+                            {
+                                if (ParseItem.ParseGem(itemText))
+                                    GlobalMethods.SaveGem(_leagueId);
+                                stackItems++;
+                            }
+                            else if (itemText.Contains("Rarity: Currency"))
+                            {
+                                if (ParseItem.ParseCurrency(itemText))
+                                    GlobalMethods.SaveCurrency(_leagueId);
+                                stackItems++;
+                            }
+                            else if (itemText.Contains(" Map"))
+                            {
+                                if (ParseItem.ParseMap(itemText))
+                                    GlobalMethods.SaveMap(_leagueId);
+                                stackItems++;
+                            }
+                            if (i.SocketedItems != null)
+                            {
+                                foreach (var si in i.SocketedItems)
+                                {
+                                    toolStripStatusLabel1.Text = "Parsing " + si.TypeLine + "... ";
+                                    Application.DoEvents();
+                                    itemText = Parser.ScriptItem(si);
+                                    if (ParseItem.ParseGem(itemText))
+                                        GlobalMethods.SaveGem(_leagueId);
+                                    stackItems++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Tell them we finished
+            MessageBox.Show("Updated " + stackItems.ToString("#,##0") + " stacks");
         }
     }
 }
