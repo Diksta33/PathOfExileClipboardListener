@@ -16,7 +16,7 @@ Main Features:
 - Affixes are worked out on a "best fit" basis where the information available isn't sufficient to determine the exact values rolled.  In theory all affixes should be parsable this way, including a "double roll" of IIR as a Prefix and a Suffix.
 - Items can be stashed locally and organised by league.
 - Maps, Currency Items and Gems can be stored and viewed in lists.
-- Armour, Weapons and Jeweleery can be viewed individually in either a large window with lots of information or in a compact view with just the basic information and a visual guide to any affixes rolled.  Once stored they can be viewed in a Stash Viewer, filtered and sorted to find specific attributes.
+- Armour, Weapons and Jewellery can be viewed individually in either a large window with lots of information or in a compact view with just the basic information and a visual guide to any affixes rolled.  Once stored they can be viewed in a Stash Viewer, filtered and sorted to find specific attributes.
 - User-defined Filters can be created and applied to find items with specific affixes, e.g. Life and Resistances.
 
 ============================
