@@ -131,7 +131,7 @@ namespace ExileClipboardListener.Classes
             if (!_leagueLoaded)
             {
                 _leagueLoaded = true;
-                new League().ShowDialog();
+                new League().Show();
                 _leagueLoaded = false;
             }
         }
@@ -141,7 +141,7 @@ namespace ExileClipboardListener.Classes
             if (!_stashLoaded)
             {
                 _stashLoaded = true;
-                new StashViewer().ShowDialog();
+                new StashViewer().Show();
                 _stashLoaded = false;
             }
         }
@@ -151,7 +151,7 @@ namespace ExileClipboardListener.Classes
             if (!_gemsLoaded)
             {
                 _gemsLoaded = true;
-                new GemViewer().ShowDialog();
+                new GemViewer().Show();
                 _gemsLoaded = false;
             }
         }
@@ -161,7 +161,7 @@ namespace ExileClipboardListener.Classes
             if (!_currencyLoaded)
             {
                 _currencyLoaded = true;
-                new CurrencyViewer().ShowDialog();
+                new CurrencyViewer().Show();
                 _currencyLoaded = false;
             }
         }
@@ -171,7 +171,7 @@ namespace ExileClipboardListener.Classes
             if (!_mapsLoaded)
             {
                 _mapsLoaded = true;
-                new MapViewer().ShowDialog();
+                new MapViewer().Show();
                 _mapsLoaded = false;
             }
         }

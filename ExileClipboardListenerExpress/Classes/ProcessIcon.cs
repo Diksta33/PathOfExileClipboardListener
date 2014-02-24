@@ -60,7 +60,7 @@ namespace ExileClipboardListener.Classes
             if (e.Button == MouseButtons.Left)
             {
                 //Show the Stash
-                new StashViewer().ShowDialog();
+                new StashViewer().Show();
             }
         }
     }

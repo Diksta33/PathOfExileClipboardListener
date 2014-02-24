@@ -14,6 +14,8 @@ namespace ExileClipboardListener.WinForms
         private List<JSON.Character> _characters;
         private int _leagueId;
         private string _stashType;
+        private string _currentCharacter;
+        private string _currentTab;
 
         public JSONReader()
         {
@@ -81,11 +83,12 @@ namespace ExileClipboardListener.WinForms
                 ItemScript.Text = "";
 
                 //Determine the tab number
-                string tabNumber = StashTab.Text.Split('[')[1].Split(']')[0];
-                while (tabNumber.Length > 1 && tabNumber.Substring(0, 1) == "0")
-                    tabNumber = tabNumber.Substring(1, tabNumber.Length - 1);
+                _currentTab = StashTab.Text;
+                string currentTab = _currentTab.Split('[')[1].Split(']')[0];
+                while (currentTab.Length > 1 && currentTab.Substring(0, 1) == "0")
+                    currentTab = currentTab.Substring(1, currentTab.Length - 1);
                 Cursor.Current = Cursors.WaitCursor;
-                _stash = POEWeb.GetStash(League.Text, tabNumber);
+                _stash = POEWeb.GetStash(League.Text, currentTab);
                 Cursor.Current = Cursors.Default;
                 foreach (var i in _stash.Items)
                     ItemList.Items.Add(i.TypeLine);
@@ -149,7 +152,9 @@ namespace ExileClipboardListener.WinForms
                     else
                     {
                         if (ParseItem.ParseStash(itemText))
+                        {
                             GlobalMethods.SaveStash(_leagueId);
+                        }
                         if (item.SocketedItems != null)
                         {
                             foreach (var si in item.SocketedItems)
@@ -214,6 +219,7 @@ namespace ExileClipboardListener.WinForms
                 {
                     if (ParseItem.ParseStash(itemText))
                     {
+                        GlobalMethods.StashItem.Location = _stashType == "Stash" ? _currentTab.Replace("'", "''") + " [" + i.X + "," + i.Y + "]" : "Character: " + _currentCharacter.Replace("'", "''");
                         GlobalMethods.SaveStash(_leagueId);
                         if (i.SocketedItems != null)
                         {
@@ -278,14 +284,14 @@ namespace ExileClipboardListener.WinForms
         {
             try
             {
+                _currentCharacter = CharacterGrid.CurrentRow.Cells[CharacterGridNameColumn.Index].Value.ToString();
                 GetCurrentLeague();
                 ItemList.Items.Clear();
                 ItemScript.Text = "";
                 if (CharacterGrid.CurrentRow == null)
                     return;
-                string character = CharacterGrid.CurrentRow.Cells[CharacterGridNameColumn.Index].Value.ToString();
                 Cursor.Current = Cursors.WaitCursor;
-                _inventory = POEWeb.GetInventory(character);
+                _inventory = POEWeb.GetInventory(_currentCharacter);
                 Cursor.Current = Cursors.Default;
                 foreach (var i in _inventory.Items)
                     ItemList.Items.Add(i.TypeLine);
@@ -422,7 +428,10 @@ namespace ExileClipboardListener.WinForms
                         else
                         {
                             if (ParseItem.ParseStash(itemText))
+                            {
+                                GlobalMethods.StashItem.Location = "Character: " + _currentCharacter.Replace("'", "''");
                                 GlobalMethods.SaveStash(_leagueId);
+                            }
                         }
                         if (i.SocketedItems != null)
                         {
@@ -466,7 +475,10 @@ namespace ExileClipboardListener.WinForms
                         else
                         {
                             if (ParseItem.ParseStash(itemText))
+                            {
+                                GlobalMethods.StashItem.Location = _currentTab.Replace("'", "''") + " [" + i.X + "," + i.Y + "]";
                                 GlobalMethods.SaveStash(_leagueId);
+                            }
                         }
                     }
                 }
@@ -520,7 +532,10 @@ namespace ExileClipboardListener.WinForms
                         else
                         {
                             if (ParseItem.ParseStash(itemText))
+                            {
+                                GlobalMethods.StashItem.Location = "Character: " + _currentCharacter;
                                 GlobalMethods.SaveStash(_leagueId);
+                            }
                         }
                         if (i.SocketedItems != null)
                         {

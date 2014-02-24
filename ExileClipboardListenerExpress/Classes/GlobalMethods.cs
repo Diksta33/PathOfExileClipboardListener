@@ -244,6 +244,7 @@ namespace ExileClipboardListener.Classes
                 StashItem.Mod[mod].ValueMax = 0;
                 StashItem.Mod[mod].ValueMin = 0;
             }
+            StashItem.Location = "";
             StashItem.OriginalText = "";
         }
 
@@ -1060,13 +1061,89 @@ namespace ExileClipboardListener.Classes
         {
             int stashId;
 
+            //Max Socket Link, we need to work this out ahead of time
+            var chains = StashItem.Sockets.Split(' ');
+            int maxChain = 0;
+            foreach (var chain in chains)
+            {
+                int chainLength = chain.Replace("-", "").Length;
+                if (chainLength > maxChain)
+                    maxChain = chainLength;
+            }
+
             //If we don't allow duplicates then check we don't already have this first
             if (!Properties.Settings.Default.StashDuplicates)
             {
-                stashId = GetScalarInt("SELECT StashId AS Count FROM Stash WHERE OriginalText = '" + StashItem.OriginalText.Replace("'", "''") + "';");
+                //The only way to really know if this item already exists is to check the name, the type and the mods
+                //Even so there could be an exact match, it's just very, very unlikely indeed
+                //When it comes to common items there isn't really any way to tell if this is a duplicate or not, e.g. an iron ring, so we store a maximum of one per item level/ quality/ implicit mod roll
+                //For example, a Sapphire Ring could be stored at item level 10 as rolling anything from 20 to 30, i.e. 11 unique items per level, then again for each quality
+                //This means that they will come up in searches but not swamp the stash viewer
+                //stashId = GetScalarInt("SELECT StashId FROM Stash WHERE OriginalText = '" + StashItem.OriginalText.Replace("'", "''") + "';");
+                string stashSQL = "SELECT s.StashId FROM Stash s ";
+                stashSQL += @"   
+                    INNER JOIN BaseItem b ON b.BaseItemId = s.BaseItemId                   
+                    LEFT JOIN StashMod sm01 ON sm01.StashId = s.StashId AND sm01.StashModId = 1
+                    LEFT JOIN StashMod sm02 ON sm02.StashId = s.StashId AND sm02.StashModId = 2
+                    LEFT JOIN StashMod sm03 ON sm03.StashId = s.StashId AND sm03.StashModId = 3
+                    LEFT JOIN StashMod sm04 ON sm04.StashId = s.StashId AND sm04.StashModId = 4
+                    LEFT JOIN StashMod sm05 ON sm05.StashId = s.StashId AND sm05.StashModId = 5
+                    LEFT JOIN StashMod sm06 ON sm06.StashId = s.StashId AND sm06.StashModId = 6
+                    LEFT JOIN StashMod sm07 ON sm07.StashId = s.StashId AND sm07.StashModId = 7
+                    LEFT JOIN StashMod sm08 ON sm08.StashId = s.StashId AND sm08.StashModId = 8
+                    LEFT JOIN StashMod sm09 ON sm09.StashId = s.StashId AND sm09.StashModId = 9
+                    LEFT JOIN StashMod sm10 ON sm10.StashId = s.StashId AND sm10.StashModId = 10
+                    LEFT JOIN StashMod sm11 ON sm11.StashId = s.StashId AND sm11.StashModId = 11
+                    LEFT JOIN StashMod sm12 ON sm12.StashId = s.StashId AND sm12.StashModId = 12
+                WHERE ";
+                stashSQL += " s.LeagueId = " + leagueId;
+                stashSQL += " AND s.ItemName = '" + StashItem.ItemName.Replace("'", "''") + "'";
+                stashSQL += " AND s.BaseItemId = " + StashItem.BaseItemId;
+                stashSQL += " AND s.RarityId = " + StashItem.RarityId;
+                stashSQL += " AND s.Quality = " + StashItem.Quality;
+                stashSQL += " AND s.SocketCount = " + StashItem.Sockets.Replace("-", "").Replace(" ", "").Length;
+                stashSQL += " AND s.ReqLevel = " + StashItem.ReqLevel;
+                if (StashItem.Affix[0].Mod1.Id != 0)
+                {
+                    stashSQL += " AND s.ImplicitMod1Id = ";
+                    stashSQL += StashItem.Affix[0].Mod1.Id.ToString();
+                    stashSQL += " AND s.ImplicitMod1Value = ";
+                    stashSQL += StashItem.Affix[0].Mod1.Value.ToString();
+                }
+                if (StashItem.Affix[0].Mod2.Id != 0)
+                {
+                    stashSQL += " AND s.ImplicitMod2Id = ";
+                    stashSQL += StashItem.Affix[0].Mod2.Id.ToString();
+                    stashSQL += " AND s.ImplicitMod2Value = ";
+                    stashSQL += StashItem.Affix[0].Mod2.Value.ToString();
+                }
+                for (int mod = 0; mod < 12; mod++)
+                {
+                    if (StashItem.Mod[mod].Id != 0)
+                    {
+                        stashSQL += " AND sm" + ((mod + 1) < 10 ? "0" : "") + (mod + 1) + ".ModId = ";
+                        stashSQL += StashItem.Mod[mod].Id.ToString();
+                        stashSQL += " AND sm" + ((mod + 1) < 10 ? "0" : "") + (mod + 1) + ".ModValue = ";
+                        stashSQL += StashItem.Mod[mod].Value.ToString();
+                    }
+                }
+                if (StashItem.ItemLevel != 100)
+                    stashSQL += " AND (s.ItemLevel = " + StashItem.ItemLevel + " OR s.ItemLevel = 100)";
+                stashSQL += ";";
+                stashId = GetScalarInt(stashSQL);
                 if (stashId != 0)
                 {
-                    RunQuery("UPDATE Stash SET LastSeen = " + DateTimeToLong(DateTime.Now) + " WHERE StashId = " + stashId + ";");
+                    string updateSQL = "UPDATE Stash SET LastSeen = " + DateTimeToLong(DateTime.Now);
+
+                    //We also update the item level because this might be copied from an item and correct rather than set to 100 from the JSON transport
+                    if (StashItem.ItemLevel != 100)
+                        updateSQL += ", ItemLevel = " + StashItem.ItemLevel;
+
+                    //We also update the location, because this might have changed
+                    if (StashItem.Location != "")
+                        updateSQL += ", Location = " + "'" + StashItem.Location.Replace("'", "''") + "'";
+                    updateSQL += " WHERE StashId = " + stashId + ";";
+                    RunQuery(updateSQL);
                     return;
                 }
             }
@@ -1110,18 +1187,7 @@ namespace ExileClipboardListener.Classes
             sql += (StashItem.Affix[0].Mod2.Value == 0 ? "NULL" : StashItem.Affix[0].Mod2.Value.ToString()) + ",";
 
             //Sockets
-            //Socket Count
             sql += StashItem.Sockets.Replace("-", "").Replace(" ", "").Length + ",";
-
-            //Max Socket Link
-            var chains = StashItem.Sockets.Split(' ');
-            int maxChain = 0;
-            foreach (var chain in chains)
-            {
-                int chainLength = chain.Replace("-", "").Length;
-                if (chainLength > maxChain)
-                    maxChain = chainLength;
-            }
             sql += maxChain + ",";
 
             //Life, Mana

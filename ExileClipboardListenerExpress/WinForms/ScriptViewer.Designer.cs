@@ -36,6 +36,7 @@
             // 
             this.ItemScript.Location = new System.Drawing.Point(12, 12);
             this.ItemScript.Name = "ItemScript";
+            this.ItemScript.ReadOnly = true;
             this.ItemScript.Size = new System.Drawing.Size(301, 348);
             this.ItemScript.TabIndex = 16;
             this.ItemScript.Text = "";

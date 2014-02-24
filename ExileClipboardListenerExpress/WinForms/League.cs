@@ -106,6 +106,7 @@ namespace ExileClipboardListener.WinForms
         private void LeagueDefault_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.DefaultLeagueId = _leagueId;
+            GlobalMethods.LeagueId = _leagueId;
             MessageBox.Show("Success!");
         }
 

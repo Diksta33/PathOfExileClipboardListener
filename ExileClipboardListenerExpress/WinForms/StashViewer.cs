@@ -158,7 +158,8 @@ namespace ExileClipboardListener.WinForms
                     CAST(CASE WHEN sm.StashModId = 12 THEN sm.ModValue ELSE 0 END AS INTEGER) AS [Mod 12 Value],";
             sql += @"
                     CAST(s.FirstSeen AS INTEGER) AS [First Seen],
-                    CAST(s.LastSeen AS INTEGER) AS [Last Seen]";
+                    CAST(s.LastSeen AS INTEGER) AS [Last Seen],
+                    s.Location";
             sql += @"
                 FROM 
 	                Stash s
