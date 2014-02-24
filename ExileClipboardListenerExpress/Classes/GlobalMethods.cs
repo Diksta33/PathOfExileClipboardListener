@@ -1065,7 +1065,7 @@ namespace ExileClipboardListener.Classes
             sql += StashItem.RarityId + ",";
             sql += StashItem.Quality + ",";
             sql += StashItem.ItemLevel + ",";
-            sql += StashItem.ReqLevelBase + ",";
+            sql += StashItem.ReqLevel + ",";
 
             //Armour
             sql += StashItem.Armour + ",";

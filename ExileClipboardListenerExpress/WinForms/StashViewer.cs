@@ -90,7 +90,10 @@ namespace ExileClipboardListener.WinForms
 	                MAX(r.RarityName) AS [Rarity], 
 	                CAST(MAX(s.Quality) AS INTEGER) AS [Quality], 
 	                CAST(MAX(s.ItemLevel) AS INTEGER) AS [Item Level], 
-	                CAST(MAX(b.ReqLevel) AS INTEGER) AS [Req Level],";
+	                CAST(MAX(s.ReqLevel) AS INTEGER) AS [Req Level],";
+            if (!CompactView.Checked)
+                sql += @",
+	                CAST(MAX(b.ReqLevel) AS INTEGER) AS [Base Req Level],";
             if (ItemType.Text == "(All)" || ItemType.Text == "Weapon")
                 sql+=@"
                     CAST(MAX(s.AttackSpeed) AS NUMERIC(18,2)) AS [APS],

@@ -1024,6 +1024,9 @@ namespace ExileClipboardListener.Classes
                 if (mod.Name != null)
                 if (mod.RealName.Contains(modText))
                     retVal += mod.Value;
+            if(si.Affix[0].Mod1.Name != null)
+                    if (si.Affix[0].Mod1.RealName.Contains(modText))
+                        retVal += si.Affix[0].Mod1.Value;
             return retVal;
         }
 
