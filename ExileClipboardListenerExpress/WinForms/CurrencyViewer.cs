@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 
@@ -26,14 +21,12 @@ namespace ExileClipboardListener.WinForms
             League.SelectedIndex = 0;
 
             //Set dynamic tooltips
-            var toolTip = new ToolTip();
-            //toolTip.ToolTipIcon = ToolTipIcon.Info;
-            toolTip.IsBalloon = false;
-            toolTip.ShowAlways = true;
+            var toolTip = new ToolTip {IsBalloon = false, ShowAlways = true};
             foreach (var currency in GlobalMethods.CurrencyCache)
             {
                 var icon = (PictureBox)Controls.Find("Icon" + currency.CurrencyItemId, true).FirstOrDefault();
-                toolTip.SetToolTip(icon, currency.Description);
+                if (icon != null) 
+                    toolTip.SetToolTip(icon, currency.Description);
             }
         }
 

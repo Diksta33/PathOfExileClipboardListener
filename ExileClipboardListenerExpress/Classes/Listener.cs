@@ -109,9 +109,7 @@ namespace ExileClipboardListener.Classes
         {
             if (item.Length < 20)
                 return false;
-            if (item.Substring(0, 6) != "Rarity")
-                return false;
-            return true;
+            return item.Substring(0, 6) == "Rarity";
         }
 
         //Hidden form to recieve the WM_CLIPBOARDUPDATE message

@@ -982,8 +982,7 @@ namespace ExileClipboardListener.Classes
                 if (!allAssigned)
                 {
                     MessageBox.Show("Not all affixes were parsed, trying to retrofit them failed :(  Here is the item that failed, copy and paste the results as an issue to https://github.com/Diksta33/PathOfExileClipboardListener/issues?state=open.");
-                    var sv = new ExileClipboardListener.WinForms.ScriptViewer();
-                    sv.ItemScript.Text = item;
+                    var sv = new WinForms.ScriptViewer {ItemScript = {Text = item}};
                     sv.ShowDialog();
                 }
 

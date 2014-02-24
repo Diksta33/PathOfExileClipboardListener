@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 
@@ -75,8 +69,7 @@ namespace ExileClipboardListener.WinForms
             if (MapGrid.CurrentRow == null)
                 return;
             string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM MapStash WHERE MapStashId = " + MapGrid.CurrentRow.Cells[0].Value + ";");
-            var sv = new ScriptViewer();
-            sv.ItemScript.Text = item;
+            var sv = new ScriptViewer {ItemScript = {Text = item}};
             sv.ShowDialog();
         }
 

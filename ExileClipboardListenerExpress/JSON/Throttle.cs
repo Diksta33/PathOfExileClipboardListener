@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
-using ExileClipboardListener.WinForms;//Horrid, must find a better way
 
 namespace ExileClipboardListener.JSON
 {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Windows.Forms;
 using ExileClipboardListener.Classes;
 
@@ -80,8 +79,7 @@ namespace ExileClipboardListener.WinForms
             if (GemGrid.CurrentRow == null)
                 return;
             string item = GlobalMethods.GetScalarString("SELECT OriginalText FROM GemStash WHERE GemStashId = " + GemGrid.CurrentRow.Cells[0].Value + ";");
-            var sv = new ScriptViewer();
-            sv.ItemScript.Text = item;
+            var sv = new ScriptViewer {ItemScript = {Text = item}};
             sv.ShowDialog();
         }
     }

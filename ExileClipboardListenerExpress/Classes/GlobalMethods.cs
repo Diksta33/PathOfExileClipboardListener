@@ -10,17 +10,20 @@ namespace ExileClipboardListener.Classes
 {
     public static class GlobalMethods
     {
+        //Epoch time
+        public static DateTime EpochTime = new DateTime(2013, 10, 23);
+        
         //ReSharper disable InconsistentNaming
         public const int STASH_MODE = 0;
         public const int COLLECTION_MODE = 1;
         public const int COMPACT_MODE = 2;
-        //ReSharper restore InconsistentNaming
-        public static int Mode = STASH_MODE;
 
         //Quick Update Settings
         public const int ALL_LEAGUES = 0;
         public const int DEFAULT_LEAGUE = 1;
+        //ReSharper restore InconsistentNaming
 
+        public static int Mode = STASH_MODE;
         public static string Connection = "Data Source=ExileStash.s3db;Version=3;";
         public static int CommandTimeout = 600;
 
@@ -126,6 +129,7 @@ namespace ExileClipboardListener.Classes
             public static int TotalRes;
             public static decimal CriticalStrikeChance;
             public static string Sockets;
+            public static string Location;
             public static Mod[] Mod = new Mod[20];
             public static Affix[] Affix = new Affix[7]; //0 = Implicit, 1-3 - Prefix, 4-6 = Suffix
         }
@@ -726,6 +730,8 @@ namespace ExileClipboardListener.Classes
                                     var col = new DataGridViewTextBoxColumn { HeaderText = dr.GetName(i) };
                                     if (dr.GetDataTypeName(i).ToUpper().Contains("DATE"))
                                         col.DefaultCellStyle.Format = "d";
+                                    else if (dr.GetName(i) == "First Seen" || dr.GetName(i) == "Last Seen")
+                                        col.DefaultCellStyle.Format = "g";
                                     else if (dr.GetDataTypeName(i).ToUpper().Contains("INT"))
                                     {
                                         col.DefaultCellStyle.Format = "N0";
@@ -746,6 +752,8 @@ namespace ExileClipboardListener.Classes
                             {
                                 if (gridTarget.Columns[i].DefaultCellStyle.Format == "d")
                                     gridTarget.Columns[i].ValueType = typeof(DateTime);
+                                else if (gridTarget.Columns[i].DefaultCellStyle.Format == "g")
+                                    gridTarget.Columns[i].ValueType = typeof(DateTime);
                                 else if (gridTarget.Columns[i].DefaultCellStyle.Format == "N0")
                                     gridTarget.Columns[i].ValueType = typeof(int);
                                 else if (gridTarget.Columns[i].DefaultCellStyle.Format.Length >= 1 && gridTarget.Columns[i].DefaultCellStyle.Format.Substring(0, 1) == "N")
@@ -760,12 +768,19 @@ namespace ExileClipboardListener.Classes
                                 {
                                     //If the column is formatted as a date then we try to load a date into it
                                     //Note we have to use null where there is no date or we will break the sorting
-                                    if (gridTarget.Columns[i].DefaultCellStyle.Format == "d")
+                                    if (gridTarget.Columns[i].DefaultCellStyle.Format == "d" || gridTarget.Columns[i].DefaultCellStyle.Format == "g")
                                     {
                                         if (dr[i] == DBNull.Value || dr[i].ToString() == "")
                                             row[i] = null;
                                         else
-                                            row[i] = Convert.ToDateTime(dr[i]);
+                                        {
+                                            object date;
+                                            if (dr.GetName(i) == "First Seen" || dr.GetName(i) == "Last Seen")
+                                                date = LongToDateTime(Convert.ToUInt64(dr[i]));
+                                            else
+                                                date = dr[i];
+                                            row[i] = Convert.ToDateTime(date);
+                                        }
                                     }
                                     else if (gridTarget.Columns[i].DefaultCellStyle.Format == "N0")//Number with no decimals
                                     {
@@ -895,13 +910,13 @@ namespace ExileClipboardListener.Classes
             }
         }
 
-        public static void GetGemTypes(ComboBox GemType)
+        public static void GetGemTypes(ComboBox gemType)
         {
             try
             {
-                GemType.Items.Clear();
+                gemType.Items.Clear();
                 var gemTypes = new List<string>();
-                GemType.Items.Add("(All)");
+                gemType.Items.Add("(All)");
                 using (var con = new SQLiteConnection(Connection))
                 {
                     con.Open();
@@ -915,10 +930,10 @@ namespace ExileClipboardListener.Classes
                             while (dr.Read())
                             {
                                 var types = dr[0].ToString().Replace(", ", ",").Split(',');
-                                foreach (var gemType in types)
+                                foreach (var gemT in types)
                                 {
-                                    if (!gemTypes.Contains(gemType))
-                                        gemTypes.Add(gemType);
+                                    if (!gemTypes.Contains(gemT))
+                                        gemTypes.Add(gemT);
                                 }
                             }
                         }
@@ -926,8 +941,8 @@ namespace ExileClipboardListener.Classes
                 }
 
                 //Add the gem types to the list
-                foreach (var gemType in gemTypes)
-                    GemType.Items.Add(gemType);
+                foreach (var gemT in gemTypes)
+                    gemType.Items.Add(gemT);
             }
             catch (Exception ex)
             {
@@ -968,7 +983,7 @@ namespace ExileClipboardListener.Classes
         {
             if (!Properties.Settings.Default.StashDuplicates)
             {
-                if (GlobalMethods.GetScalarInt("SELECT COUNT(*) AS Count FROM MapStash WHERE OriginalText = '" + StashMap.OriginalText.Replace("'", "''") + "';") != 0)
+                if (GetScalarInt("SELECT COUNT(*) AS Count FROM MapStash WHERE OriginalText = '" + StashMap.OriginalText.Replace("'", "''") + "';") != 0)
                     return;
             }
             string sql = "INSERT INTO MapStash(LeagueId, Name, RarityId, MapLevel, ItemLevel, ItemQuantity, Quality, OriginalText) VALUES(";
@@ -980,15 +995,15 @@ namespace ExileClipboardListener.Classes
             sql += StashMap.ItemQuantity + ",";
             sql += StashMap.Quality + ",";
             sql += "'" + StashMap.OriginalText.Replace("'", "''") + "')";
-            GlobalMethods.RunQuery(sql);
+            RunQuery(sql);
         }
 
         public static void SaveCurrency(int leagueId)
         {
-            string sql = "";
+            string sql;
 
             //Check to see if we have a row for this combination
-            if (GlobalMethods.GetScalarInt("SELECT COUNT(*) FROM CurrencyStash WHERE LeagueId = " + leagueId + " AND CurrencyItemId = " + StashCurrency.CurrencyItemId + ";") == 0)
+            if (GetScalarInt("SELECT COUNT(*) FROM CurrencyStash WHERE LeagueId = " + leagueId + " AND CurrencyItemId = " + StashCurrency.CurrencyItemId + ";") == 0)
             {
                 sql = "INSERT INTO CurrencyStash(LeagueId, CurrencyItemId, Count) VALUES(" + leagueId + ", " + StashCurrency.CurrencyItemId + "," + StashCurrency.StackSize + ");";
             }
@@ -1043,17 +1058,23 @@ namespace ExileClipboardListener.Classes
 
         public static void SaveStash(int leagueId)
         {
+            int stashId;
+
             //If we don't allow duplicates then check we don't already have this first
             if (!Properties.Settings.Default.StashDuplicates)
             {
-                if (GlobalMethods.GetScalarInt("SELECT COUNT(*) AS Count FROM Stash WHERE OriginalText = '" + StashItem.OriginalText.Replace("'", "''") + "';") != 0)
+                stashId = GetScalarInt("SELECT StashId AS Count FROM Stash WHERE OriginalText = '" + StashItem.OriginalText.Replace("'", "''") + "';");
+                if (stashId != 0)
+                {
+                    RunQuery("UPDATE Stash SET LastSeen = " + DateTimeToLong(DateTime.Now) + " WHERE StashId = " + stashId + ";");
                     return;
+                }
             }
 
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
             sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, ChaosRes, OriginalText)";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, ChaosRes, FirstSeen, LastSeen, Location, OriginalText)";
             sql += " VALUES(";
 
             //League
@@ -1113,6 +1134,13 @@ namespace ExileClipboardListener.Classes
             sql += StashItem.LightningRes + ",";
             sql += StashItem.ChaosRes + ",";
 
+            //First & Last Seen
+            sql += DateTimeToLong(DateTime.Now) + ",";
+            sql += DateTimeToLong(DateTime.Now) + ",";
+
+            //Location
+            sql += "'" + StashItem.Location.Replace("'", "''") + "',";
+
             //Original Text
             sql += "'" + StashItem.OriginalText.Replace("'", "''") + "')";
 
@@ -1120,7 +1148,7 @@ namespace ExileClipboardListener.Classes
             RunQuery(sql);
 
             //This is particularly nasty, but I don't know how else to get the StashId for the item we just stashed
-            int stashId = GetScalarInt("SELECT MAX(StashId) FROM Stash;");
+            stashId = GetScalarInt("SELECT MAX(StashId) FROM Stash;");
 
             //Now stash the affixes
             //Turned off for now as we don't strictly need them
@@ -1149,6 +1177,16 @@ namespace ExileClipboardListener.Classes
                 sql += StashItem.Mod[mod].Value + ")";
                 RunQuery(sql);
             }
+        }
+
+        private static ulong DateTimeToLong(DateTime dt)
+        {
+            return Convert.ToUInt64((dt - EpochTime).TotalSeconds);
+        }
+
+        private static DateTime LongToDateTime(ulong seconds)
+        {
+            return EpochTime.AddSeconds(seconds);
         }
     }
 }

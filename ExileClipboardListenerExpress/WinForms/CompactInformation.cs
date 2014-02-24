@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
@@ -75,7 +74,7 @@ namespace ExileClipboardListener.WinForms
                     if (rangeMod1High == rangeMod1Low && (rangeMod1High != 1 || levels.Count == 1))
                     {
                         rangeMod1Low = rangeMod1Low > 1 ? rangeMod1Low - 1 : 1;
-                        rangeMod1High = rangeMod1High < maxMod1Value ? maxMod1Value : rangeMod1High + 1; ;
+                        rangeMod1High = rangeMod1High < maxMod1Value ? maxMod1Value : rangeMod1High + 1;
                     }
                     int rangeMod2Low = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod2ValueMin FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
                     int rangeMod2High = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT Mod2ValueMax FROM " + si.Affix[i].AffixType + " WHERE Level = " + level + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
@@ -103,18 +102,19 @@ namespace ExileClipboardListener.WinForms
             for (int i = 1; i <= 6; i++)
             {
                 var label = (Label)Controls.Find("Label" + i, true).FirstOrDefault();
-                var progressBar = (NewProgressBar)Controls.Find("newProgressBar" + i, true).FirstOrDefault();
                 if (label.Visible == false)
                 {
                     for (int j = i + 1; j <= 6; j++)
                     {
+                        //ReSharper disable UseObjectOrCollectionInitializer
                         var newLocation = new Point();
-                        newLocation.X = ((Label)Controls.Find("Label" + j, true).FirstOrDefault()).Location.X;
-                        newLocation.Y = ((Label)Controls.Find("Label" + j, true).FirstOrDefault()).Location.Y - 49;
-                        ((Label)Controls.Find("Label" + j, true).FirstOrDefault()).Location = newLocation;
-                        newLocation.X = ((NewProgressBar)Controls.Find("newProgressBar" + j, true).FirstOrDefault()).Location.X;
-                        newLocation.Y = ((NewProgressBar)Controls.Find("newProgressBar" + j, true).FirstOrDefault()).Location.Y - 49;
-                        ((NewProgressBar)Controls.Find("newProgressBar" + j, true).FirstOrDefault()).Location = newLocation;
+                        //ReSharper restore UseObjectOrCollectionInitializer
+                        newLocation.X = Controls.Find("Label" + j, true).FirstOrDefault().Location.X;
+                        newLocation.Y = Controls.Find("Label" + j, true).FirstOrDefault().Location.Y - 49;
+                        Controls.Find("Label" + j, true).FirstOrDefault().Location = newLocation;
+                        newLocation.X = Controls.Find("newProgressBar" + j, true).FirstOrDefault().Location.X;
+                        newLocation.Y = Controls.Find("newProgressBar" + j, true).FirstOrDefault().Location.Y - 49;
+                        Controls.Find("newProgressBar" + j, true).FirstOrDefault().Location = newLocation;
                     }
                     shuffled++;
                 }
@@ -123,9 +123,7 @@ namespace ExileClipboardListener.WinForms
             //If we shuffled we also need to shuffle the buttons and shrink the form
             if (shuffled > 0)
             {
-                var newLocation = new Point();
-                newLocation.X = Dismiss.Location.X;
-                newLocation.Y = Dismiss.Location.Y - 49 * shuffled;
+                var newLocation = new Point {X = Dismiss.Location.X, Y = Dismiss.Location.Y - 49*shuffled};
                 Dismiss.Location = newLocation;
                 newLocation.X = AddStash.Location.X;
                 newLocation.Y = AddStash.Location.Y - 49 * shuffled;

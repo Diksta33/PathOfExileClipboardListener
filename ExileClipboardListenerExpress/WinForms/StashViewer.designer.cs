@@ -58,6 +58,8 @@
             this.ViewScript = new System.Windows.Forms.Button();
             this.ReparseStash = new System.Windows.Forms.Button();
             this.ReparseLabel = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.ItemCategory = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.StashGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MinItemLevel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MaxItemLevel)).BeginInit();
@@ -89,7 +91,7 @@
             this.StashGrid.ReadOnly = true;
             this.StashGrid.RowHeadersVisible = false;
             this.StashGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.StashGrid.Size = new System.Drawing.Size(1590, 543);
+            this.StashGrid.Size = new System.Drawing.Size(1570, 543);
             this.StashGrid.TabIndex = 0;
             // 
             // ItemType
@@ -99,11 +101,12 @@
             this.ItemType.Items.AddRange(new object[] {
             "(All)",
             "Armour",
-            "Weapons",
-            "Jewellery"});
+            "Jewellery",
+            "Weapons"});
             this.ItemType.Location = new System.Drawing.Point(216, 25);
             this.ItemType.Name = "ItemType";
-            this.ItemType.Size = new System.Drawing.Size(159, 21);
+            this.ItemType.Size = new System.Drawing.Size(125, 21);
+            this.ItemType.Sorted = true;
             this.ItemType.TabIndex = 1;
             this.ItemType.SelectedIndexChanged += new System.EventHandler(this.ItemType_SelectedIndexChanged);
             // 
@@ -111,9 +114,9 @@
             // 
             this.ItemSubType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ItemSubType.FormattingEnabled = true;
-            this.ItemSubType.Location = new System.Drawing.Point(381, 25);
+            this.ItemSubType.Location = new System.Drawing.Point(518, 25);
             this.ItemSubType.Name = "ItemSubType";
-            this.ItemSubType.Size = new System.Drawing.Size(163, 21);
+            this.ItemSubType.Size = new System.Drawing.Size(131, 21);
             this.ItemSubType.TabIndex = 2;
             this.ItemSubType.SelectedIndexChanged += new System.EventHandler(this.ItemSubType_SelectedIndexChanged);
             // 
@@ -129,7 +132,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(378, 9);
+            this.label2.Location = new System.Drawing.Point(515, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(76, 13);
             this.label2.TabIndex = 4;
@@ -138,7 +141,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(547, 9);
+            this.label3.Location = new System.Drawing.Point(652, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(28, 13);
             this.label3.TabIndex = 6;
@@ -148,7 +151,7 @@
             // 
             this.Mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.Mod.FormattingEnabled = true;
-            this.Mod.Location = new System.Drawing.Point(550, 25);
+            this.Mod.Location = new System.Drawing.Point(655, 25);
             this.Mod.Name = "Mod";
             this.Mod.Size = new System.Drawing.Size(287, 21);
             this.Mod.TabIndex = 3;
@@ -198,7 +201,7 @@
             // 
             this.FilterList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.FilterList.FormattingEnabled = true;
-            this.FilterList.Location = new System.Drawing.Point(843, 25);
+            this.FilterList.Location = new System.Drawing.Point(948, 25);
             this.FilterList.Name = "FilterList";
             this.FilterList.Size = new System.Drawing.Size(287, 21);
             this.FilterList.TabIndex = 10;
@@ -207,7 +210,7 @@
             // ItemCount
             // 
             this.ItemCount.AutoSize = true;
-            this.ItemCount.Location = new System.Drawing.Point(1525, 605);
+            this.ItemCount.Location = new System.Drawing.Point(1524, 606);
             this.ItemCount.Name = "ItemCount";
             this.ItemCount.Size = new System.Drawing.Size(31, 13);
             this.ItemCount.TabIndex = 12;
@@ -215,7 +218,7 @@
             // 
             // MinItemLevel
             // 
-            this.MinItemLevel.Location = new System.Drawing.Point(1397, 613);
+            this.MinItemLevel.Location = new System.Drawing.Point(1295, 614);
             this.MinItemLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -234,7 +237,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(840, 9);
+            this.label5.Location = new System.Drawing.Point(945, 9);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(29, 13);
             this.label5.TabIndex = 11;
@@ -243,7 +246,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(1394, 597);
+            this.label6.Location = new System.Drawing.Point(1292, 598);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(105, 13);
             this.label6.TabIndex = 14;
@@ -261,7 +264,7 @@
             // 
             // Filter
             // 
-            this.Filter.Location = new System.Drawing.Point(1527, 23);
+            this.Filter.Location = new System.Drawing.Point(1507, 24);
             this.Filter.Name = "Filter";
             this.Filter.Size = new System.Drawing.Size(75, 23);
             this.Filter.TabIndex = 16;
@@ -271,7 +274,7 @@
             // 
             // MaxItemLevel
             // 
-            this.MaxItemLevel.Location = new System.Drawing.Point(1450, 613);
+            this.MaxItemLevel.Location = new System.Drawing.Point(1348, 614);
             this.MaxItemLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -290,7 +293,7 @@
             // HideZeroScores
             // 
             this.HideZeroScores.AutoSize = true;
-            this.HideZeroScores.Location = new System.Drawing.Point(1136, 28);
+            this.HideZeroScores.Location = new System.Drawing.Point(1241, 28);
             this.HideZeroScores.Name = "HideZeroScores";
             this.HideZeroScores.Size = new System.Drawing.Size(109, 17);
             this.HideZeroScores.TabIndex = 18;
@@ -312,7 +315,7 @@
             this.CompactView.AutoSize = true;
             this.CompactView.Checked = true;
             this.CompactView.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.CompactView.Location = new System.Drawing.Point(1427, 27);
+            this.CompactView.Location = new System.Drawing.Point(1407, 28);
             this.CompactView.Name = "CompactView";
             this.CompactView.Size = new System.Drawing.Size(94, 17);
             this.CompactView.TabIndex = 20;
@@ -321,7 +324,7 @@
             // 
             // MaxReqLevel
             // 
-            this.MaxReqLevel.Location = new System.Drawing.Point(1297, 613);
+            this.MaxReqLevel.Location = new System.Drawing.Point(1195, 614);
             this.MaxReqLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -339,7 +342,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(1241, 597);
+            this.label7.Location = new System.Drawing.Point(1139, 598);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(105, 13);
             this.label7.TabIndex = 22;
@@ -347,7 +350,7 @@
             // 
             // MinReqLevel
             // 
-            this.MinReqLevel.Location = new System.Drawing.Point(1244, 613);
+            this.MinReqLevel.Location = new System.Drawing.Point(1142, 614);
             this.MinReqLevel.Minimum = new decimal(new int[] {
             1,
             0,
@@ -391,11 +394,37 @@
             this.ReparseLabel.TabIndex = 26;
             this.ReparseLabel.Text = "Ready";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(344, 7);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(72, 13);
+            this.label8.TabIndex = 28;
+            this.label8.Text = "Item Category";
+            // 
+            // ItemCategory
+            // 
+            this.ItemCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ItemCategory.Enabled = false;
+            this.ItemCategory.FormattingEnabled = true;
+            this.ItemCategory.Items.AddRange(new object[] {
+            "(All)",
+            "Armour",
+            "Weapons",
+            "Jewellery"});
+            this.ItemCategory.Location = new System.Drawing.Point(347, 23);
+            this.ItemCategory.Name = "ItemCategory";
+            this.ItemCategory.Size = new System.Drawing.Size(165, 21);
+            this.ItemCategory.TabIndex = 27;
+            // 
             // StashViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1614, 636);
+            this.ClientSize = new System.Drawing.Size(1594, 636);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.ItemCategory);
             this.Controls.Add(this.ReparseLabel);
             this.Controls.Add(this.ReparseStash);
             this.Controls.Add(this.ViewScript);
@@ -470,5 +499,7 @@
         private System.Windows.Forms.Button ViewScript;
         private System.Windows.Forms.Button ReparseStash;
         private System.Windows.Forms.Label ReparseLabel;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox ItemCategory;
     }
 }

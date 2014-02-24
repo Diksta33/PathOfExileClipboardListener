@@ -330,11 +330,7 @@ namespace ExileClipboardListener.WinForms
                 {
                     if (ParseItem.ParseStash(itemText))
                     {
-                        var dr = DialogResult.None;
-                        if (GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE)
-                            dr = new ItemInformation().ShowDialog();
-                        else
-                            dr = new CompactInformation().ShowDialog();
+                        var dr = GlobalMethods.Mode == GlobalMethods.COLLECTION_MODE ? new ItemInformation().ShowDialog() : new CompactInformation().ShowDialog();
 
                         //Stash the item if we are said to stash it from the pop up
                         if (dr == DialogResult.OK)
@@ -561,9 +557,9 @@ namespace ExileClipboardListener.WinForms
         {
             //Just update currency and maps
             int stackItems = 0;
-            for (int l = 0; l < League.Items.Count; l++)
+            foreach (object l in League.Items)
             {
-                string leagueName = League.Items[l].ToString();
+                string leagueName = l.ToString();
                 int internalLeagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + leagueName + "';");
                 if (Properties.Settings.Default.QuickLeagues == GlobalMethods.DEFAULT_LEAGUE && Properties.Settings.Default.DefaultLeagueId != internalLeagueId)
                     continue;
