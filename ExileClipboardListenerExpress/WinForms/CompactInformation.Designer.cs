@@ -130,6 +130,7 @@
             this.Dismiss.TabIndex = 19;
             this.Dismiss.Text = "Dismiss";
             this.Dismiss.UseVisualStyleBackColor = true;
+            this.Dismiss.Click += new System.EventHandler(this.Dismiss_Click);
             // 
             // newProgressBar6
             // 

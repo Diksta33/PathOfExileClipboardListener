@@ -137,5 +137,10 @@ namespace ExileClipboardListener.WinForms
             if (e.KeyChar == (char)Keys.Space || e.KeyChar == (char)Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
+
+        private void Dismiss_Click(object sender, EventArgs e)
+        {
+            Hide();
+        }
     }
 }

@@ -51,5 +51,10 @@ namespace ExileClipboardListener.WinForms
                 textBox.Text = currency.StackSize.ToString("#,##0");
             }
         }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            Hide();
+        }
     }
 }

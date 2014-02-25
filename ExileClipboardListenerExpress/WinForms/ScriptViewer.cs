@@ -8,5 +8,10 @@ namespace ExileClipboardListener.WinForms
         {
             InitializeComponent();
         }
+
+        private void Exit_Click(object sender, System.EventArgs e)
+        {
+            Hide();
+        }
     }
 }

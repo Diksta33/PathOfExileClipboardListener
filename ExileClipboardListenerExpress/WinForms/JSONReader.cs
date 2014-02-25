@@ -429,7 +429,7 @@ namespace ExileClipboardListener.WinForms
                         {
                             if (ParseItem.ParseStash(itemText))
                             {
-                                GlobalMethods.StashItem.Location = "Character: " + _currentCharacter.Replace("'", "''");
+                                GlobalMethods.StashItem.Location = "Character: " + character.Replace("'", "''");
                                 GlobalMethods.SaveStash(_leagueId);
                             }
                         }
@@ -476,7 +476,7 @@ namespace ExileClipboardListener.WinForms
                         {
                             if (ParseItem.ParseStash(itemText))
                             {
-                                GlobalMethods.StashItem.Location = _currentTab.Replace("'", "''") + " [" + i.X + "," + i.Y + "]";
+                                GlobalMethods.StashItem.Location = _stash.Tabs[tab].n.Replace("'", "''") + " [" + i.X + "," + i.Y + "]";
                                 GlobalMethods.SaveStash(_leagueId);
                             }
                         }

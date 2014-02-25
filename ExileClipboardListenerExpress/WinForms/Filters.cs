@@ -309,5 +309,10 @@ namespace ExileClipboardListener.WinForms
             _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterName.Text.Replace("'", "''") + "';");
             RefreshButtons();
         }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            Hide();
+        }
     }
 }

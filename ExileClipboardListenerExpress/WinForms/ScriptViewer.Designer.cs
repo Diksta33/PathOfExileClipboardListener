@@ -50,6 +50,7 @@
             this.Exit.TabIndex = 17;
             this.Exit.Text = "Close";
             this.Exit.UseVisualStyleBackColor = true;
+            this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // ScriptViewer
             // 

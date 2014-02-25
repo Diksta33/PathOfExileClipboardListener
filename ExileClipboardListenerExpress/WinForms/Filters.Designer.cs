@@ -410,6 +410,7 @@
             this.Exit.TabIndex = 35;
             this.Exit.Text = "Exit";
             this.Exit.UseVisualStyleBackColor = true;
+            this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // Filters
             // 

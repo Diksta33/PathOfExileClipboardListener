@@ -94,7 +94,7 @@ namespace ExileClipboardListener.WinForms
             if (!CompactView.Checked)
                 sql += @",
 	                CAST(b.ReqLevel AS INTEGER) AS [Base Req Level],";
-            if (ItemType.Text == "(All)" || ItemType.Text == "Weapon")
+            if (ItemType.Text == "(All)" || ItemType.Text == "Weapons")
                 sql+=@"
                     CAST(s.AttackSpeed AS NUMERIC(18,2)) AS [APS],
                     CAST(s.PhysicalDPS AS NUMERIC(18,2)) AS [pDPS],
@@ -281,6 +281,10 @@ namespace ExileClipboardListener.WinForms
          {
              //Determine the ItemType
              _itemTypeId = ItemType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text + "';");
+
+             //Store the current subtype
+             string subType = ItemSubType.Items.Count == 0 ? "XXX" : ItemSubType.Text;
+
              GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemSubTypeName FROM ItemSubType" + (_itemTypeId != 0 ? " WHERE ItemTypeId = " + _itemTypeId : "") + ";", ItemSubType);
 
              //We add some categories to make life easier
@@ -311,7 +315,12 @@ namespace ExileClipboardListener.WinForms
              }
              else
                  ItemCategory.Enabled = false;
-             ItemSubType.SelectedIndex = 0;
+             if (ItemCategory.Items.Count > 0)
+                 ItemCategory.SelectedIndex = 0;
+             if (ItemSubType.Items.Contains(subType))
+                 ItemSubType.Text = subType;
+             else
+                 ItemSubType.SelectedIndex = 0;
          }
 
         private void ItemSubType_SelectedIndexChanged(object sender, EventArgs e)

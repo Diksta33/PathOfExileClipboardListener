@@ -83,7 +83,7 @@
             this.Item22 = new System.Windows.Forms.TextBox();
             this.Icon24 = new System.Windows.Forms.PictureBox();
             this.Icon22 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Exit = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Icon12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon10)).BeginInit();
@@ -143,10 +143,8 @@
             this.groupBox1.Controls.Add(this.Item4);
             this.groupBox1.Controls.Add(this.Item10);
             this.groupBox1.Controls.Add(this.Item11);
-            this.groupBox1.Controls.Add(this.Item12);
             this.groupBox1.Controls.Add(this.Item2);
             this.groupBox1.Controls.Add(this.Item1);
-            this.groupBox1.Controls.Add(this.Icon12);
             this.groupBox1.Controls.Add(this.Icon10);
             this.groupBox1.Controls.Add(this.Icon11);
             this.groupBox1.Controls.Add(this.Icon4);
@@ -162,7 +160,7 @@
             // Item4
             // 
             this.Item4.Enabled = false;
-            this.Item4.Location = new System.Drawing.Point(67, 359);
+            this.Item4.Location = new System.Drawing.Point(67, 298);
             this.Item4.Name = "Item4";
             this.Item4.Size = new System.Drawing.Size(66, 20);
             this.Item4.TabIndex = 12;
@@ -170,7 +168,7 @@
             // Item10
             // 
             this.Item10.Enabled = false;
-            this.Item10.Location = new System.Drawing.Point(67, 298);
+            this.Item10.Location = new System.Drawing.Point(67, 237);
             this.Item10.Name = "Item10";
             this.Item10.Size = new System.Drawing.Size(66, 20);
             this.Item10.TabIndex = 11;
@@ -178,7 +176,7 @@
             // Item11
             // 
             this.Item11.Enabled = false;
-            this.Item11.Location = new System.Drawing.Point(67, 237);
+            this.Item11.Location = new System.Drawing.Point(67, 176);
             this.Item11.Name = "Item11";
             this.Item11.Size = new System.Drawing.Size(66, 20);
             this.Item11.TabIndex = 10;
@@ -186,7 +184,7 @@
             // Item12
             // 
             this.Item12.Enabled = false;
-            this.Item12.Location = new System.Drawing.Point(67, 176);
+            this.Item12.Location = new System.Drawing.Point(67, 115);
             this.Item12.Name = "Item12";
             this.Item12.Size = new System.Drawing.Size(66, 20);
             this.Item12.TabIndex = 9;
@@ -210,7 +208,7 @@
             // Icon12
             // 
             this.Icon12.Image = global::ExileClipboardListener.Properties.Resources.Jewellers;
-            this.Icon12.Location = new System.Drawing.Point(6, 141);
+            this.Icon12.Location = new System.Drawing.Point(6, 80);
             this.Icon12.Name = "Icon12";
             this.Icon12.Size = new System.Drawing.Size(55, 55);
             this.Icon12.TabIndex = 6;
@@ -219,7 +217,7 @@
             // Icon10
             // 
             this.Icon10.Image = global::ExileClipboardListener.Properties.Resources.Gemcutters;
-            this.Icon10.Location = new System.Drawing.Point(6, 263);
+            this.Icon10.Location = new System.Drawing.Point(6, 202);
             this.Icon10.Name = "Icon10";
             this.Icon10.Size = new System.Drawing.Size(55, 55);
             this.Icon10.TabIndex = 5;
@@ -228,7 +226,7 @@
             // Icon11
             // 
             this.Icon11.Image = global::ExileClipboardListener.Properties.Resources.Glassblowers;
-            this.Icon11.Location = new System.Drawing.Point(6, 202);
+            this.Icon11.Location = new System.Drawing.Point(6, 141);
             this.Icon11.Name = "Icon11";
             this.Icon11.Size = new System.Drawing.Size(55, 55);
             this.Icon11.TabIndex = 4;
@@ -237,7 +235,7 @@
             // Icon4
             // 
             this.Icon4.Image = global::ExileClipboardListener.Properties.Resources.Cartographers;
-            this.Icon4.Location = new System.Drawing.Point(6, 324);
+            this.Icon4.Location = new System.Drawing.Point(6, 263);
             this.Icon4.Name = "Icon4";
             this.Icon4.Size = new System.Drawing.Size(55, 55);
             this.Icon4.TabIndex = 3;
@@ -559,9 +557,11 @@
             // 
             this.groupBox3.Controls.Add(this.Item13);
             this.groupBox3.Controls.Add(this.Icon13);
+            this.groupBox3.Controls.Add(this.Icon12);
+            this.groupBox3.Controls.Add(this.Item12);
             this.groupBox3.Location = new System.Drawing.Point(620, 218);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(143, 135);
+            this.groupBox3.Size = new System.Drawing.Size(143, 149);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
@@ -630,22 +630,23 @@
             this.Icon22.TabIndex = 0;
             this.Icon22.TabStop = false;
             // 
-            // button1
+            // Exit
             // 
-            this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button1.Location = new System.Drawing.Point(688, 417);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 16;
-            this.button1.Text = "Exit";
-            this.button1.UseVisualStyleBackColor = true;
+            this.Exit.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.Exit.Location = new System.Drawing.Point(688, 417);
+            this.Exit.Name = "Exit";
+            this.Exit.Size = new System.Drawing.Size(75, 23);
+            this.Exit.TabIndex = 16;
+            this.Exit.Text = "Exit";
+            this.Exit.UseVisualStyleBackColor = true;
+            this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // CurrencyViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 452);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Exit);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -750,7 +751,7 @@
         private System.Windows.Forms.TextBox Item13;
         private System.Windows.Forms.TextBox Item24;
         private System.Windows.Forms.TextBox Item22;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Exit;
         private System.Windows.Forms.PictureBox Icon19;
         private System.Windows.Forms.PictureBox Icon18;
     }

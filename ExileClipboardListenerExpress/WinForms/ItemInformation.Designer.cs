@@ -70,6 +70,8 @@
             this.Armour = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label47 = new System.Windows.Forms.Label();
+            this.TotalDPS = new System.Windows.Forms.TextBox();
             this.label45 = new System.Windows.Forms.Label();
             this.label44 = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
@@ -190,8 +192,6 @@
             this.label46 = new System.Windows.Forms.Label();
             this.League = new System.Windows.Forms.ComboBox();
             this.ItemIcon = new System.Windows.Forms.PictureBox();
-            this.label47 = new System.Windows.Forms.Label();
-            this.TotalDPS = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -562,6 +562,24 @@
             this.groupBox3.TabIndex = 17;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Damage";
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(157, 136);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(31, 13);
+            this.label47.TabIndex = 38;
+            this.label47.Text = "Total";
+            // 
+            // TotalDPS
+            // 
+            this.TotalDPS.Enabled = false;
+            this.TotalDPS.Location = new System.Drawing.Point(160, 152);
+            this.TotalDPS.Name = "TotalDPS";
+            this.TotalDPS.Size = new System.Drawing.Size(50, 20);
+            this.TotalDPS.TabIndex = 37;
+            this.TotalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label45
             // 
@@ -1719,6 +1737,7 @@
             this.Exit.TabIndex = 2;
             this.Exit.Text = "Dismiss";
             this.Exit.UseVisualStyleBackColor = true;
+            this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
             // timer1
             // 
@@ -1752,24 +1771,6 @@
             this.ItemIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ItemIcon.TabIndex = 29;
             this.ItemIcon.TabStop = false;
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(157, 136);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(31, 13);
-            this.label47.TabIndex = 38;
-            this.label47.Text = "Total";
-            // 
-            // TotalDPS
-            // 
-            this.TotalDPS.Enabled = false;
-            this.TotalDPS.Location = new System.Drawing.Point(160, 152);
-            this.TotalDPS.Name = "TotalDPS";
-            this.TotalDPS.Size = new System.Drawing.Size(50, 20);
-            this.TotalDPS.TabIndex = 37;
-            this.TotalDPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // ItemInformation
             // 

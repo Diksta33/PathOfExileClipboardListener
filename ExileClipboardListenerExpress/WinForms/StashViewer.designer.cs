@@ -117,6 +117,7 @@
             this.ItemSubType.Location = new System.Drawing.Point(518, 25);
             this.ItemSubType.Name = "ItemSubType";
             this.ItemSubType.Size = new System.Drawing.Size(131, 21);
+            this.ItemSubType.Sorted = true;
             this.ItemSubType.TabIndex = 2;
             this.ItemSubType.SelectedIndexChanged += new System.EventHandler(this.ItemSubType_SelectedIndexChanged);
             // 
@@ -154,6 +155,7 @@
             this.Mod.Location = new System.Drawing.Point(655, 25);
             this.Mod.Name = "Mod";
             this.Mod.Size = new System.Drawing.Size(287, 21);
+            this.Mod.Sorted = true;
             this.Mod.TabIndex = 3;
             this.Mod.SelectedIndexChanged += new System.EventHandler(this.Mod_SelectedIndexChanged);
             // 
@@ -189,11 +191,12 @@
             this.League.Items.AddRange(new object[] {
             "(All)",
             "Armour",
-            "Weapons",
-            "Jewellery"});
+            "Jewellery",
+            "Weapons"});
             this.League.Location = new System.Drawing.Point(12, 25);
             this.League.Name = "League";
             this.League.Size = new System.Drawing.Size(198, 21);
+            this.League.Sorted = true;
             this.League.TabIndex = 0;
             this.League.SelectedIndexChanged += new System.EventHandler(this.League_SelectedIndexChanged);
             // 
@@ -204,6 +207,7 @@
             this.FilterList.Location = new System.Drawing.Point(948, 25);
             this.FilterList.Name = "FilterList";
             this.FilterList.Size = new System.Drawing.Size(287, 21);
+            this.FilterList.Sorted = true;
             this.FilterList.TabIndex = 10;
             this.FilterList.SelectedIndexChanged += new System.EventHandler(this.FilterList_SelectedIndexChanged);
             // 
@@ -411,11 +415,12 @@
             this.ItemCategory.Items.AddRange(new object[] {
             "(All)",
             "Armour",
-            "Weapons",
-            "Jewellery"});
+            "Jewellery",
+            "Weapons"});
             this.ItemCategory.Location = new System.Drawing.Point(347, 23);
             this.ItemCategory.Name = "ItemCategory";
             this.ItemCategory.Size = new System.Drawing.Size(165, 21);
+            this.ItemCategory.Sorted = true;
             this.ItemCategory.TabIndex = 27;
             // 
             // StashViewer

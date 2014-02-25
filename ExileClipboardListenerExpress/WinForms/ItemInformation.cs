@@ -581,5 +581,10 @@ namespace ExileClipboardListener.WinForms
             if (e.KeyCode == Keys.Escape)
                 Hide();
         }
+
+        private void Exit_Click(object sender, EventArgs e)
+        {
+            Hide();
+        }
     }
 }
