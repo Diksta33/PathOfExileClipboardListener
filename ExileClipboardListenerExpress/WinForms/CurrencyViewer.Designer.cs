@@ -35,15 +35,15 @@
             this.Item4 = new System.Windows.Forms.TextBox();
             this.Item10 = new System.Windows.Forms.TextBox();
             this.Item11 = new System.Windows.Forms.TextBox();
-            this.Item12 = new System.Windows.Forms.TextBox();
             this.Item2 = new System.Windows.Forms.TextBox();
             this.Item1 = new System.Windows.Forms.TextBox();
-            this.Icon12 = new System.Windows.Forms.PictureBox();
             this.Icon10 = new System.Windows.Forms.PictureBox();
             this.Icon11 = new System.Windows.Forms.PictureBox();
             this.Icon4 = new System.Windows.Forms.PictureBox();
             this.Icon2 = new System.Windows.Forms.PictureBox();
             this.Icon1 = new System.Windows.Forms.PictureBox();
+            this.Item12 = new System.Windows.Forms.TextBox();
+            this.Icon12 = new System.Windows.Forms.PictureBox();
             this.Icon15 = new System.Windows.Forms.PictureBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Icon19 = new System.Windows.Forms.PictureBox();
@@ -85,12 +85,12 @@
             this.Icon22 = new System.Windows.Forms.PictureBox();
             this.Exit = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Icon12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon10)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Icon12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon15)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Icon19)).BeginInit();
@@ -181,14 +181,6 @@
             this.Item11.Size = new System.Drawing.Size(66, 20);
             this.Item11.TabIndex = 10;
             // 
-            // Item12
-            // 
-            this.Item12.Enabled = false;
-            this.Item12.Location = new System.Drawing.Point(67, 115);
-            this.Item12.Name = "Item12";
-            this.Item12.Size = new System.Drawing.Size(66, 20);
-            this.Item12.TabIndex = 9;
-            // 
             // Item2
             // 
             this.Item2.Enabled = false;
@@ -204,15 +196,6 @@
             this.Item1.Name = "Item1";
             this.Item1.Size = new System.Drawing.Size(66, 20);
             this.Item1.TabIndex = 7;
-            // 
-            // Icon12
-            // 
-            this.Icon12.Image = global::ExileClipboardListener.Properties.Resources.Jewellers;
-            this.Icon12.Location = new System.Drawing.Point(6, 80);
-            this.Icon12.Name = "Icon12";
-            this.Icon12.Size = new System.Drawing.Size(55, 55);
-            this.Icon12.TabIndex = 6;
-            this.Icon12.TabStop = false;
             // 
             // Icon10
             // 
@@ -258,6 +241,23 @@
             this.Icon1.Size = new System.Drawing.Size(55, 55);
             this.Icon1.TabIndex = 0;
             this.Icon1.TabStop = false;
+            // 
+            // Item12
+            // 
+            this.Item12.Enabled = false;
+            this.Item12.Location = new System.Drawing.Point(67, 115);
+            this.Item12.Name = "Item12";
+            this.Item12.Size = new System.Drawing.Size(66, 20);
+            this.Item12.TabIndex = 9;
+            // 
+            // Icon12
+            // 
+            this.Icon12.Image = global::ExileClipboardListener.Properties.Resources.Jewellers;
+            this.Icon12.Location = new System.Drawing.Point(6, 80);
+            this.Icon12.Name = "Icon12";
+            this.Icon12.Size = new System.Drawing.Size(55, 55);
+            this.Icon12.TabIndex = 6;
+            this.Icon12.TabStop = false;
             // 
             // Icon15
             // 
@@ -654,6 +654,7 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.League);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CurrencyViewer";
@@ -662,12 +663,12 @@
             this.Load += new System.EventHandler(this.CurrencyViewer_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Icon12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon10)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Icon12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon15)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

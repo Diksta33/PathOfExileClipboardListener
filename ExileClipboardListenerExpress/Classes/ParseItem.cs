@@ -89,13 +89,13 @@ namespace ExileClipboardListener.Classes
                 return false;
             }
             gi.GemName = entity[1];
-            gi.Quality = FindAnyValue<int>(entity, "Quality");
             RemoveSection(ref entity);
 
             //Next comes the types as a list
             gi.GemType = entity[3];
 
             //And other properties
+            gi.Quality = FindAnyValue<int>(entity, "Quality");
             gi.Level = FindAnyValue<int>(entity, "Level");
             gi.ManaCost = FindAnyValue<int>(entity, "Mana Cost");
             gi.ManaMultiplier = FindAnyValue<int>(entity, "Mana Multiplier");

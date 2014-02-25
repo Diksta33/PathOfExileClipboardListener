@@ -788,16 +788,16 @@ namespace ExileClipboardListener.Classes
                                         if (dr[i] == DBNull.Value || dr[i].ToString() == "" || (suppressZeroes && dr[i].ToString() == "0"))
                                             // ReSharper disable RedundantCast
                                             row[i] = (int?)null;
-                                            // ReSharper restore RedundantCast
+                                        // ReSharper restore RedundantCast
                                         else
                                             row[i] = Convert.ToInt32(dr[i]);
                                     }
                                     else if (gridTarget.Columns[i].DefaultCellStyle.Format.Length > 1 && gridTarget.Columns[i].DefaultCellStyle.Format.Substring(0, 1) == "N")//Number with decimals
                                     {
-                                        if (dr[i] == DBNull.Value || dr[i].ToString() == "")
+                                        if (dr[i] == DBNull.Value || dr[i].ToString() == "" || (suppressZeroes && dr[i].ToString() == "0"))
                                             // ReSharper disable RedundantCast
                                             row[i] = (decimal?)null;
-                                            // ReSharper restore RedundantCast
+                                        // ReSharper restore RedundantCast
                                         else
                                             row[i] = Convert.ToDecimal(dr[i]);
                                     }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MapViewer));
             this.MapCount = new System.Windows.Forms.Label();
             this.ViewScript = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
@@ -140,6 +141,7 @@
             this.Controls.Add(this.League);
             this.Controls.Add(this.MapGrid);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MapViewer";

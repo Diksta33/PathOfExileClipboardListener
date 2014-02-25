@@ -88,46 +88,46 @@ namespace ExileClipboardListener.WinForms
 	                s.ItemName AS [Item Name],
 	                b.ItemName AS [Base Item], 
 	                r.RarityName AS [Rarity], 
-	                CAST(s.Quality AS INTEGER) AS [Quality], 
+	                CAST(IFNULL(s.Quality, 0) AS INTEGER) AS [Quality], 
 	                CAST(s.ItemLevel AS INTEGER) AS [Item Level], 
 	                CAST(s.ReqLevel AS INTEGER) AS [Req Level],";
             if (!CompactView.Checked)
                 sql += @",
 	                CAST(b.ReqLevel AS INTEGER) AS [Base Req Level],";
             if (ItemType.Text == "(All)" || ItemType.Text == "Weapons")
-                sql+=@"
-                    CAST(s.AttackSpeed AS NUMERIC(18,2)) AS [APS],
-                    CAST(s.PhysicalDPS AS NUMERIC(18,2)) AS [pDPS],
-                    CAST(s.ElementalDPS AS NUMERIC(18,2)) AS [eDPS],
-                    CAST(s.TotalDPS AS NUMERIC(18,2)) AS [tDPS],";
+                sql += @"
+                    CAST(IFNULL(s.AttackSpeed, 0) AS DOUBLE) AS [APS],
+                    CAST(IFNULL(s.PhysicalDPS, 0) AS DOUBLE) AS [pDPS],
+                    CAST(IFNULL(s.ElementalDPS, 0) AS DOUBLE) AS [eDPS],
+                    CAST(IFNULL(s.TotalDPS, 0) AS DOUBLE) AS [tDPS],";
             if (ItemType.Text == "(All)" || ItemType.Text == "Armour")
                 sql += @"
-                    CAST(s.Armour AS INTEGER) AS [Armour], 
-	                CAST(s.Evasion AS INTEGER) AS [Evasion], 
-	                CAST(s.EnergyShield AS INTEGER) AS [Energy Shield],";
+                    CAST(IFNULL(s.Armour, 0) AS INTEGER) AS [Armour], 
+	                CAST(IFNULL(s.Evasion, 0) AS INTEGER) AS [Evasion], 
+	                CAST(IFNULL(s.EnergyShield, 0) AS INTEGER) AS [Energy Shield],";
             if (ItemType.Text == "(All)" || ItemType.Text == "Weapon" || ItemType.Text == "Armour")
                 sql += @"            
-	                CAST(s.SocketCount AS INTEGER) AS [Sockets],
+	                CAST(IFNULL(s.SocketCount, 0) AS INTEGER) AS [Sockets],
 	                CASE WHEN s.SocketMaxLink = 0 THEN NULL ELSE CAST(s.SocketMaxLink AS VARCHAR(1)) || 'L' END AS [Max Links],";
             sql += @"
-	                CAST(s.Life AS INTEGER) AS [Life],
-	                CAST(s.Mana AS INTEGER) AS [Mana],
-	                CAST(s.FireRes AS INTEGER) AS [Fire Res],
-	                CAST(s.ColdRes AS INTEGER) AS [Cold Res],
-	                CAST(s.LightningRes AS INTEGER) AS [Lig Res],
-	                CAST(s.FireRes + s.ColdRes + s.LightningRes AS INTEGER) AS [Elem Res],
-	                CAST(s.ChaosRes AS INTEGER) AS [Chaos Res],
-	                CAST(s.FireRes + s.ColdRes + s.LightningRes + s.ChaosRes AS INTEGER) AS [Total Res],";
+	                CAST(IFNULL(s.Life, 0) AS INTEGER) AS [Life],
+	                CAST(IFNULL(s.Mana, 0) AS INTEGER) AS [Mana],
+	                CAST(IFNULL(s.FireRes, 0) AS INTEGER) AS [Fire Res],
+	                CAST(IFNULL(s.ColdRes, 0) AS INTEGER) AS [Cold Res],
+	                CAST(IFNULL(s.LightningRes, 0) AS INTEGER) AS [Lig Res],
+	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) AS INTEGER) AS [Elem Res],
+	                CAST(IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Chaos Res],
+	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Total Res],";
             if (!CompactView.Checked)
                 sql += @",
 	                CAST(IFNULL(b.DamagePhysicalMin, 0) AS INTEGER) AS [Base Damage Physical Min],
 	                CAST(IFNULL(b.DamagePhysicalMax, 0) AS INTEGER) AS [Base Damage Physical Max],
-	                CAST(b.Armour AS INTEGER) AS [Base Armour],
-	                CAST(b.Evasion AS INTEGER) AS [Base Evasion],
-	                CAST(b.EnergyShield AS INTEGER) AS [Base Energy Shield],
-	                CAST(b.ReqStr AS INTEGER) AS [Req Str], 
-	                CAST(b.ReqDex AS INTEGER) AS [Req Dex], 
-	                CAST(b.ReqInt AS INTEGER) AS [Req Int],
+	                CAST(IFNULL(b.Armour, 0) AS INTEGER) AS [Base Armour],
+	                CAST(IFNULL(b.Evasion, 0) AS INTEGER) AS [Base Evasion],
+	                CAST(IFNULL(b.EnergyShield, 0) AS INTEGER) AS [Base Energy Shield],
+	                CAST(IFNULL(b.ReqStr, 0) AS INTEGER) AS [Req Str], 
+	                CAST(IFNULL(b.ReqDex, 0) AS INTEGER) AS [Req Dex], 
+	                CAST(IFNULL(b.ReqInt, 0) AS INTEGER) AS [Req Int],
 	                mi1.ModName AS [Implict Mod 1],
 	                CAST(IFNULL(s.ImplicitMod1Value, 0) AS INTEGER) AS [Implict Mod 1 Value],
 	                mi2.ModName AS [Implicit Mod 2],
@@ -196,7 +196,7 @@ namespace ExileClipboardListener.WinForms
                     LEFT JOIN [Mod] m12 ON m12.ModId = sm12.ModId";
             if (scored)
                 sql += " LEFT JOIN StashScore ss ON ss.StashId = s.StashId";
-
+       
             //Add filters
             bool where = false;
             if (_leagueId != 0)

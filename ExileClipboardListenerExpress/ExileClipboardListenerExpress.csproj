@@ -24,7 +24,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>36</ApplicationRevision>
+    <ApplicationRevision>37</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -309,6 +309,7 @@
     <Content Include="PathOfExile.ico" />
     <Content Include="Resources\Fusing.png" />
     <Content Include="Resources\Regret.png" />
+    <None Include="Resources\worn_squoil.ico" />
     <None Include="Resources\Regal.png" />
     <None Include="Resources\Scouring.png" />
     <None Include="Resources\Transmutation.png" />
@@ -379,12 +380,12 @@
   <ItemGroup>
     <PublishFile Include="ExileStash.s3db">
       <Visible>False</Visible>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
       <Group>
       </Group>
       <TargetPath>
       </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
