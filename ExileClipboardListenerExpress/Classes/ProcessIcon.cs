@@ -21,7 +21,7 @@ namespace ExileClipboardListener.Classes
             {
                 //Put the icon in the system tray and allow it react to mouse clicks.			
                 _ni.MouseClick += MouseClick;
-                _ni.Icon = Resources.WornSquoil;
+                _ni.Icon = Resources.Mouse;
                 _ni.Text = "Path of Exile Clipboard Listener";
                 _ni.Visible = true;
 

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CompactInformation));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.Stuff = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -197,6 +198,7 @@
             this.Controls.Add(this.newProgressBar2);
             this.Controls.Add(this.newProgressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "CompactInformation";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
