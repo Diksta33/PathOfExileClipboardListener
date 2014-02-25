@@ -259,11 +259,11 @@ namespace ExileClipboardListener.WinForms
             if (ItemCategory.Text == "Evasion/ Energy Shield")
                 sql += (where ? " AND " : " WHERE ") + " s.Armour = 0 AND s.Evasion != 0 AND s.EnergyShield != 0";
             if (ItemCategory.Text == "Rings & Amulets")
-                sql += (where ? " AND " : " WHERE ") + " s.ItemSubTypeName IN ('Ring', 'Amulet')";
+                sql += (where ? " AND " : " WHERE ") + " i2.ItemSubTypeName IN ('Ring', 'Amulet')";
             if (ItemCategory.Text == "1-Handed")
-                sql += (where ? " AND " : " WHERE ") + " s.ItemSubTypeName IN ('Claw', 'Bow', 'Dagger', 'One Hand Axe', 'One Hand Sword', 'One Hand Mace', 'Sceptre', 'Wand', 'Thrusting One Hand Sword')";
+                sql += (where ? " AND " : " WHERE ") + " i2.ItemSubTypeName IN ('Claw', 'Bow', 'Dagger', 'One Hand Axe', 'One Hand Sword', 'One Hand Mace', 'Sceptre', 'Wand', 'Thrusting One Hand Sword')";
             if (ItemCategory.Text == "2-Handed")
-                sql += (where ? " AND " : " WHERE ") + " s.ItemSubTypeName IN ('Staff', 'Two Hand Axe', 'Two Hand Mace', 'Two Hand Sword')";
+                sql += (where ? " AND " : " WHERE ") + " i2.ItemSubTypeName IN ('Staff', 'Two Hand Axe', 'Two Hand Mace', 'Two Hand Sword')";
 
             //Run the query and count the items
             ItemCount.Text = GlobalMethods.StuffGrid(sql, StashGrid, true, true).ToString("#,##0") + " items";
