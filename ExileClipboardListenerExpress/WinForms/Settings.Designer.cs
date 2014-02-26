@@ -35,7 +35,6 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.StashPopUpSeconds = new System.Windows.Forms.NumericUpDown();
-            this.StashPopUpPerm = new System.Windows.Forms.RadioButton();
             this.StashPopUpTimed = new System.Windows.Forms.RadioButton();
             this.StashNoPopUp = new System.Windows.Forms.RadioButton();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -141,15 +140,14 @@
             // 
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.StashPopUpSeconds);
-            this.groupBox2.Controls.Add(this.StashPopUpPerm);
             this.groupBox2.Controls.Add(this.StashPopUpTimed);
             this.groupBox2.Controls.Add(this.StashNoPopUp);
             this.groupBox2.Location = new System.Drawing.Point(12, 111);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(209, 100);
+            this.groupBox2.Size = new System.Drawing.Size(209, 74);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Pop Up Behaviour - Stash Mode";
+            this.groupBox2.Text = "Pop Up Behaviour - Stashing Item";
             // 
             // label1
             // 
@@ -181,17 +179,6 @@
             0,
             0,
             0});
-            // 
-            // StashPopUpPerm
-            // 
-            this.StashPopUpPerm.AutoSize = true;
-            this.StashPopUpPerm.Location = new System.Drawing.Point(6, 65);
-            this.StashPopUpPerm.Name = "StashPopUpPerm";
-            this.StashPopUpPerm.Size = new System.Drawing.Size(140, 17);
-            this.StashPopUpPerm.TabIndex = 2;
-            this.StashPopUpPerm.TabStop = true;
-            this.StashPopUpPerm.Text = "Pops Up Until Dismissed";
-            this.StashPopUpPerm.UseVisualStyleBackColor = true;
             // 
             // StashPopUpTimed
             // 
@@ -238,7 +225,7 @@
             // 
             this.groupBox4.Controls.Add(this.CompareLevel);
             this.groupBox4.Controls.Add(this.CompareBest);
-            this.groupBox4.Location = new System.Drawing.Point(12, 288);
+            this.groupBox4.Location = new System.Drawing.Point(12, 262);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(209, 72);
             this.groupBox4.TabIndex = 3;
@@ -302,7 +289,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(358, 405);
+            this.button1.Location = new System.Drawing.Point(361, 354);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 5;
@@ -313,7 +300,7 @@
             // button2
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(277, 405);
+            this.button2.Location = new System.Drawing.Point(280, 354);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 6;
@@ -549,12 +536,12 @@
             this.groupBox7.Controls.Add(this.CollectionPopUpSeconds);
             this.groupBox7.Controls.Add(this.CollectionPopUpPerm);
             this.groupBox7.Controls.Add(this.CollectionPopUpTimed);
-            this.groupBox7.Location = new System.Drawing.Point(12, 217);
+            this.groupBox7.Location = new System.Drawing.Point(12, 191);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(209, 65);
             this.groupBox7.TabIndex = 8;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Pop Up Behaviour - Collection Mode";
+            this.groupBox7.Text = "Pop Up Behaviour - Viewing Item";
             // 
             // label11
             // 
@@ -659,7 +646,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(449, 440);
+            this.ClientSize = new System.Drawing.Size(448, 390);
             this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox6);
@@ -712,7 +699,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown StashPopUpSeconds;
-        private System.Windows.Forms.RadioButton StashPopUpPerm;
         private System.Windows.Forms.RadioButton StashPopUpTimed;
         private System.Windows.Forms.RadioButton StashNoPopUp;
         private System.Windows.Forms.GroupBox groupBox3;

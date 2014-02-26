@@ -42,7 +42,6 @@ namespace ExileClipboardListener.WinForms
             CompareLevel.Checked = Properties.Settings.Default.RatingMode == 1;
             StashNoPopUp.Checked = Properties.Settings.Default.StashPopUpMode == 0;
             StashPopUpTimed.Checked = Properties.Settings.Default.StashPopUpMode == 1;
-            StashPopUpPerm.Checked = Properties.Settings.Default.StashPopUpMode == 2;
             StashPopUpSeconds.Value = Properties.Settings.Default.StashPopUpSeconds == 0 ? 1 : Properties.Settings.Default.StashPopUpSeconds;
             CollectionPopUpTimed.Checked = Properties.Settings.Default.CollectionPopUpMode == 1;
             CollectionPopUpPerm.Checked = Properties.Settings.Default.CollectionPopUpMode == 2;
@@ -63,7 +62,7 @@ namespace ExileClipboardListener.WinForms
             Properties.Settings.Default.ToleranceGoodFrom = (int)ToleranceGoodFrom.Value;
             Properties.Settings.Default.StashDuplicates = DuplicatesYes.Checked;
             Properties.Settings.Default.RatingMode = (CompareBest.Checked ? 0 : 1);
-            Properties.Settings.Default.StashPopUpMode = (StashNoPopUp.Checked ? 0 : (StashPopUpTimed.Checked ? 1 : 2));
+            Properties.Settings.Default.StashPopUpMode = (StashNoPopUp.Checked ? 0 : 1);
             Properties.Settings.Default.StashPopUpSeconds = (int)StashPopUpSeconds.Value;
             Properties.Settings.Default.CollectionPopUpMode = (CollectionPopUpTimed.Checked ? 1 : 2);
             Properties.Settings.Default.CollectionPopUpSeconds = (int)CollectionPopUpSeconds.Value;
