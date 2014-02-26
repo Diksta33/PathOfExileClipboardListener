@@ -69,7 +69,8 @@
     <StartupObject>ExileClipboardListener.Classes.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>PathOfExile.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup />
@@ -306,7 +307,6 @@
     <Content Include="ExileStash.s3db">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="PathOfExile.ico" />
     <Content Include="Resources\Fusing.png" />
     <None Include="Resources\mouse.ico" />
     <Content Include="Resources\Regret.png" />
