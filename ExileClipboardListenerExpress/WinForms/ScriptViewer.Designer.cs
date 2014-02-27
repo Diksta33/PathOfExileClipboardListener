@@ -67,6 +67,7 @@
             this.Name = "ScriptViewer";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Script Viewer";
+            this.Load += new System.EventHandler(this.ScriptViewer_Load);
             this.ResumeLayout(false);
 
         }

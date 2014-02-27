@@ -430,7 +430,7 @@ namespace ExileClipboardListener.Classes
                     return true;
 
                 //Try to fit the mods to affixes
-                FitAffixes(item, mods, itemTypeName, itemSubTypeName);
+                FitAffixes(item, ref mods, itemTypeName, itemSubTypeName);
 
                 //Finally, now everything has been parsed we need to pull out some key statistics
                 //We ignore % increases for life/ mana at the moment as they are a pain
@@ -451,7 +451,7 @@ namespace ExileClipboardListener.Classes
             return true;
         }
 
-        private static void FitAffixes(string item, List<GlobalMethods.Mod> mods, string itemTypeName, string itemSubTypeName)
+        private static void FitAffixes(string item, ref List<GlobalMethods.Mod> mods, string itemTypeName, string itemSubTypeName)
         {
             //Because some prefixes/ suffixes have two mods we need to find these first and then scoop up whatever is left as single mod affixes
             //We also have the situation of double mods, e.g. Item Quantity is a prefix and a suffix, in these cases we are limited to how much we can determine
@@ -715,13 +715,16 @@ namespace ExileClipboardListener.Classes
                                 }
                             }
 
+                            //If either mod wasn't placed go round again
+                            if ((singlePrimaryModValueMin != 0 && affixFirstSingleMod.AffixId == 0) || (singleSecondaryModValueMin != 0 && affixSecondSingleMod.AffixId == 0))
+                                continue;
+
                             //If we got a hit then we can exit the loop
-                            if (affixFirstSingleMod.AffixId != 0 && (singleSecondaryModValueMin == 0 || affixSecondSingleMod.AffixId != 0))
-                                break;
+                            break;
                         }
 
-                        //We should get at least two affixes out of this
-                        if (affixDoubleMod.AffixId == 0 || affixFirstSingleMod.AffixId == 0)
+                        //We should get at least a double affix out of this
+                        if (affixDoubleMod.AffixId == 0)
                         {
                             //MessageBox.Show("Retrofit process went badly wrong!");
                             break;
