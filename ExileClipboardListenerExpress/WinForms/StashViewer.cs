@@ -11,6 +11,7 @@ namespace ExileClipboardListener.WinForms
     public partial class StashViewer : Form
     {
         private int _itemTypeId;
+        private int _itemCategoryId;
         private int _itemSubTypeId;
         private int _leagueId;
         private int _modId;
@@ -29,7 +30,7 @@ namespace ExileClipboardListener.WinForms
             ItemType.SelectedIndex = 0;
             GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ModName FROM [Mod] ORDER BY 1;", Mod);
             Mod.SelectedIndex = 0;
-            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT FilterName FROM FilterHeader ORDER BY 1;", FilterList);
+            GlobalMethods.StuffCombo("SELECT '(None)' UNION ALL SELECT FilterName FROM FilterHeader ORDER BY 1;", FilterList);
             FilterList.SelectedIndex = 0;
             //RefreshGrid();
         }
@@ -65,6 +66,29 @@ namespace ExileClipboardListener.WinForms
                     {
                         sqlFilter += " AND EXISTS (SELECT * FROM StashMod sm2 WHERE sm2.StashId = s.StashId AND sm2.ModId = " + _modId + ")";
                     }
+                    if (_itemCategoryId != 0)
+                    {
+                        //Some item types have category filters so we apply these here
+                        if (ItemCategory.Text == "Armour")
+                            sqlFilter += " AND s.Armour != 0 AND s.Evasion = 0 AND s.EnergyShield = 0";
+                        if (ItemCategory.Text == "Evasion")
+                            sqlFilter += " AND s.Armour = 0 AND s.Evasion != 0 AND s.EnergyShield = 0";
+                        if (ItemCategory.Text == "Energy Shield")
+                            sqlFilter += " AND s.Armour = 0 AND s.Evasion = 0 AND s.EnergyShield != 0";
+                        if (ItemCategory.Text == "Armour/ Evasion")
+                            sqlFilter += " AND s.Armour != 0 AND s.Evasion != 0 AND s.EnergyShield = 0";
+                        if (ItemCategory.Text == "Armour/ Energy Shield")
+                            sqlFilter += " AND s.Armour != 0 AND s.Evasion = 0 AND s.EnergyShield != 0";
+                        if (ItemCategory.Text == "Evasion/ Energy Shield")
+                            sqlFilter += " AND s.Armour = 0 AND s.Evasion != 0 AND s.EnergyShield != 0";
+                        if (ItemCategory.Text == "Rings and Amulets")
+                            sqlFilter += " AND i2.ItemSubTypeName IN ('Ring', 'Amulet')";
+                        if (ItemCategory.Text == "1-Handed")
+                            sqlFilter += " AND i2.ItemSubTypeName IN ('Claw', 'Bow', 'Dagger', 'One Hand Axe', 'One Hand Sword', 'One Hand Mace', 'Sceptre', 'Wand', 'Thrusting One Hand Sword')";
+                        if (ItemCategory.Text == "2-Handed")
+                            sqlFilter += " AND i2.ItemSubTypeName IN ('Staff', 'Two Hand Axe', 'Two Hand Mace', 'Two Hand Sword')";
+                    }
+                    sqlFilter += ";";
                     stashId = GlobalMethods.GetScalarInt(sqlFilter);
                     if (stashId == 0)
                         break;
@@ -258,7 +282,7 @@ namespace ExileClipboardListener.WinForms
                 sql += (where ? " AND " : " WHERE ") + " s.Armour != 0 AND s.Evasion = 0 AND s.EnergyShield != 0";
             if (ItemCategory.Text == "Evasion/ Energy Shield")
                 sql += (where ? " AND " : " WHERE ") + " s.Armour = 0 AND s.Evasion != 0 AND s.EnergyShield != 0";
-            if (ItemCategory.Text == "Rings & Amulets")
+            if (ItemCategory.Text == "Rings and Amulets")
                 sql += (where ? " AND " : " WHERE ") + " i2.ItemSubTypeName IN ('Ring', 'Amulet')";
             if (ItemCategory.Text == "1-Handed")
                 sql += (where ? " AND " : " WHERE ") + " i2.ItemSubTypeName IN ('Claw', 'Bow', 'Dagger', 'One Hand Axe', 'One Hand Sword', 'One Hand Mace', 'Sceptre', 'Wand', 'Thrusting One Hand Sword')";
@@ -280,7 +304,7 @@ namespace ExileClipboardListener.WinForms
          private void ItemType_SelectedIndexChanged(object sender, EventArgs e)
          {
              //Determine the ItemType
-             _itemTypeId = ItemType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text + "';");
+             _itemTypeId = ItemType.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text.Replace("'", "''") + "';");
 
              //Store the current subtype
              string subType = ItemSubType.Items.Count == 0 ? "XXX" : ItemSubType.Text;
@@ -288,35 +312,20 @@ namespace ExileClipboardListener.WinForms
              GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemSubTypeName FROM ItemSubType" + (_itemTypeId != 0 ? " WHERE ItemTypeId = " + _itemTypeId : "") + ";", ItemSubType);
 
              //We add some categories to make life easier
-             ItemCategory.Items.Clear();
-             if (ItemType.Text == "Armour")
+             if (_itemTypeId == 0)
              {
+                 ItemCategory.Items.Clear();
                  ItemCategory.Items.Add("(All)");
-                 ItemCategory.Items.Add("Armour");
-                 ItemCategory.Items.Add("Armour/ Energy Shield");
-                 ItemCategory.Items.Add("Armour/ Evasion");
-                 ItemCategory.Items.Add("Evasion");
-                 ItemCategory.Items.Add("Evasion/ Energy Shield");
-                 ItemCategory.Items.Add("Energy Shield");
-                 ItemCategory.Enabled = true;
-             }
-             else if (ItemType.Text == "Weapons")
-             {
-                 ItemCategory.Items.Add("(All)");
-                 ItemCategory.Items.Add("1-Handed");
-                 ItemCategory.Items.Add("2-Handed");
-                 ItemCategory.Enabled = true;
-             }
-             else if (ItemType.Text == "Jewellery")
-             {
-                 ItemCategory.Items.Add("(All)");
-                 ItemCategory.Items.Add("Rings & Amulets");
-                 ItemCategory.Enabled = true;
              }
              else
-                 ItemCategory.Enabled = false;
-             if (ItemCategory.Items.Count > 0)
-                 ItemCategory.SelectedIndex = 0;
+             {
+                 GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemCategoryName FROM ItemCategory WHERE ItemTypeId = " + _itemTypeId + ";", ItemCategory);
+                 ItemCategory.Enabled = ItemCategory.Items.Count > 1;
+                 if (ItemCategory.Items.Count > 1)
+                     ItemCategory.SelectedIndex = 0;
+             }
+
+             //Sub type
              if (ItemSubType.Items.Contains(subType))
                  ItemSubType.Text = subType;
              else
@@ -363,13 +372,34 @@ namespace ExileClipboardListener.WinForms
         private void League_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Determine the LeagueId
-            _leagueId = League.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
+            _leagueId = League.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text.Replace("'", "''") + "';");
         }
 
         private void FilterList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Determine the filter
-            _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterList.Text + "';");
+            if (FilterList.Text == "(None)")
+            {
+                _filterId = 0;
+                ItemType.Enabled = true;
+                ItemType.SelectedIndex = 0;
+                ItemCategory.Enabled = true;
+                ItemCategory.SelectedIndex = 0;
+                ItemSubType.Enabled = true;
+                ItemSubType.SelectedIndex = 0;
+            }
+            else
+            {
+                //Determine the filter
+                _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterList.Text.Replace("'", "''") + "';");
+
+                //Also set the item type/ sub-type and lock them
+                ItemType.Text = GlobalMethods.GetScalarString("SELECT i.ItemTypeName FROM FilterHeader f INNER JOIN ItemType i ON i.ItemTypeId = f.ItemTypeId WHERE f.FilterId = " + _filterId + ";");
+                ItemType.Enabled = false;
+                ItemCategory.SelectedIndex = 0;
+                ItemCategory.Enabled = false;
+                ItemSubType.Text = GlobalMethods.GetScalarString("SELECT i.ItemSubTypeName FROM FilterHeader f INNER JOIN ItemSubType i ON i.ItemTypeId = f.ItemTypeId AND i.ItemSubTypeId = f.ItemSubTypeId WHERE f.FilterId = " + _filterId + ";");
+                ItemSubType.Enabled = false;
+            }
         }
 
         private void Filter_Click(object sender, EventArgs e)
@@ -437,6 +467,11 @@ namespace ExileClipboardListener.WinForms
             }
             MessageBox.Show("Reparse Complete");
             ReparseLabel.Text = "Ready";
+        }
+
+        private void ItemCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _itemCategoryId = GlobalMethods.GetScalarInt("SELECT ItemCategoryId FROM ItemCategory WHERE ItemCategoryName = '" + ItemCategory.Text.Replace("'", "''") + "';");
         }
     }
 }

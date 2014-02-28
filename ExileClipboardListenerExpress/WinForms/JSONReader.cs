@@ -267,15 +267,15 @@ namespace ExileClipboardListener.WinForms
             _leagueId = 0;
             while (_leagueId == 0)
             {
-                _leagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
+                _leagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text.Replace("'", "''") + "';");
                 if (_leagueId == 0)
                 {
-                    if (MessageBox.Show("The league: [" + League.Text + "] doesn't exist, do you want to create it?", "Confirm League Create", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    if (MessageBox.Show("The league: [" + League.Text.Replace("'", "''") + "] doesn't exist, do you want to create it?", "Confirm League Create", MessageBoxButtons.YesNo) != DialogResult.Yes)
                     {
                         GrabStash.Enabled = false;
                         return;
                     }
-                    GlobalMethods.RunQuery("INSERT INTO League(LeagueName, LeagueParentId) VALUES('" + League.Text + "',NULL);");
+                    GlobalMethods.RunQuery("INSERT INTO League(LeagueName, LeagueParentId) VALUES('" + League.Text.Replace("'", "''") + "',NULL);");
                 }
             }
         }

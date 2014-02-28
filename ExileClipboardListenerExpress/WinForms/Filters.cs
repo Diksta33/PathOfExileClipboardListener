@@ -8,10 +8,12 @@ namespace ExileClipboardListener.WinForms
     {
         private bool _adding;
         private bool _editing;
+        private bool _refreshing;
 
         //Current Filter
         private int _filterId;
         private int _itemTypeId;
+        private int _itemCategoryId;
         private int _itemSubTypeId;
 
         public Filters()
@@ -28,7 +30,7 @@ namespace ExileClipboardListener.WinForms
 
         private void RefreshFilterGrid()
         {
-            GlobalMethods.StuffGrid("SELECT f.FilterName AS [Filter Name], IFNULL(i.ItemTypeName, '(All)') AS [Item Class], IFNULL(ist.ItemSubTypeName, '(All)') AS [Item Type], COUNT(*) AS [Affix Count] FROM FilterHeader f LEFT JOIN ItemType i ON i.ItemTypeId = f.ItemTypeId LEFT JOIN ItemSubType ist ON ist.ItemTypeId = f.ItemTypeId AND ist.ItemSubTypeId = f.ItemSubTypeId LEFT JOIN FilterDetail fd ON fd.FilterId = f.FilterId GROUP BY f.FilterName, IFNULL(i.ItemTypeName, '(All)'), IFNULL(ist.ItemSubTypeName, '(All)') ORDER BY 1; ", FilterGrid);
+            GlobalMethods.StuffGrid("SELECT f.FilterName AS [Filter Name], IFNULL(i.ItemTypeName, '(All)') AS [Item Class],  IFNULL(ic.ItemCategoryName, '(All)') AS [Item Category], IFNULL(ist.ItemSubTypeName, '(All)') AS [Item Type], COUNT(*) AS [Affix Count] FROM FilterHeader f LEFT JOIN ItemType i ON i.ItemTypeId = f.ItemTypeId LEFT JOIN ItemSubType ist ON ist.ItemTypeId = f.ItemTypeId AND ist.ItemSubTypeId = f.ItemSubTypeId LEFT JOIN ItemCategory ic ON ic.ItemTypeId = f.ItemTypeId AND ic.ItemCategoryId = f.ItemCategoryId LEFT JOIN FilterDetail fd ON fd.FilterId = f.FilterId GROUP BY f.FilterName, IFNULL(i.ItemTypeName, '(All)'),  IFNULL(ist.ItemSubTypeName, '(All)'), IFNULL(ist.ItemSubTypeName, '(All)') ORDER BY 1; ", FilterGrid);
         }
 
         private void RefreshButtons()
@@ -40,6 +42,7 @@ namespace ExileClipboardListener.WinForms
             SaveFilter.Enabled = _adding || _editing;
             FilterName.Enabled = _adding || _editing;
             ItemType.Enabled = _adding || _editing;
+            ItemCategory.Enabled = (_adding || _editing) && _itemTypeId != 0;
             ItemSubType.Enabled = _adding || _editing;
             Prefix1ModClass.Enabled = _adding || _editing;
             Prefix1Mod.Enabled = _adding || _editing;
@@ -90,8 +93,22 @@ namespace ExileClipboardListener.WinForms
 
         private void ItemType_SelectedIndexChanged(object sender, EventArgs e)
         {
+            _itemTypeId = GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text.Replace("'", "''") + "';");
+
+            //We add some categories to make life easier
+            if (_itemTypeId == 0)
+            {
+                ItemCategory.Items.Clear();
+                ItemCategory.Items.Add("(All)");
+            }
+            else
+            {
+                GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemCategoryName FROM ItemCategory WHERE ItemTypeId = " + _itemTypeId + ";", ItemCategory);
+                if (ItemCategory.Items.Count > 1)
+                    ItemCategory.SelectedIndex = 0;
+            }
+            
             //Filter the Item Sub Type by the class selected
-            _itemTypeId = GlobalMethods.GetScalarInt("SELECT ItemTypeId FROM ItemType WHERE ItemTypeName = '" + ItemType.Text + "';");
             if (_itemTypeId == 0)
             {
                 ItemSubType.Items.Clear();
@@ -101,11 +118,12 @@ namespace ExileClipboardListener.WinForms
                 GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemSubTypeName FROM ItemSubType WHERE ItemTypeId = " + _itemTypeId + " ORDER BY 1;", ItemSubType);
             if (ItemSubType.Items.Count > 0)
                 ItemSubType.SelectedIndex = 0;
+            RefreshButtons();
         }
 
         private void ItemSubType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemTypeId = " + _itemTypeId + " AND ItemSubTypeName = '" + ItemSubType.Text + "';");
+            _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM ItemSubType WHERE ItemTypeId = " + _itemTypeId + " AND ItemSubTypeName = '" + ItemSubType.Text.Replace("'", "''") + "';");
 
             //Refresh the available prefix and suffix mods depending on the Item Type/ Item Sub Type selected
             LoadModClass(Prefix1ModClass, "Prefix");
@@ -202,13 +220,12 @@ namespace ExileClipboardListener.WinForms
         {
             _adding = false;
             _editing = false;
-            FilterGrid_SelectionChanged(null, null);
             RefreshButtons();
         }
 
         private void FilterGrid_SelectionChanged(object sender, EventArgs e)
         {
-            if (FilterGrid.CurrentRow == null)
+            if (FilterGrid.CurrentRow == null || _refreshing)
                 return;
 
             //Load the current row values into the controls
@@ -223,6 +240,14 @@ namespace ExileClipboardListener.WinForms
                 ItemType.Text = GlobalMethods.GetScalarString("SELECT ItemTypeName FROM ItemType WHERE ItemTypeId = " + _itemTypeId + ";");
             if (oldIndex == ItemType.SelectedIndex)
                 ItemType_SelectedIndexChanged(null, null);
+            oldIndex = ItemCategory.SelectedIndex;
+            _itemCategoryId = GlobalMethods.GetScalarInt("SELECT ItemCategoryId FROM FilterHeader WHERE FilterId = " + _filterId + ";");
+            if (_itemCategoryId == 0)
+                ItemCategory.SelectedIndex = 0;
+            else
+                ItemCategory.Text = GlobalMethods.GetScalarString("SELECT ItemCategoryName FROM ItemCategory WHERE ItemTypeId = " + _itemTypeId + " AND ItemCategoryId = " + _itemCategoryId + ";");
+            if (oldIndex == ItemCategory.SelectedIndex)
+                ItemCategory_SelectedIndexChanged(null, null);
             oldIndex = ItemSubType.SelectedIndex;
             _itemSubTypeId = GlobalMethods.GetScalarInt("SELECT ItemSubTypeId FROM FilterHeader WHERE FilterId = " + _filterId + ";");
             if (_itemSubTypeId == 0)
@@ -256,8 +281,10 @@ namespace ExileClipboardListener.WinForms
                 return;
             GlobalMethods.RunQuery("DELETE FROM FilterDetail WHERE FilterId = " + _filterId + ";");
             GlobalMethods.RunQuery("DELETE FROM FilterHeader WHERE FilterId = " + _filterId + ";");
+            _refreshing = true;
             RefreshFilterGrid();
             RefreshButtons();
+            _refreshing = false;
         }
 
         private void SaveFilter_Click(object sender, EventArgs e)
@@ -285,13 +312,13 @@ namespace ExileClipboardListener.WinForms
             }
 
             //Save the filter
-            GlobalMethods.RunQuery("INSERT INTO FilterHeader(FilterName, ItemTypeId, ItemSubTypeId) VALUES ('" + FilterName.Text.Replace("'", "''") + "'," + _itemTypeId + "," + _itemSubTypeId + ");");
+            GlobalMethods.RunQuery("INSERT INTO FilterHeader(FilterName, ItemTypeId, ItemCategoryId, ItemSubTypeId) VALUES ('" + FilterName.Text.Replace("'", "''") + "'," + _itemTypeId + "," + _itemCategoryId + "," + _itemSubTypeId + ");");
             _filterId = GlobalMethods.GetScalarInt("SELECT FilterId FROM FilterHeader WHERE FilterName = '" + FilterName.Text.Replace("'", "''") + "';");
             for (int affixSlot = 1; affixSlot < 7; affixSlot++)
             {
                 string affixName = affixSlot < 4 ? "Prefix" + affixSlot : "Suffix" + (affixSlot - 3);
                 string modClass = Controls.Find(affixName + "ModClass", true)[0].Text;
-                int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + Controls.Find(affixName + "Mod", true)[0].Text + "';");
+                int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM Mod WHERE ModName = '" + Controls.Find(affixName + "Mod", true)[0].Text.Replace("'", "''") + "';");
                 if (modClass != "(Any)" || modId != 0)
                     GlobalMethods.RunQuery("INSERT INTO FilterDetail(FilterId, AffixSlot, ModClass, ModId) VALUES (" + _filterId + "," + affixSlot + ",'" + (modClass == "(Any)" ? "NULL" : modClass) + "'," + modId + ");");
             }
@@ -299,8 +326,10 @@ namespace ExileClipboardListener.WinForms
             //All done
             _editing = false;
             _adding = false;
+            _refreshing = true;
             RefreshFilterGrid();
             RefreshButtons();
+            _refreshing = false;
         }
 
         private void EditFilter_Click(object sender, EventArgs e)
@@ -313,6 +342,11 @@ namespace ExileClipboardListener.WinForms
         private void Exit_Click(object sender, EventArgs e)
         {
             Hide();
+        }
+
+        private void ItemCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _itemCategoryId = GlobalMethods.GetScalarInt("SELECT ItemCategoryId FROM ItemCategory WHERE ItemCategoryName = '" + ItemCategory.Text.Replace("'", "''") + "';");
         }
     }
 }

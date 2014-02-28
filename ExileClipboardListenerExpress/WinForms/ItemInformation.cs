@@ -206,13 +206,22 @@ namespace ExileClipboardListener.WinForms
             //We return a score but we also load the specified filter and the results into a static class in case we need to do more work with them
             int runningTotalActual = 0;
             int filterCount = 0;
+            //GlobalMethods.BISResults.Clear();
+            //GlobalMethods.ILevelResults.Clear();
+            //GlobalMethods.CLevelResults.Clear();
+            //GlobalMethods.ItemResults.Clear();
+
+            //Run through each filter slot
             for (int affixSlot = (filterAffixSlot == 0 ? 1 : filterAffixSlot); affixSlot <= (filterAffixSlot == 0 ? 6 : filterAffixSlot); affixSlot++)
             {
+                int runningTotalILevel = 0;
+                int runningTotalCLevel = 0;
+                int runningTotalSlot = 0;
                 string affixType = affixSlot < 4 ? "Prefix" : "Suffix";
                 string affixName = affixSlot < 4 ? "Prefix" + affixSlot : "Suffix" + (affixSlot - 3);
                 string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM FilterDetail WHERE FilterId = " + filterId + " AND AffixSlot = " + affixSlot + ";");
                 int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM FilterDetail WHERE FilterId = " + filterId + " AND AffixSlot = " + affixSlot + ";");
-             
+
                 //Clean down any previous values
                 if (showDetail)
                 {
@@ -226,232 +235,74 @@ namespace ExileClipboardListener.WinForms
                 if (modClass == "" && modId == 0)
                     continue;
 
-                //First we need to know which mods the item could have 
+                //See if any mods on the item match the filter, this requires the affixes being parsed correctly as we need to know the ranges that could have rolled
+                //We could have multiple hits if they just specified a mod class
                 filterCount++;
-                var mods = new List<GlobalMethods.Mod>();
-
-                //If they specified a filter with a mod class AND a specific mod then great, we just use that mod
-                if (modId != 0)
-                    mods.Add(new GlobalMethods.Mod { Id = modId });
-
-                //Otherwise we have to work out which mods the item could have based on the mod class
-                else
+                int affixesHit = 0;
+                for (int mod = 0; mod < 10; mod++)
                 {
-                    string sql = "SELECT m.ModId FROM Mod m WHERE m.ModClass = '" + modClass + "'";
+                    //First check the mod class
+                    if (si.Mod[mod].Class != modClass)
+                        continue;
 
-                    //We filter by the current item type
-                    if (si.ItemTypeName == "Weapons")
-                        sql += " AND IFNULL(m.Weapons, 1) = 1";
-                    else if (si.ItemTypeName == "Armour")
-                        sql += " AND IFNULL(m.Armour, 1) = 1";
-                    else if (si.ItemTypeName == "Jewellery")
-                        sql += " AND IFNULL(m.Jewellery, 1) = 1";
+                    //Then check the modId if it exists
+                    if (modId != 0 && si.Mod[mod].Id != modId)
+                        continue;
 
-                    //For Defense we also need to make the base type of the body armour matches the mod, e.g. we wouldn't get evasion on an AR armour
-                    if (modClass == "Defense")
+                    //Before we continue we need to know which affix this is
+                    int hitModId = si.Mod[mod].Id;
+                    for (int a = 1; a <= 6; a++)
                     {
-                        if (si.Armour != 0)
+                        if (si.Affix[a].Mod1.Id == hitModId || si.Affix[a].Mod2.Id == hitModId)
                         {
-                            if (si.Evasion != 0)
-                                sql += " AND (m.ModRealName = 'increased Armour and Evasion' OR m.ModRealName = 'to Armour' OR m.ModRealName = 'to Evasion Rating')";
-                            else if (si.EnergyShield != 0)
-                                sql += " AND (m.ModRealName = 'increased Armour and Energy Shield' OR m.ModRealName = 'to Armour' OR m.ModRealName = 'to Energy Shield')";
-                            else
-                                sql += " AND (m.ModRealName = 'increased Armour' OR m.ModRealName = 'to Armour')";
+                            affixesHit++;
+                            var affix = si.Affix[a];
+
+                            //Work out the slot position
+                            var slot = si.Affix[a].Mod1.Id == hitModId ? "Primary" : "Secondary";
+
+                            //We parse out the rolls for the various levels
+                            int actualRoll = si.Mod[mod].Value;
+                            int maxILevel = slot == "Primary" ? si.Affix[a].Mod1.ValueMax : si.Affix[a].Mod2.ValueMax;
+                            var best = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.ModCategoryId == affix.ModCategoryId && next.Mod1.Id == affix.Mod1.Id && next.Mod2.Id == affix.Mod2.Id ? next : agg);
+                            int maxSlot = slot == "Primary" ? best.Mod1.ValueMax : best.Mod2.ValueMax;
+                            best = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.ModCategoryId == affix.ModCategoryId && next.Mod1.Id == affix.Mod1.Id && next.Mod2.Id == affix.Mod2.Id && next.Level <= CharacterLevel.Value ? next : agg);
+                            int maxCLevel = slot == "Primary" ? best.Mod1.ValueMax : best.Mod2.ValueMax;
+
+                            //Now we can rate the mod
+                            int scoreILevel = maxILevel == 0 ? 0 : actualRoll * 100 / maxILevel;
+                            int scoreCLevel = maxCLevel == 0 ? 0 : actualRoll * 100 / maxCLevel;
+                            int scoreSlot = maxSlot == 0 ? 0 : actualRoll * 100 / maxSlot;
+
+                            //Tally the scores
+                            runningTotalILevel += scoreILevel;
+                            runningTotalCLevel += scoreCLevel;
+                            runningTotalSlot += scoreSlot;
                         }
-                        else if (si.Evasion != 0)
-                        {
-                            if (si.EnergyShield != 0)
-                                sql += " AND (m.ModRealName = 'increased Evasion and Energy Shield' OR m.ModRealName = 'to Evasion Rating' OR m.ModRealName = 'to Energy Shield')";
-                            else
-                                sql += " AND  (m.ModRealName = 'increased Evasion' OR m.ModRealName = 'to Evasion Rating')";
-                        }
-                        else if (si.EnergyShield != 0)
-                            sql += " AND (m.ModRealName = 'increased Energy Shield' OR m.ModRealName = 'to Energy Shield')";
                     }
-                    sql += " AND IFNULL(m.ModPair, 2) = 2";
-                    sql += " AND EXISTS (SELECT * FROM " + affixType + " a WHERE a.Mod1Id = m.ModId OR a.Mod2Id = m.ModId);";
-                    var match = GlobalMethods.StuffIntList(sql);
-                    foreach (int id in match)
-                        mods.Add(new GlobalMethods.Mod { Id = id });
                 }
 
-                //Now we have a list it's simply a matter of tallying up the scores for each mod
-                int modsHit = 0;
-                int runningTotalILevel = 0;
-                int runningTotalCLevel = 0;
-                int runningTotalSlot = 0;
-                GlobalMethods.BISResults.Clear();
-                GlobalMethods.ILevelResults.Clear();
-                GlobalMethods.CLevelResults.Clear();
-                GlobalMethods.ItemResults.Clear();
-                foreach (GlobalMethods.Mod m in mods)
+                //Calculate the average score
+                if (affixesHit > 0)
                 {
-                    GlobalMethods.Mod localMod = m;
+                    runningTotalActual += (Properties.Settings.Default.RatingMode == 0 ? runningTotalSlot : runningTotalILevel) / affixesHit;
 
-                    //Before we continue we need a subset of the AffixCache where the mod we are looking for is either the primary or secondary mod
-                    var affixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == localMod.Id);
-                    var affixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == localMod.Id);
-
-                    //First the BIS roll
-                    int maxSlot = 0;
-                    if (affixPrimarySearch.Count() != 0)
+                    //Dump the results out to the form if this option is on
+                    if (showDetail)
                     {
-                        var maxPrimary = affixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == localMod.Id ? next : agg);
-                        var row = new object[6];
-                        row[0] = maxPrimary.Name;
-                        row[1] = "Primary";
-                        row[2] = maxPrimary.Level;
-                        row[3] = maxPrimary.Mod1.Name;
-                        row[4] = maxPrimary.Mod1.ValueMin;
-                        row[5] = maxPrimary.Mod1.ValueMax;
-                        GlobalMethods.BISResults.Add(row);
-                        maxSlot = maxPrimary.Mod1.ValueMax;
+                        tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit) + "%";
+                        tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel / affixesHit) + "%";
+                        tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) + "%";
+                        Image smiley;
+                        int score = Properties.Settings.Default.RatingMode == 0 ? (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) : (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit);
+                        if (score / affixesHit <= Properties.Settings.Default.TolerancePoorTo)
+                            smiley = Resources.PoorSmall;
+                        else if (score / affixesHit <= Properties.Settings.Default.ToleranceAverageTo)
+                            smiley = Resources.AverageSmall;
+                        else
+                            smiley = Resources.GoodSmall;
+                        ((PictureBox)Controls.Find(affixName + "Smiley", true)[0]).Image = smiley;
                     }
-                    if (affixSecondarySearch.Count() != 0)
-                    {
-                        var maxSecondary = affixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == localMod.Id ? next : agg);
-                        var row = new object[6];
-                        row[0] = maxSecondary.Name;
-                        row[1] = "Secondary";
-                        row[2] = maxSecondary.Level;
-                        row[3] = maxSecondary.Mod2.Name;
-                        row[4] = maxSecondary.Mod2.ValueMin;
-                        row[5] = maxSecondary.Mod2.ValueMax; 
-                        GlobalMethods.BISResults.Add(row);
-                        maxSlot = maxSecondary.Mod2.ValueMax > maxSlot ? maxSecondary.Mod2.ValueMax : maxSlot;
-                    }
-
-                    //Next we do the same but use item level as well
-                    affixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == localMod.Id && a.Level <= si.ItemLevel);
-                    affixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == localMod.Id && a.Level <= si.ItemLevel);
-                    int maxILevel = 0;
-                    if (affixPrimarySearch.Count() != 0)
-                    {
-                        var maxPrimary = affixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == localMod.Id ? next : agg);
-                        var row = new object[6];
-                        row[0] = maxPrimary.Name;
-                        row[1] = "Primary";
-                        row[2] = maxPrimary.Level;
-                        row[3] = maxPrimary.Mod1.Name;
-                        row[4] = maxPrimary.Mod1.ValueMin;
-                        row[5] = maxPrimary.Mod1.ValueMax;
-                        GlobalMethods.ILevelResults.Add(row);
-                        maxILevel = maxPrimary.Mod1.ValueMax;
-                    }
-                    if (affixSecondarySearch.Count() != 0)
-                    {
-                        var maxSecondary = affixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == localMod.Id ? next : agg);
-                        var row = new object[6];
-                        row[0] = maxSecondary.Name;
-                        row[1] = "Secondary";
-                        row[2] = maxSecondary.Level;
-                        row[3] = maxSecondary.Mod2.Name;
-                        row[4] = maxSecondary.Mod2.ValueMin;
-                        row[5] = maxSecondary.Mod2.ValueMax;
-                        GlobalMethods.ILevelResults.Add(row);
-                        maxILevel = maxSecondary.Mod2.ValueMax > maxILevel ? maxSecondary.Mod2.ValueMax : maxILevel;
-                    }
-                    
-                    //Next we do the same but use character level instead
-                    affixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == localMod.Id && a.Level <= CharacterLevel.Value);
-                    affixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == localMod.Id && a.Level <= CharacterLevel.Value);
-                    int maxCLevel = 0;
-                    if (affixPrimarySearch.Count() != 0)
-                    {
-                        var maxPrimary = affixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == localMod.Id ? next : agg);
-                        var row = new object[6];
-                        row[0] = maxPrimary.Name;
-                        row[1] = "Primary";
-                        row[2] = maxPrimary.Level;
-                        row[3] = maxPrimary.Mod1.Name;
-                        row[4] = maxPrimary.Mod1.ValueMin;
-                        row[5] = maxPrimary.Mod1.ValueMax;
-                        GlobalMethods.CLevelResults.Add(row);
-                        maxCLevel = maxPrimary.Mod1.ValueMax;
-                    }
-                    if (affixSecondarySearch.Count() != 0)
-                    {
-                        var maxSecondary = affixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == localMod.Id ? next : agg);
-                        var row = new object[6];
-                        row[0] = maxSecondary.Name;
-                        row[1] = "Secondary";
-                        row[2] = maxSecondary.Level;
-                        row[3] = maxSecondary.Mod2.Name;
-                        row[4] = maxSecondary.Mod2.ValueMin;
-                        row[5] = maxSecondary.Mod2.ValueMax;
-                        GlobalMethods.CLevelResults.Add(row);
-                        maxCLevel = maxSecondary.Mod2.ValueMax > maxCLevel ? maxSecondary.Mod2.ValueMax : maxCLevel;
-                    }
-
-                    //Finally we need to do this all one last time for the item rolls
-                    int itemModScore = 0;
-                    for (int mod = 0; mod < 10; mod++)
-                    {
-                        if (si.Mod[mod].Id == m.Id)
-                        {
-                            itemModScore += si.Mod[mod].Value;
-                            int modInternal = mod;
-                            affixPrimarySearch = GlobalMethods.AffixCache.Where(a => a.Mod1.Id == localMod.Id && a.Level <= si.ItemLevel && a.Mod1.ValueMin <= si.Mod[modInternal].Value && a.Mod1.ValueMax >= si.Mod[modInternal].Value);
-                            affixSecondarySearch = GlobalMethods.AffixCache.Where(a => a.Mod2.Id == localMod.Id && a.Level <= si.ItemLevel && a.Mod2.ValueMin <= si.Mod[modInternal].Value && a.Mod2.ValueMax >= si.Mod[modInternal].Value);
-                            if (affixPrimarySearch.Count() != 0)
-                            {
-                                var maxPrimary = affixPrimarySearch.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == localMod.Id ? next : agg);
-                                var row = new object[7];
-                                row[0] = maxPrimary.Name;
-                                row[1] = "Primary";
-                                row[2] = maxPrimary.Level;
-                                row[3] = maxPrimary.Mod1.Name;
-                                row[4] = maxPrimary.Mod1.ValueMin;
-                                row[5] = maxPrimary.Mod1.ValueMax;
-                                row[6] = si.Mod[mod].Value;
-                                GlobalMethods.ItemResults.Add(row);
-                            }
-                            if (affixSecondarySearch.Count() != 0)
-                            {
-                                var maxSecondary = affixSecondarySearch.Aggregate((agg, next) => next.Mod2.ValueMax > agg.Mod2.ValueMax && next.Mod2.Id == localMod.Id ? next : agg);
-                                var row = new object[7];
-                                row[0] = maxSecondary.Name;
-                                row[1] = "Secondary";
-                                row[2] = maxSecondary.Level;
-                                row[3] = maxSecondary.Mod2.Name;
-                                row[4] = maxSecondary.Mod2.ValueMin;
-                                row[5] = maxSecondary.Mod2.ValueMax;
-                                row[6] = si.Mod[mod].Value;
-                                GlobalMethods.ItemResults.Add(row);
-                            }
-                        }
-                    }
-
-                    //Now we can rate the mod
-                    int scoreILevel = maxILevel == 0 ? 0 : itemModScore * 100 / maxILevel;
-                    int scoreCLevel = maxCLevel == 0 ? 0 : itemModScore * 100 / maxCLevel;
-                    int scoreSlot = maxSlot == 0 ? 0 : itemModScore * 100 / maxSlot;
-
-                    //Tally the scores
-                    runningTotalILevel += scoreILevel;
-                    runningTotalCLevel += scoreCLevel;
-                    runningTotalSlot += scoreSlot;
-                    modsHit++;
-                }
-                if (modsHit > 0)
-                    runningTotalActual += (Properties.Settings.Default.RatingMode == 0 ? runningTotalSlot : runningTotalILevel) / modsHit;
-
-                //Dump the results out to the form if this option is on
-                if (showDetail)
-                {
-                    tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (runningTotalILevel == 0 ? 0 : runningTotalILevel / modsHit) + "%";
-                    tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel/ modsHit) + "%";
-                    tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / modsHit) + "%";
-                    Image smiley;
-                    int score = Properties.Settings.Default.RatingMode == 0 ? (runningTotalSlot == 0 ? 0 : runningTotalSlot / modsHit) : (runningTotalILevel == 0 ? 0 : runningTotalILevel / modsHit);
-                    if (score / modsHit <= Properties.Settings.Default.TolerancePoorTo)
-                        smiley = Resources.PoorSmall;
-                    else if (score / modsHit <= Properties.Settings.Default.ToleranceAverageTo)
-                        smiley = Resources.AverageSmall;
-                    else
-                        smiley = Resources.GoodSmall;
-                    ((PictureBox)Controls.Find(affixName + "Smiley", true)[0]).Image = smiley;
                 }
             }
 
@@ -530,38 +381,38 @@ namespace ExileClipboardListener.WinForms
 
         private void Prefix1Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(_filterId, false, 1);
-            new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix1ModClass.Text, ModNameString = Prefix1Mod.Text }.ShowDialog();
+            //ScoreFilter(_filterId, false, 1);
+            //new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix1ModClass.Text, ModNameString = Prefix1Mod.Text }.ShowDialog();
         }
 
         private void Prefix2Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(_filterId, false, 2);
-            new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix2ModClass.Text, ModNameString = Prefix2Mod.Text }.ShowDialog();
+            //ScoreFilter(_filterId, false, 2);
+            //new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix2ModClass.Text, ModNameString = Prefix2Mod.Text }.ShowDialog();
         }
 
         private void Prefix3Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(_filterId, false, 3);
-            new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix3ModClass.Text, ModNameString = Prefix3Mod.Text }.ShowDialog();
+            //ScoreFilter(_filterId, false, 3);
+            //new RollDetails { AffixTypeString = "Prefix", ModClassName = Prefix3ModClass.Text, ModNameString = Prefix3Mod.Text }.ShowDialog();
         }
 
         private void Suffix1Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(_filterId, false, 4);
-            new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix1ModClass.Text, ModNameString = Suffix1Mod.Text }.ShowDialog();
+            //ScoreFilter(_filterId, false, 4);
+            //new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix1ModClass.Text, ModNameString = Suffix1Mod.Text }.ShowDialog();
         }
 
         private void Suffix2Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(_filterId, false, 5);
-            new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix2ModClass.Text, ModNameString = Suffix2Mod.Text }.ShowDialog();
+            //ScoreFilter(_filterId, false, 5);
+            //new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix2ModClass.Text, ModNameString = Suffix2Mod.Text }.ShowDialog();
         }
 
         private void Suffix3Details_Click(object sender, EventArgs e)
         {
-            ScoreFilter(_filterId, false, 6);
-            new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix3ModClass.Text, ModNameString = Suffix3Mod.Text }.ShowDialog();
+            //ScoreFilter(_filterId, false, 6);
+            //new RollDetails { AffixTypeString = "Suffix", ModClassName = Suffix3ModClass.Text, ModNameString = Suffix3Mod.Text }.ShowDialog();
         }
 
         private void Timer1Tick(object sender, EventArgs e)
@@ -571,7 +422,7 @@ namespace ExileClipboardListener.WinForms
 
         private void LeagueSelectedIndexChanged(object sender, EventArgs e)
         {
-            GlobalMethods.LeagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
+            GlobalMethods.LeagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text.Replace("'", "''") + "';");
             Properties.Settings.Default.DefaultLeagueId = GlobalMethods.LeagueId;
             Properties.Settings.Default.Save();
         }

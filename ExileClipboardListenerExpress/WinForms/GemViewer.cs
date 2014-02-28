@@ -71,7 +71,7 @@ namespace ExileClipboardListener.WinForms
         private void League_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Determine the LeagueId
-            _leagueId = League.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text + "';");
+            _leagueId = League.Text == "(All)" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + League.Text.Replace("'", "''") + "';");
         }
 
         private void ViewScript_Click(object sender, EventArgs e)

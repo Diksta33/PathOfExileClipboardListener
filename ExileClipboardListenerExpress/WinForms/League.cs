@@ -66,7 +66,7 @@ namespace ExileClipboardListener.WinForms
             //Copy the details down
             LeagueName.Text = LeagueGrid.CurrentRow.Cells[0].Value.ToString();
             LeagueParent.Text = LeagueGrid.CurrentRow.Cells[1].Value.ToString();
-            _leagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueName.Text + "';");
+            _leagueId = GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueName.Text.Replace("'", "''") + "';");
             RefreshButtons();
         }
 
@@ -94,11 +94,11 @@ namespace ExileClipboardListener.WinForms
 
         private void SaveLeague_Click(object sender, EventArgs e)
         {
-            int parentId = LeagueParent.Text == "" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueParent.Text + "';");
+            int parentId = LeagueParent.Text == "" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueParent.Text.Replace("'", "''") + "';");
             if (_editing)
-                GlobalMethods.RunQuery("UPDATE League SET LeagueName = '" + LeagueName.Text + "', LeagueParentId = " + (parentId == 0 ? "NULL" : parentId.ToString()) + " WHERE LeagueId = " + _leagueId + ";");
+                GlobalMethods.RunQuery("UPDATE League SET LeagueName = '" + LeagueName.Text.Replace("'", "''") + "', LeagueParentId = " + (parentId == 0 ? "NULL" : parentId.ToString()) + " WHERE LeagueId = " + _leagueId + ";");
             else
-                GlobalMethods.RunQuery("INSERT INTO League(LeagueName, LeagueParentId) VALUES('" + LeagueName.Text + "'," + (parentId == 0 ? "NULL" : parentId.ToString()) + ");");
+                GlobalMethods.RunQuery("INSERT INTO League(LeagueName, LeagueParentId) VALUES('" + LeagueName.Text.Replace("'", "''") + "'," + (parentId == 0 ? "NULL" : parentId.ToString()) + ");");
             MessageBox.Show("Success!");
             RefreshLeagueGrid();
         }
@@ -124,7 +124,7 @@ namespace ExileClipboardListener.WinForms
 
         private void MergeStash_Click(object sender, EventArgs e)
         {
-            int parentId = LeagueParent.Text == "" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueParent.Text + "';");
+            int parentId = LeagueParent.Text == "" ? 0 : GlobalMethods.GetScalarInt("SELECT LeagueId FROM League WHERE LeagueName = '" + LeagueParent.Text.Replace("'", "''") + "';");
             if (parentId == 0)
             {
                 MessageBox.Show("You can't merge a league that doesn't have a parent to merge into");

@@ -422,6 +422,7 @@
             this.ItemCategory.Size = new System.Drawing.Size(165, 21);
             this.ItemCategory.Sorted = true;
             this.ItemCategory.TabIndex = 27;
+            this.ItemCategory.SelectedIndexChanged += new System.EventHandler(this.ItemCategory_SelectedIndexChanged);
             // 
             // StashViewer
             // 

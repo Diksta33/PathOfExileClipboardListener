@@ -63,6 +63,8 @@
             this.DeleteFilter = new System.Windows.Forms.Button();
             this.SaveFilter = new System.Windows.Forms.Button();
             this.Exit = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.ItemCategory = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.FilterGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -78,7 +80,7 @@
             this.FilterGrid.ReadOnly = true;
             this.FilterGrid.RowHeadersVisible = false;
             this.FilterGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.FilterGrid.Size = new System.Drawing.Size(454, 329);
+            this.FilterGrid.Size = new System.Drawing.Size(548, 329);
             this.FilterGrid.TabIndex = 2;
             this.FilterGrid.SelectionChanged += new System.EventHandler(this.FilterGrid_SelectionChanged);
             // 
@@ -95,7 +97,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(472, 27);
+            this.label1.Location = new System.Drawing.Point(566, 27);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(60, 13);
             this.label1.TabIndex = 4;
@@ -103,7 +105,7 @@
             // 
             // FilterName
             // 
-            this.FilterName.Location = new System.Drawing.Point(552, 24);
+            this.FilterName.Location = new System.Drawing.Point(646, 24);
             this.FilterName.MaxLength = 100;
             this.FilterName.Name = "FilterName";
             this.FilterName.Size = new System.Drawing.Size(400, 20);
@@ -288,7 +290,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(472, 53);
+            this.label10.Location = new System.Drawing.Point(566, 53);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(55, 13);
             this.label10.TabIndex = 26;
@@ -298,7 +300,7 @@
             // 
             this.ItemType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ItemType.FormattingEnabled = true;
-            this.ItemType.Location = new System.Drawing.Point(552, 50);
+            this.ItemType.Location = new System.Drawing.Point(646, 50);
             this.ItemType.Name = "ItemType";
             this.ItemType.Size = new System.Drawing.Size(111, 21);
             this.ItemType.TabIndex = 25;
@@ -307,7 +309,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(472, 80);
+            this.label11.Location = new System.Drawing.Point(566, 80);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(54, 13);
             this.label11.TabIndex = 28;
@@ -317,7 +319,7 @@
             // 
             this.ItemSubType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ItemSubType.FormattingEnabled = true;
-            this.ItemSubType.Location = new System.Drawing.Point(552, 77);
+            this.ItemSubType.Location = new System.Drawing.Point(646, 77);
             this.ItemSubType.Name = "ItemSubType";
             this.ItemSubType.Size = new System.Drawing.Size(111, 21);
             this.ItemSubType.TabIndex = 27;
@@ -345,7 +347,7 @@
             this.groupBox1.Controls.Add(this.Suffix1Mod);
             this.groupBox1.Controls.Add(this.Suffix1ModClass);
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Location = new System.Drawing.Point(475, 104);
+            this.groupBox1.Location = new System.Drawing.Point(569, 104);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(477, 208);
             this.groupBox1.TabIndex = 29;
@@ -354,7 +356,7 @@
             // 
             // EditFilter
             // 
-            this.EditFilter.Location = new System.Drawing.Point(472, 318);
+            this.EditFilter.Location = new System.Drawing.Point(566, 318);
             this.EditFilter.Name = "EditFilter";
             this.EditFilter.Size = new System.Drawing.Size(75, 23);
             this.EditFilter.TabIndex = 30;
@@ -364,7 +366,7 @@
             // 
             // NewFilter
             // 
-            this.NewFilter.Location = new System.Drawing.Point(553, 318);
+            this.NewFilter.Location = new System.Drawing.Point(647, 318);
             this.NewFilter.Name = "NewFilter";
             this.NewFilter.Size = new System.Drawing.Size(75, 23);
             this.NewFilter.TabIndex = 31;
@@ -374,7 +376,7 @@
             // 
             // CancelFilter
             // 
-            this.CancelFilter.Location = new System.Drawing.Point(634, 318);
+            this.CancelFilter.Location = new System.Drawing.Point(728, 318);
             this.CancelFilter.Name = "CancelFilter";
             this.CancelFilter.Size = new System.Drawing.Size(75, 23);
             this.CancelFilter.TabIndex = 32;
@@ -384,7 +386,7 @@
             // 
             // DeleteFilter
             // 
-            this.DeleteFilter.Location = new System.Drawing.Point(715, 318);
+            this.DeleteFilter.Location = new System.Drawing.Point(809, 318);
             this.DeleteFilter.Name = "DeleteFilter";
             this.DeleteFilter.Size = new System.Drawing.Size(75, 23);
             this.DeleteFilter.TabIndex = 33;
@@ -394,7 +396,7 @@
             // 
             // SaveFilter
             // 
-            this.SaveFilter.Location = new System.Drawing.Point(796, 318);
+            this.SaveFilter.Location = new System.Drawing.Point(890, 318);
             this.SaveFilter.Name = "SaveFilter";
             this.SaveFilter.Size = new System.Drawing.Size(75, 23);
             this.SaveFilter.TabIndex = 34;
@@ -405,7 +407,7 @@
             // Exit
             // 
             this.Exit.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Exit.Location = new System.Drawing.Point(877, 318);
+            this.Exit.Location = new System.Drawing.Point(971, 318);
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(75, 23);
             this.Exit.TabIndex = 35;
@@ -413,11 +415,32 @@
             this.Exit.UseVisualStyleBackColor = true;
             this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(810, 53);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(72, 13);
+            this.label12.TabIndex = 37;
+            this.label12.Text = "Item Category";
+            // 
+            // ItemCategory
+            // 
+            this.ItemCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ItemCategory.FormattingEnabled = true;
+            this.ItemCategory.Location = new System.Drawing.Point(890, 50);
+            this.ItemCategory.Name = "ItemCategory";
+            this.ItemCategory.Size = new System.Drawing.Size(156, 21);
+            this.ItemCategory.TabIndex = 36;
+            this.ItemCategory.SelectedIndexChanged += new System.EventHandler(this.ItemCategory_SelectedIndexChanged);
+            // 
             // Filters
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 350);
+            this.ClientSize = new System.Drawing.Size(1058, 350);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.ItemCategory);
             this.Controls.Add(this.Exit);
             this.Controls.Add(this.SaveFilter);
             this.Controls.Add(this.DeleteFilter);
@@ -483,5 +506,7 @@
         private System.Windows.Forms.Button DeleteFilter;
         private System.Windows.Forms.Button SaveFilter;
         private System.Windows.Forms.Button Exit;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox ItemCategory;
     }
 }
