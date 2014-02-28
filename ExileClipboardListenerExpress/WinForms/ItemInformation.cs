@@ -286,23 +286,23 @@ namespace ExileClipboardListener.WinForms
                 if (affixesHit > 0)
                 {
                     runningTotalActual += (Properties.Settings.Default.RatingMode == 0 ? runningTotalSlot : runningTotalILevel) / affixesHit;
+                }
 
-                    //Dump the results out to the form if this option is on
-                    if (showDetail)
-                    {
-                        tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit) + "%";
-                        tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel / affixesHit) + "%";
-                        tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) + "%";
-                        Image smiley;
-                        int score = Properties.Settings.Default.RatingMode == 0 ? (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) : (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit);
-                        if (score / affixesHit <= Properties.Settings.Default.TolerancePoorTo)
-                            smiley = Resources.PoorSmall;
-                        else if (score / affixesHit <= Properties.Settings.Default.ToleranceAverageTo)
-                            smiley = Resources.AverageSmall;
-                        else
-                            smiley = Resources.GoodSmall;
-                        ((PictureBox)Controls.Find(affixName + "Smiley", true)[0]).Image = smiley;
-                    }
+                //Dump the results out to the form if this option is on
+                if (showDetail)
+                {
+                    tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit) + "%";
+                    tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel / affixesHit) + "%";
+                    tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) + "%";
+                    Image smiley;
+                    int score = Properties.Settings.Default.RatingMode == 0 ? (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) : (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit);
+                    if (score / affixesHit <= Properties.Settings.Default.TolerancePoorTo)
+                        smiley = Resources.PoorSmall;
+                    else if (score / affixesHit <= Properties.Settings.Default.ToleranceAverageTo)
+                        smiley = Resources.AverageSmall;
+                    else
+                        smiley = Resources.GoodSmall;
+                    ((PictureBox)Controls.Find(affixName + "Smiley", true)[0]).Image = smiley;
                 }
             }
 
