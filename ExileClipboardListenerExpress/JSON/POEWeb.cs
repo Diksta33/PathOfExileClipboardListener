@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Json;
+using System.Windows.Forms;
 
 namespace ExileClipboardListener.JSON
 {
@@ -18,20 +19,8 @@ namespace ExileClipboardListener.JSON
         private const string HashRegEx = "name=\\\"hash\\\" value=\\\"(?<hash>[a-zA-Z0-9]{1,})\\\"";
         private static CookieContainer _credentialCookies;
 
-        //private void Throttled(object sender, ThrottledEventArgs e)
-        //{
-        //    if (e.WaitTime.TotalSeconds > 5)
-        //    {
-        //        toolStrip.Text = "Server request limit has been hit, stalling for " + e.WaitTime.TotalSeconds + " seconds...";
-        //        Application.DoEvents();
-        //    }
-        //}
-
         public static bool Authenticate()
         {
-            //Add an event handler for throttling
-            //RequestThrottle.ThrottledEvent += Throttled;
-
             _credentialCookies = new CookieContainer();
             String username = Properties.Settings.Default.Username;
             String password = StringCipher.Decrypt(Properties.Settings.Default.Password);

@@ -803,16 +803,6 @@ namespace ExileClipboardListener.Classes
                 }
             }
 
-            //There is one final case for tricky affixes, this is where there are three affixes that result in two mods
-            //This requires Evasion +% and Stun Recovery +%
-            //The first step is to check and see if we have both of those unassigned
-            if (mods.Count > 0)
-            {
-                //We are looking for 16 (Base Stun Recovery +%) and 61 (Local Evasion Rating +%)
-                //there is a lot of hardcoding here as this is a specific edge case
-
-            }
-
             //Now we need to handle the second case of IIR messing us up
             //This time we might have everything assigned but have ended up with 4 prefixes and 2 suffixes (for example)
             //This will be because IIR will get pushed into a prefix before a suffix and prefix ranges are more generous

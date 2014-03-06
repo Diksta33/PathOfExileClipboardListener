@@ -17,6 +17,15 @@ namespace ExileClipboardListener.WinForms
         private string _currentCharacter;
         private string _currentTab;
 
+        private void Throttled(object sender, ThrottledEventArgs e)
+        {
+            if (e.WaitTime.TotalSeconds > 5)
+            {
+                string text = "Server request limit has been hit, stalling for " + e.WaitTime.TotalSeconds + " seconds...";
+                SetStatus(text);
+            }
+        }
+
         public JSONReader()
         {
             InitializeComponent();
@@ -395,6 +404,9 @@ namespace ExileClipboardListener.WinForms
         {
             try
             {
+                //Add an event handler for throttling
+                RequestThrottle.ThrottledEvent += Throttled;
+
                 ItemList.Items.Clear();
                 ItemScript.Text = "";
                 Cursor.Current = Cursors.WaitCursor;
