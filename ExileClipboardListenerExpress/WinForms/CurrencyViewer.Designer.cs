@@ -76,6 +76,8 @@
             this.Icon3 = new System.Windows.Forms.PictureBox();
             this.Icon14 = new System.Windows.Forms.PictureBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.Icon25 = new System.Windows.Forms.PictureBox();
+            this.Item25 = new System.Windows.Forms.TextBox();
             this.Item13 = new System.Windows.Forms.TextBox();
             this.Icon13 = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -108,6 +110,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Icon3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon14)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Icon25)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon13)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Icon24)).BeginInit();
@@ -555,16 +558,35 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.Icon25);
+            this.groupBox3.Controls.Add(this.Item25);
             this.groupBox3.Controls.Add(this.Item13);
             this.groupBox3.Controls.Add(this.Icon13);
             this.groupBox3.Controls.Add(this.Icon12);
             this.groupBox3.Controls.Add(this.Item12);
-            this.groupBox3.Location = new System.Drawing.Point(620, 218);
+            this.groupBox3.Location = new System.Drawing.Point(620, 205);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(143, 149);
+            this.groupBox3.Size = new System.Drawing.Size(143, 206);
             this.groupBox3.TabIndex = 14;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Other";
+            // 
+            // Icon25
+            // 
+            this.Icon25.Image = global::ExileClipboardListener.Properties.Resources.Currency;
+            this.Icon25.Location = new System.Drawing.Point(6, 141);
+            this.Icon25.Name = "Icon25";
+            this.Icon25.Size = new System.Drawing.Size(55, 55);
+            this.Icon25.TabIndex = 10;
+            this.Icon25.TabStop = false;
+            // 
+            // Item25
+            // 
+            this.Item25.Enabled = false;
+            this.Item25.Location = new System.Drawing.Point(67, 176);
+            this.Item25.Name = "Item25";
+            this.Item25.Size = new System.Drawing.Size(66, 20);
+            this.Item25.TabIndex = 11;
             // 
             // Item13
             // 
@@ -591,7 +613,7 @@
             this.groupBox4.Controls.Add(this.Icon22);
             this.groupBox4.Location = new System.Drawing.Point(620, 49);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(143, 163);
+            this.groupBox4.Size = new System.Drawing.Size(143, 150);
             this.groupBox4.TabIndex = 15;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Scroll";
@@ -688,6 +710,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.Icon14)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Icon25)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Icon13)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
@@ -755,5 +778,7 @@
         private System.Windows.Forms.Button Exit;
         private System.Windows.Forms.PictureBox Icon19;
         private System.Windows.Forms.PictureBox Icon18;
+        private System.Windows.Forms.PictureBox Icon25;
+        private System.Windows.Forms.TextBox Item25;
     }
 }

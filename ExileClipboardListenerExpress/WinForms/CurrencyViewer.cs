@@ -39,7 +39,7 @@ namespace ExileClipboardListener.WinForms
 
         private void RefreshForm()
         {
-            for (int i = 1; i <= 24; i++)
+            for (int i = 1; i <= 25; i++)
             {
                 var textBox = (TextBox)Controls.Find("Item" + i, true).FirstOrDefault();
                 textBox.Text = "";
