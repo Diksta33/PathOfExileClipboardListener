@@ -153,6 +153,7 @@ namespace ExileClipboardListener.Classes
                 si.OriginalText = item;
                 item = item.Replace(" (augmented)", "");
                 item = item.Replace("Adds ", "");
+                item = item.Replace("Has ", "");
                 item = item.Replace("Reflects ", "");
                 item = item.Replace("Recharges ", "");
                 item = item.Replace("Grants ", "");
@@ -289,7 +290,7 @@ namespace ExileClipboardListener.Classes
 
                 //Sockets
                 //For now just store them
-                if (itemTypeName != "Jewellery" && itemTypeName != "Flask" && itemTypeName != "Quiver")
+                if ((itemTypeName != "Jewellery" || bi.ItemName == "Unset Ring") && itemTypeName != "Flask" && itemTypeName != "Quiver")
                 {
                     si.Sockets = FindAnyValue<string>(entity, "Sockets");
                     RemoveSection(ref entity);
