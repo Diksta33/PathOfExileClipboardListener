@@ -440,8 +440,46 @@ namespace ExileClipboardListener.Classes
                 si.FireRes = GetModValues("to Fire Resistance");
                 si.ColdRes = GetModValues("to Cold Resistance");
                 si.LightningRes = GetModValues("to Lightning Resistance");
+                si.AllRes = GetModValues("to all Elemental Resistances");
                 si.ChaosRes = GetModValues("to Chaos Resistance");
-                si.EleRes = si.LightningRes + si.FireRes + si.ColdRes;
+
+                //This is rather clumsy, but some base items have an implicit mod that we need to add on to our key statistics
+                //if (bi.ItemName == "Coral Ring" || bi.ItemName == "Leather Belt")
+                //    si.Life += si.Affix[0].Mod1.Value;
+                //if (bi.ItemName == "Paua Ring")
+                //    si.Mana += si.Affix[0].Mod1.Value;
+                //if (bi.ItemName == "Ruby Ring")
+                //    si.FireRes += si.Affix[0].Mod1.Value;
+                //if (bi.ItemName == "Sapphire Ring")
+                //    si.ColdRes += si.Affix[0].Mod1.Value;
+                //if (bi.ItemName == "Topaz Ring")
+                //    si.LightningRes += si.Affix[0].Mod1.Value;
+                //if (bi.ItemName == "Primsatic Ring")
+                //    si.AllRes += si.Affix[0].Mod1.Value;
+                //if (bi.ItemName == "Amethyst Ring")
+                //    si.ChaosRes += si.Affix[0].Mod1.Value;
+                if (bi.ItemName == "Two-Stone Ring")
+                {
+                    //Two-Stone Rings are a pain
+                    if (bi.BaseItemId == 24)
+                    {
+                        si.ColdRes += si.Affix[0].Mod1.Value;
+                        si.LightningRes += si.Affix[0].Mod1.Value;
+                    }
+                    if (bi.BaseItemId == 25)
+                    {
+                        si.FireRes += si.Affix[0].Mod1.Value;
+                        si.ColdRes += si.Affix[0].Mod1.Value;
+                    }
+                    if (bi.BaseItemId == 26)
+                    {
+                        si.FireRes += si.Affix[0].Mod1.Value;
+                        si.LightningRes += si.Affix[0].Mod1.Value;
+                    }
+                }
+
+                //Get the subtotal and total
+                si.EleRes = si.LightningRes + si.FireRes + si.ColdRes + si.AllRes * 3;
                 si.TotalRes = si.EleRes + si.ChaosRes;
             }
             catch (Exception ex)

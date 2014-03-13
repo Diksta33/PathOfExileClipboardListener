@@ -139,9 +139,10 @@ namespace ExileClipboardListener.WinForms
 	                CAST(IFNULL(s.FireRes, 0) AS INTEGER) AS [Fire Res],
 	                CAST(IFNULL(s.ColdRes, 0) AS INTEGER) AS [Cold Res],
 	                CAST(IFNULL(s.LightningRes, 0) AS INTEGER) AS [Lig Res],
-	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) AS INTEGER) AS [Elem Res],
+	                CAST(IFNULL(s.AllRes, 0) AS INTEGER) AS [All Res],
+	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.AllRes, 0) * 3 AS INTEGER) AS [Elem Res],
 	                CAST(IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Chaos Res],
-	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Total Res],";
+	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.AllRes, 0) * 3 + IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Total Res],";
             if (!CompactView.Checked)
                 sql += @",
 	                CAST(IFNULL(b.DamagePhysicalMin, 0) AS INTEGER) AS [Base Damage Physical Min],
@@ -471,7 +472,22 @@ namespace ExileClipboardListener.WinForms
 
         private void ItemCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _itemCategoryId = GlobalMethods.GetScalarInt("SELECT ItemCategoryId FROM ItemCategory WHERE ItemCategoryName = '" + ItemCategory.Text.Replace("'", "''") + "';");
+            //For armour or where we want (All) then we just pick everything
+            if (ItemCategory.SelectedIndex == 0 || _itemTypeId == 0 || _itemTypeId == 1)
+                _itemCategoryId = 0;
+            else
+                _itemCategoryId = GlobalMethods.GetScalarInt("SELECT ItemCategoryId FROM ItemCategory WHERE ItemCategoryName = '" + ItemCategory.Text.Replace("'", "''") + "';");
+
+            //Store the current subtype
+            string subType = ItemSubType.Items.Count == 0 ? "XXX" : ItemSubType.Text;
+
+            GlobalMethods.StuffCombo("SELECT '(All)' UNION ALL SELECT ItemSubTypeName FROM ItemSubType" + (_itemTypeId != 0 ? " WHERE ItemTypeId = " + _itemTypeId + (_itemCategoryId != 0 ? " AND IFNULL(ItemCategoryId, 0) = " + _itemCategoryId : "") : "") + ";", ItemSubType);
+
+            //Sub type
+            if (ItemSubType.Items.Contains(subType))
+                ItemSubType.Text = subType;
+            else
+                ItemSubType.SelectedIndex = 0;
         }
     }
 }

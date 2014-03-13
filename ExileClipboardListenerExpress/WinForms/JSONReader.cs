@@ -21,7 +21,7 @@ namespace ExileClipboardListener.WinForms
         {
             if (e.WaitTime.TotalSeconds > 5)
             {
-                string text = "Server request limit has been hit, stalling for " + e.WaitTime.TotalSeconds + " seconds...";
+                string text = "Server request limit has been hit, stalling for " + e.WaitTime.TotalSeconds.ToString("#0") + " seconds...";
                 SetStatus(text);
             }
         }
@@ -416,6 +416,7 @@ namespace ExileClipboardListener.WinForms
                 for (int row = 0; row < CharacterGrid.Rows.Count; row++)
                 {
                     string character = CharacterGrid.Rows[row].Cells[CharacterGridNameColumn.Index].Value.ToString();
+                    System.Threading.Thread.Sleep(750);
                     _inventory = POEWeb.GetInventory(character);
                     foreach (var i in _inventory.Items)
                     {
@@ -463,6 +464,7 @@ namespace ExileClipboardListener.WinForms
                 for (int tab = 0; tab < _stash.NumTabs; tab++)
                 {
                     string tabNumber = tab.ToString();
+                    System.Threading.Thread.Sleep(750);
                     _stash = POEWeb.GetStash(League.Text, tabNumber);
                     foreach (var i in _stash.Items)
                     {

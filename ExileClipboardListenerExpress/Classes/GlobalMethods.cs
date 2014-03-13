@@ -127,6 +127,7 @@ namespace ExileClipboardListener.Classes
             public static int FireRes;
             public static int ColdRes;
             public static int LightningRes;
+            public static int AllRes;
             public static int EleRes;
             public static int ChaosRes;
             public static int TotalRes;
@@ -227,6 +228,15 @@ namespace ExileClipboardListener.Classes
             StashItem.ElementalDamageMax = 0;
             StashItem.AttacksPerSecond = 0;
             StashItem.DamagePerSecond = 0;
+            StashItem.Life = 0;
+            StashItem.Mana = 0;
+            StashItem.ColdRes = 0;
+            StashItem.FireRes = 0;
+            StashItem.LightningRes = 0;
+            StashItem.EleRes = 0;
+            StashItem.AllRes = 0;
+            StashItem.ChaosRes = 0;
+            StashItem.TotalRes = 0;
             StashItem.eDPS = 0;
             StashItem.pDPS = 0;
             StashItem.tDPS = 0;
@@ -1106,6 +1116,7 @@ namespace ExileClipboardListener.Classes
                 stashSQL += " AND s.Quality = " + StashItem.Quality;
                 stashSQL += " AND s.SocketCount = " + StashItem.Sockets.Replace("-", "").Replace(" ", "").Length;
                 stashSQL += " AND s.ReqLevel = " + StashItem.ReqLevel;
+                stashSQL += " AND s.AllRes = " + StashItem.AllRes;
                 if (StashItem.Affix[0].Mod1.Id != 0)
                 {
                     stashSQL += " AND s.ImplicitMod1Id = ";
@@ -1154,7 +1165,7 @@ namespace ExileClipboardListener.Classes
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
             sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, ChaosRes, FirstSeen, LastSeen, Location, OriginalText)";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, AllRes, ChaosRes, FirstSeen, LastSeen, Location, OriginalText)";
             sql += " VALUES(";
 
             //League
@@ -1201,6 +1212,7 @@ namespace ExileClipboardListener.Classes
             sql += StashItem.FireRes + ",";
             sql += StashItem.ColdRes + ",";
             sql += StashItem.LightningRes + ",";
+            sql += StashItem.AllRes + ",";
             sql += StashItem.ChaosRes + ",";
 
             //First & Last Seen
