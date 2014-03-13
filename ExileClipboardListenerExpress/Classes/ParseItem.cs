@@ -442,36 +442,20 @@ namespace ExileClipboardListener.Classes
                 si.LightningRes = GetModValues("to Lightning Resistance");
                 si.AllRes = GetModValues("to all Elemental Resistances");
                 si.ChaosRes = GetModValues("to Chaos Resistance");
-
-                //This is rather clumsy, but some base items have an implicit mod that we need to add on to our key statistics
-                //if (bi.ItemName == "Coral Ring" || bi.ItemName == "Leather Belt")
-                //    si.Life += si.Affix[0].Mod1.Value;
-                //if (bi.ItemName == "Paua Ring")
-                //    si.Mana += si.Affix[0].Mod1.Value;
-                //if (bi.ItemName == "Ruby Ring")
-                //    si.FireRes += si.Affix[0].Mod1.Value;
-                //if (bi.ItemName == "Sapphire Ring")
-                //    si.ColdRes += si.Affix[0].Mod1.Value;
-                //if (bi.ItemName == "Topaz Ring")
-                //    si.LightningRes += si.Affix[0].Mod1.Value;
-                //if (bi.ItemName == "Primsatic Ring")
-                //    si.AllRes += si.Affix[0].Mod1.Value;
-                //if (bi.ItemName == "Amethyst Ring")
-                //    si.ChaosRes += si.Affix[0].Mod1.Value;
                 if (bi.ItemName == "Two-Stone Ring")
                 {
                     //Two-Stone Rings are a pain
-                    if (bi.BaseItemId == 24)
+                    if (item.Contains("to Cold and Lightning Resistances"))
                     {
                         si.ColdRes += si.Affix[0].Mod1.Value;
                         si.LightningRes += si.Affix[0].Mod1.Value;
                     }
-                    if (bi.BaseItemId == 25)
+                    else if (item.Contains("to Fire and Cold Resistances"))
                     {
                         si.FireRes += si.Affix[0].Mod1.Value;
                         si.ColdRes += si.Affix[0].Mod1.Value;
                     }
-                    if (bi.BaseItemId == 26)
+                    else if (item.Contains("to Fire and Lightning Resistances"))
                     {
                         si.FireRes += si.Affix[0].Mod1.Value;
                         si.LightningRes += si.Affix[0].Mod1.Value;
@@ -686,13 +670,13 @@ namespace ExileClipboardListener.Classes
                             int levelInternal = level;
 
                             //If we are dealing with spell damage/ mana we have an extra problem, we need to know if this is 1-handed or 2-handed
-                            //If this is Evasion/ Base Stun Recovery then we could end up with 2 mods producing 3 affixes!  In this case we need to be even more forgiving
+                            //If this is Defense/ Base Stun Recovery then we could end up with 2 mods producing 3 affixes!  In this case we need to be even more forgiving
                             //For now I will hardcode these values for "simplicty"
                             if (primaryMod.Name == "Spell Damage +%" && si.ItemSubTypeName == "Staff")
                                 affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "Staff Spell Damage and Mana" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
                             else if (primaryMod.Name == "Spell Damage +%")
                                 affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.ModCategoryName == "One Hand Spell Damage and Mana" && next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
-                            else if (primaryMod.Name == "Local Evasion Rating +%" && secondaryMod.Name == "Base Stun Recovery +%")
+                            else if ((primaryMod.Name == "Local Evasion Rating +%" || primaryMod.Name == "Local Physical Damage Reduction Rating +%" || primaryMod.Name == "Local Energy Shield +%" || primaryMod.Name == "Local Armour And Evasion +%" || primaryMod.Name == "Local Evasion And Energy Shield +%" || primaryMod.Name == "Local Armour And Energy Shield +%") && secondaryMod.Name == "Base Stun Recovery +%")
                                 affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && (next.Mod1.ValueMin <= primaryMod.Value || next.Mod2.ValueMin <= secondaryMod.Value) && next.Level <= levelInternal ? next : agg);
                             else
                                 affixDoubleMod = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.Mod1.Id == primaryMod.Id && next.Mod2.Id == secondaryMod.Id && ((next.Mod1.ValueMin <= primaryMod.Value && next.Mod1.ValueMax >= primaryMod.Value) || (next.Mod2.ValueMin <= secondaryMod.Value && next.Mod2.ValueMax >= secondaryMod.Value)) && next.Level <= levelInternal ? next : agg);
