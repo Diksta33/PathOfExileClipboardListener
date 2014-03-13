@@ -133,7 +133,8 @@ namespace ExileClipboardListener.WinForms
                 sql += @"            
 	                CAST(IFNULL(s.SocketCount, 0) AS INTEGER) AS [Sockets],
 	                CASE WHEN s.SocketMaxLink = 0 THEN NULL ELSE CAST(s.SocketMaxLink AS VARCHAR(1)) || 'L' END AS [Max Links],";
-            sql += @"
+            if (ItemType.Text != "Flask")
+                sql += @"
 	                CAST(IFNULL(s.Life, 0) AS INTEGER) AS [Life],
 	                CAST(IFNULL(s.Mana, 0) AS INTEGER) AS [Mana],
 	                CAST(IFNULL(s.FireRes, 0) AS INTEGER) AS [Fire Res],
