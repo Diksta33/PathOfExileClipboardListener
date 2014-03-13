@@ -11,7 +11,7 @@ namespace ExileClipboardListener.Classes
     public static class GlobalMethods
     {
         //Allow clipboard monitoring
-        public static bool allowClipboardEvents = true;
+        public static bool AllowClipboardEvents = true;
 
         //Epoch time
         public static DateTime EpochTime = new DateTime(2013, 10, 23);

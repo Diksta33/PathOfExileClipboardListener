@@ -21,9 +21,9 @@ namespace ExileClipboardListener.Classes
             try
             {
                 string item = Clipboard.GetText();
-                if (GlobalMethods.allowClipboardEvents)
+                if (GlobalMethods.AllowClipboardEvents)
                 {
-                    GlobalMethods.allowClipboardEvents = false;
+                    GlobalMethods.AllowClipboardEvents = false;
 
                     //First we need to confirm that this is a POE item
                     if (!CheckItem(item))
@@ -91,7 +91,7 @@ namespace ExileClipboardListener.Classes
                 var handler = ClipboardUpdate;
                 if (handler != null)
                     handler(null, e);
-                GlobalMethods.allowClipboardEvents = true;
+                GlobalMethods.AllowClipboardEvents = true;
             }
             catch (Exception ex)
             {

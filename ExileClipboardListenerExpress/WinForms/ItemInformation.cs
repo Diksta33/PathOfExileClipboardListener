@@ -217,7 +217,6 @@ namespace ExileClipboardListener.WinForms
                 int runningTotalILevel = 0;
                 int runningTotalCLevel = 0;
                 int runningTotalSlot = 0;
-                string affixType = affixSlot < 4 ? "Prefix" : "Suffix";
                 string affixName = affixSlot < 4 ? "Prefix" + affixSlot : "Suffix" + (affixSlot - 3);
                 string modClass = GlobalMethods.GetScalarString("SELECT ModClass FROM FilterDetail WHERE FilterId = " + filterId + " AND AffixSlot = " + affixSlot + ";");
                 int modId = GlobalMethods.GetScalarInt("SELECT ModId FROM FilterDetail WHERE FilterId = " + filterId + " AND AffixSlot = " + affixSlot + ";");

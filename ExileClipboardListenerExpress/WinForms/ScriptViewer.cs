@@ -10,12 +10,12 @@ namespace ExileClipboardListener.WinForms
             InitializeComponent();
         }
 
-        private void Exit_Click(object sender, System.EventArgs e)
+        private void Exit_Click(object sender, EventArgs e)
         {
             Hide();
         }
 
-        private void ScriptViewer_Load(object sender, System.EventArgs e)
+        private void ScriptViewer_Load(object sender, EventArgs e)
         {
             ItemScript.Text = "--------Script Viewer--------" + Environment.NewLine + ItemScript.Text + Environment.NewLine + "--------Script Viewer--------";
         }

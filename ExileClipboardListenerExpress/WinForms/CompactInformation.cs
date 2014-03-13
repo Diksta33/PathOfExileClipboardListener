@@ -58,8 +58,6 @@ namespace ExileClipboardListener.WinForms
                 var levels = GlobalMethods.StuffIntList("SELECT Level FROM " + si.Affix[i].AffixType + " WHERE Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + " ORDER BY Level;");
 
                 //We need to know the highest and lowest values possible
-                int minLevel = levels.Find(l => l > 0);
-                int maxLevel = levels.FindLast(l => l > 0);
                 int minMod1Value = GlobalMethods.GetScalarInt("SELECT MIN(Mod1ValueMin) FROM " + si.Affix[i].AffixType + " WHERE ModCategoryId = " + si.Affix[i].ModCategoryId + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
                 int maxMod1Value = GlobalMethods.GetScalarInt("SELECT MAX(Mod1ValueMax) FROM " + si.Affix[i].AffixType + " WHERE ModCategoryId = " + si.Affix[i].ModCategoryId + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
                 int minMod2Value = mod2 == 0 ? 0 : GlobalMethods.GetScalarInt("SELECT MIN(Mod2ValueMin) FROM " + si.Affix[i].AffixType + " WHERE ModCategoryId = " + si.Affix[i].ModCategoryId + " AND Mod1Id = " + mod1 + " AND IFNULL(Mod2Id, 0) = " + mod2 + ";");
@@ -107,11 +105,11 @@ namespace ExileClipboardListener.WinForms
                     }
                     double mod1Score = ((double)si.Affix[i].Mod1.Value - minMod1Value) / (maxMod1Value == minMod1Value ? 1 : maxMod1Value - minMod1Value);
                     double mod2Score = mod2 == 0 ? 0 : ((double)si.Affix[i].Mod2.Value - minMod2Value) / (maxMod2Value == minMod2Value ? 1 : maxMod2Value - minMod2Value);
-                    int score = (int)(100 * (mod1Score + mod2Score) / (mod2 == 0 ? 1 : 2));
+                    var score = (int)(100 * (mod1Score + mod2Score) / (mod2 == 0 ? 1 : 2));
                     progressBar.Value = score;
                     double mod1ItemScore = ((double)si.Affix[i].Mod1.Value - minMod1Value) / (maxMod1ItemValue == minMod1Value ? 1 : maxMod1ItemValue - minMod1Value);
                     double mod2ItemScore = mod2 == 0 ? 0 : ((double)si.Affix[i].Mod2.Value - minMod2Value) / (maxMod2ItemValue == minMod2Value ? 1 : maxMod2ItemValue - minMod2Value);
-                    int scoreItem = (int)(100 * (mod1ItemScore + mod2ItemScore) / (mod2 == 0 ? 1 : 2));
+                    var scoreItem = (int)(100 * (mod1ItemScore + mod2ItemScore) / (mod2 == 0 ? 1 : 2));
                     label.Text = "[" + score + "%] " + (score == scoreItem ? "" : "{" + scoreItem + "%} ") + label.Text;
                 }
             }

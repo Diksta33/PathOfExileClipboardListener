@@ -6,7 +6,6 @@ using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Json;
-using System.Windows.Forms;
 
 namespace ExileClipboardListener.JSON
 {
