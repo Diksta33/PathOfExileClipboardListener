@@ -99,6 +99,10 @@ namespace ExileClipboardListener.WinForms
             ReqDex.Text = bi.ReqDex.ToString(); 
             ReqInt.Text = bi.ReqInt.ToString();
 
+            //Totals
+            TotalRes.Text = si.TotalRes.ToString();
+            TotalLife.Text = si.Life.ToString();
+
             //Sockets
             Sockets.Text = si.Sockets;
 
@@ -206,10 +210,6 @@ namespace ExileClipboardListener.WinForms
             //We return a score but we also load the specified filter and the results into a static class in case we need to do more work with them
             int runningTotalActual = 0;
             int filterCount = 0;
-            //GlobalMethods.BISResults.Clear();
-            //GlobalMethods.ILevelResults.Clear();
-            //GlobalMethods.CLevelResults.Clear();
-            //GlobalMethods.ItemResults.Clear();
 
             //Run through each filter slot
             for (int affixSlot = (filterAffixSlot == 0 ? 1 : filterAffixSlot); affixSlot <= (filterAffixSlot == 0 ? 6 : filterAffixSlot); affixSlot++)
@@ -262,8 +262,9 @@ namespace ExileClipboardListener.WinForms
 
                             //We parse out the rolls for the various levels
                             int actualRoll = si.Mod[mod].Value;
-                            int maxILevel = slot == "Primary" ? si.Affix[a].Mod1.ValueMax : si.Affix[a].Mod2.ValueMax;
-                            var best = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.ModCategoryId == affix.ModCategoryId && next.Mod1.Id == affix.Mod1.Id && next.Mod2.Id == affix.Mod2.Id ? next : agg);
+                            var best = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.ModCategoryId == affix.ModCategoryId && next.Mod1.Id == affix.Mod1.Id && next.Mod2.Id == affix.Mod2.Id && next.Level <= si.ItemLevel ? next : agg);
+                            int maxILevel = slot == "Primary" ? best.Mod1.ValueMax : best.Mod2.ValueMax; //si.Affix[a].Mod1.ValueMax : si.Affix[a].Mod2.ValueMax;
+                            best = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.ModCategoryId == affix.ModCategoryId && next.Mod1.Id == affix.Mod1.Id && next.Mod2.Id == affix.Mod2.Id ? next : agg);
                             int maxSlot = slot == "Primary" ? best.Mod1.ValueMax : best.Mod2.ValueMax;
                             best = GlobalMethods.AffixCache.Aggregate((agg, next) => next.Mod1.ValueMax > agg.Mod1.ValueMax && next.ModCategoryId == affix.ModCategoryId && next.Mod1.Id == affix.Mod1.Id && next.Mod2.Id == affix.Mod2.Id && next.Level <= CharacterLevel.Value ? next : agg);
                             int maxCLevel = slot == "Primary" ? best.Mod1.ValueMax : best.Mod2.ValueMax;
@@ -290,12 +291,12 @@ namespace ExileClipboardListener.WinForms
                 //Dump the results out to the form if this option is on
                 if (showDetail)
                 {
-                    tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit) + "%";
-                    tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (runningTotalCLevel == 0 ? 0 : runningTotalCLevel / affixesHit) + "%";
-                    tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) + "%";
+                    tabControl1.Controls.Find(affixName + "ILevel", true)[0].Text = (affixesHit  == 0 ? 0 : runningTotalILevel / affixesHit) + "%";
+                    tabControl1.Controls.Find(affixName + "CLevel", true)[0].Text = (affixesHit == 0 ? 0 : runningTotalCLevel / affixesHit) + "%";
+                    tabControl1.Controls.Find(affixName + "Slot", true)[0].Text = (affixesHit == 0 ? 0 : runningTotalSlot / affixesHit) + "%";
                     Image smiley;
-                    int score = Properties.Settings.Default.RatingMode == 0 ? (runningTotalSlot == 0 ? 0 : runningTotalSlot / affixesHit) : (runningTotalILevel == 0 ? 0 : runningTotalILevel / affixesHit);
-                    if (score / affixesHit <= Properties.Settings.Default.TolerancePoorTo)
+                    int score = Properties.Settings.Default.RatingMode == 0 ? (affixesHit == 0 ? 0 : runningTotalSlot / affixesHit) : (affixesHit == 0 ? 0 : runningTotalILevel / affixesHit);
+                    if (affixesHit  == 0 ||score / affixesHit <= Properties.Settings.Default.TolerancePoorTo)
                         smiley = Resources.PoorSmall;
                     else if (score / affixesHit <= Properties.Settings.Default.ToleranceAverageTo)
                         smiley = Resources.AverageSmall;

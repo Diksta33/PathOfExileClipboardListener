@@ -193,6 +193,10 @@
             this.label46 = new System.Windows.Forms.Label();
             this.League = new System.Windows.Forms.ComboBox();
             this.ItemIcon = new System.Windows.Forms.PictureBox();
+            this.label48 = new System.Windows.Forms.Label();
+            this.TotalRes = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
+            this.TotalLife = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.FilterResultsGrid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -349,6 +353,10 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label49);
+            this.groupBox1.Controls.Add(this.TotalLife);
+            this.groupBox1.Controls.Add(this.label48);
+            this.groupBox1.Controls.Add(this.TotalRes);
             this.groupBox1.Controls.Add(this.Sockets);
             this.groupBox1.Controls.Add(this.label38);
             this.groupBox1.Controls.Add(this.Quality);
@@ -1773,6 +1781,42 @@
             this.ItemIcon.TabIndex = 29;
             this.ItemIcon.TabStop = false;
             // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(197, 152);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(53, 13);
+            this.label48.TabIndex = 28;
+            this.label48.Text = "Total Res";
+            // 
+            // TotalRes
+            // 
+            this.TotalRes.Enabled = false;
+            this.TotalRes.Location = new System.Drawing.Point(256, 149);
+            this.TotalRes.Name = "TotalRes";
+            this.TotalRes.Size = new System.Drawing.Size(38, 20);
+            this.TotalRes.TabIndex = 27;
+            this.TotalRes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(197, 126);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(51, 13);
+            this.label49.TabIndex = 30;
+            this.label49.Text = "Total Life";
+            // 
+            // TotalLife
+            // 
+            this.TotalLife.Enabled = false;
+            this.TotalLife.Location = new System.Drawing.Point(256, 123);
+            this.TotalLife.Name = "TotalLife";
+            this.TotalLife.Size = new System.Drawing.Size(38, 20);
+            this.TotalLife.TabIndex = 29;
+            this.TotalLife.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // ItemInformation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1986,5 +2030,9 @@
         private System.Windows.Forms.PictureBox ItemIcon;
         private System.Windows.Forms.Label label47;
         private System.Windows.Forms.TextBox TotalDPS;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.TextBox TotalLife;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TextBox TotalRes;
     }
 }
