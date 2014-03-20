@@ -38,6 +38,8 @@ namespace ExileClipboardListener.JSON
 
         public static string Decrypt(string cipherText)
         {
+            if (cipherText == "")
+                return "";
             byte[] initVectorBytes = Encoding.ASCII.GetBytes(InitVector);
             byte[] cipherTextBytes = Convert.FromBase64String(cipherText);
             byte[] saltKey = Encoding.UTF8.GetBytes(SaltText);

@@ -50,7 +50,7 @@ namespace ExileClipboardListener.WinForms
 
             //Security
             Username.Text = Properties.Settings.Default.Username;
-            Password.Text = JSON.StringCipher.Decrypt(Properties.Settings.Default.Password);
+            Password.Text = Properties.Settings.Default.Password == "" ? "" : JSON.StringCipher.Decrypt(Properties.Settings.Default.Password);
         }
 
         private void Save_Click(object sender, EventArgs e)

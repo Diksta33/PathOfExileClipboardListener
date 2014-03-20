@@ -207,6 +207,8 @@ namespace ExileClipboardListener.Classes
 
         public static string DecryptCredentials()
         {
+            if (Properties.Settings.Default.Password == "" || Properties.Settings.Default.Password == null)
+                return "";
             return JSON.StringCipher.Decrypt(Properties.Settings.Default.Password);
         }
 

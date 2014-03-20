@@ -48,7 +48,7 @@
       <Value Profile="(Default)">The Butcher</Value>
     </Setting>
     <Setting Name="Password" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Fresh Meat</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="CurrencyTab1" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
