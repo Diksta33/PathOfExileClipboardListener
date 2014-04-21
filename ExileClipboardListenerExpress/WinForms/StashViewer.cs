@@ -143,7 +143,9 @@ namespace ExileClipboardListener.WinForms
 	                CAST(IFNULL(s.AllRes, 0) AS INTEGER) AS [All Res],
 	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.AllRes, 0) * 3 AS INTEGER) AS [Elem Res],
 	                CAST(IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Chaos Res],
-	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.AllRes, 0) * 3 + IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Total Res],";
+	                CAST(IFNULL(s.FireRes, 0) + IFNULL(s.ColdRes, 0) + IFNULL(s.LightningRes, 0) + IFNULL(s.AllRes, 0) * 3 + IFNULL(s.ChaosRes, 0) AS INTEGER) AS [Total Res],
+                    CAST(IFNULL(s.IIQ, 0) AS INTEGER) AS [IIQ],
+                    CAST(IFNULL(s.IIR, 0) AS INTEGER) AS [IIR],";
             if (!CompactView.Checked)
                 sql += @"
 	                CAST(IFNULL(b.DamagePhysicalMin, 0) AS INTEGER) AS [Base Damage Physical Min],

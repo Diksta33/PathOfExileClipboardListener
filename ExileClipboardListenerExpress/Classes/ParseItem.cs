@@ -442,6 +442,8 @@ namespace ExileClipboardListener.Classes
                 si.LightningRes = GetModValues("to Lightning Resistance");
                 si.AllRes = GetModValues("to all Elemental Resistances");
                 si.ChaosRes = GetModValues("to Chaos Resistance");
+                si.IIQ = GetModValues("increased Quantity of Items found");
+                si.IIR = GetModValues("increased Rarity of Items found");
                 if (bi.ItemName == "Two-Stone Ring")
                 {
                     //Two-Stone Rings are a pain

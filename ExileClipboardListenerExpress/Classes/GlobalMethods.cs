@@ -131,6 +131,8 @@ namespace ExileClipboardListener.Classes
             public static int EleRes;
             public static int ChaosRes;
             public static int TotalRes;
+            public static int IIQ;
+            public static int IIR;
             public static decimal CriticalStrikeChance;
             public static string Sockets;
             public static string Location;
@@ -239,6 +241,8 @@ namespace ExileClipboardListener.Classes
             StashItem.AllRes = 0;
             StashItem.ChaosRes = 0;
             StashItem.TotalRes = 0;
+            StashItem.IIQ = 0;
+            StashItem.IIR = 0;
             StashItem.eDPS = 0;
             StashItem.pDPS = 0;
             StashItem.tDPS = 0;
@@ -1167,7 +1171,7 @@ namespace ExileClipboardListener.Classes
             //Save this item to the database
             string sql = "INSERT INTO Stash(LeagueId, ItemName, BaseItemId, RarityId, Quality, ItemLevel, ReqLevel,";
             sql += " Armour, Evasion, EnergyShield, AttackSpeed, DamagePhysicalMin, DamagePhysicalMax, PhysicalDPS, DamageElementalMin, DamageElementalMax, ElementalDPS, TotalDPS,";
-            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, AllRes, ChaosRes, FirstSeen, LastSeen, Location, OriginalText)";
+            sql += " ImplicitMod1Id, ImplicitMod1Value, ImplicitMod2Id, ImplicitMod2Value, SocketCount, SocketMaxLink, Life, Mana, FireRes, ColdRes, LightningRes, AllRes, ChaosRes, IIQ, IIR, FirstSeen, LastSeen, Location, OriginalText)";
             sql += " VALUES(";
 
             //League
@@ -1216,6 +1220,10 @@ namespace ExileClipboardListener.Classes
             sql += StashItem.LightningRes + ",";
             sql += StashItem.AllRes + ",";
             sql += StashItem.ChaosRes + ",";
+
+            //IIQ/IIR
+            sql += StashItem.IIQ + ",";
+            sql += StashItem.IIR + ",";
 
             //First & Last Seen
             sql += DateTimeToLong(DateTime.Now) + ",";
