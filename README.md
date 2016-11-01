@@ -1,7 +1,7 @@
 Path Of Exile Clipboard Listener and Stash Management System
 ============================================================
 
-Clipboard Listener and Stash Manager for Path of Exile
+Clipboard Listener and Stash Manager for Path of Exile.
 
 Written in Visual Studio 10 C#.Net targetting .NET 4.0 Framework.
 
